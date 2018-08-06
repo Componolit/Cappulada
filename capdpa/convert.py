@@ -3,7 +3,7 @@ import clang.cindex
 
 def print_tree(cursor, indent):
     #print(cursor.displayname)
-    print(" " * indent + cursor.displayname + "(" + str(cursor.kind) + ")")
+    print(" " * indent + cursor.displayname + "(" + str(cursor.kind) + ")(" + str(cursor.type.get_size()) + ")")
     for x in cursor.get_children():
         print_tree(x, indent + 1)
 
