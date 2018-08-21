@@ -1,7 +1,9 @@
+import cxx;
 
-class Type:
+class Type(cxx.Base):
 
     def __init__(self, name, size, is_primitive=True):
+        super(Type, self).__init__()
         self.name = name
         self.size = size
         self.is_primitive = is_primitive
