@@ -40,17 +40,22 @@ class GenerateConstant(unittest.TestCase):
         self.assertTrue(result == "Inv_X_X_X_Alid : constant := 0;",
                         "Invalid constant: " + result);
 
-    def test_identifier_reserved_word1 (self):
+    def test_identifier_reserved_word1(self):
         result = Constant("begin").AdaSpecification()
         self.assertTrue(result == "X_Begin : constant := 0;",
                         "Invalid constant: " + result);
 
-    def test_identifier_reserved_word2 (self):
+    def test_identifier_reserved_word2(self):
         result = Constant("while").AdaSpecification()
         self.assertTrue(result == "X_While : constant := 0;",
                         "Invalid constant: " + result);
 
-    def test_unsupported_character (self):
+    def test_unsupported_character(self):
         result = Constant("Thüringer_Klöße").AdaSpecification()
         self.assertTrue(result == "Thc3bcringer_Klc3b6c39fe : constant := 0;",
                         "Invalid constant: " + result);
+
+    def test_class_simple(self):
+        expected = open("tests/data/test_class_simple.txt", "r").read()
+        result = Class(["foo", "brabbel"], constructor=Function(name="brabbel", symbol="SYM_FIXME")).AdaSpecification();
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");

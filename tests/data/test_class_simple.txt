@@ -1,0 +1,7 @@
+package Foo.Brabbel
+is
+   type Brabbel is
+   tagged null record;
+   function Constructor return Brabbel
+   with Import => "SYM_FIXME";
+end Foo.Brabbel;

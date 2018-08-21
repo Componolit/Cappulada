@@ -36,7 +36,7 @@ class TypeTestCase(unittest.TestCase):
 
     def print_function(self, indentation, f):
         print(" " * indentation + f.name + " -> " + f.return_type.name)
-        for a in f.arguments:
+        for a in f.parameters:
             self.print_variable(indentation + 2, a)
 
 
