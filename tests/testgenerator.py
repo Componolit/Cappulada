@@ -59,3 +59,10 @@ class GenerateConstant(unittest.TestCase):
         expected = open("tests/data/test_class_simple.txt", "r").read()
         result = Class(["foo", "brabbel"], constructor=Function(name="brabbel", symbol="SYM_FIXME")).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
+
+    def test_class_simple(self):
+        expected = open("tests/data/test_class_with_elements.txt", "r").read()
+        result = Class(["bar", "foo", "brabbel"],
+                       constructor=Function(name="brabbel", symbol="SYM_FIXME"),
+                       members=[Variable("field1", "int"), Variable("field2", "long")]).AdaSpecification();
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");

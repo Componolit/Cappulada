@@ -1,0 +1,10 @@
+package Bar.Foo.Brabbel
+is
+   type Brabbel is
+   tagged record
+      Field1 : int;
+      Field2 : long;
+   end record;
+   function Constructor return Brabbel
+   with Import => "SYM_FIXME";
+end Bar.Foo.Brabbel;

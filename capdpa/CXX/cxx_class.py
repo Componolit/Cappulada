@@ -1,9 +1,9 @@
 import cxx
 
-class NotImplemented:
+class NotImplemented(Exception):
 
     def __init__(self, message):
-        super(NotImplemented, self).__init__("Not implemented: " + message);
+        super(NotImplemented, self).__init__(message);
 
 class Class(cxx.Base):
 
@@ -24,7 +24,13 @@ class Class(cxx.Base):
         type_name=(self.ConvertIdentifier(self.name[-1]))
 
         if self.members:
-            raise NotImplemented("FIXME: Expand class members")
+            class_record = "record\n"
+            for member in self.members:
+                class_record += \
+                    "      %(name)s : %(type)s;\n" % \
+                    { 'name': self.ConvertIdentifier(member.name),
+                      'type': self.ConvertType(member.ctype) }
+            class_record += "   end record"
         else:
             class_record = "null record"
 
