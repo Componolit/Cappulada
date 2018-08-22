@@ -8,6 +8,6 @@ class Variable(cxx.Base):
         self.ctype = ctype
 
     def AdaSpecification(self):
-        return "%(name)s : %(type)s;" % \
+        return "%(name)s : %(type)s" % \
                { 'name': self.ConvertIdentifier(self.name),
-                 'type': self.ConvertType(self.ctype) }
+                 'type': self.ConvertTypeName(self.ctype.name) }

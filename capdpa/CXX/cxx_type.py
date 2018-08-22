@@ -7,3 +7,6 @@ class Type(cxx.Base):
         self.name = name
         self.size = size
         self.is_primitive = is_primitive
+
+    def AdaSpecification(self):
+        return ".".join(map(self.ConvertIdentifier, self.name))

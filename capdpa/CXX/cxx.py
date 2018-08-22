@@ -52,7 +52,7 @@ class Base(object):
 
         return tmp
 
-    def ConvertType(self, name):
+    def ConvertTypeName(self, name):
         return '.'.join(map(self.ConvertIdentifier,name))
 
     def AdaSpecification(self):

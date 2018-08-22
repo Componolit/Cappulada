@@ -64,26 +64,40 @@ class GenerateConstant(unittest.TestCase):
         expected = open("tests/data/test_class_with_elements.txt", "r").read()
         result = Class(["bar", "foo", "brabbel"],
                        constructor=Function(name="brabbel", symbol="SYM_FIXME"),
-                       members=[Variable("field1", ["int"]), Variable("field2", ["long"])]).AdaSpecification();
+                       members=[Variable("field1", Type(["int"], 4)), Variable("field2", Type(["long"], 8))]).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
 
     def test_class_elements_external_types(self):
         expected = open("tests/data/test_class_with_external_types.txt", "r").read()
         result = Class(["bar", "foo", "brabbel"],
                        constructor=Function(name="brabbel", symbol="SYM_FIXME"),
-                       members=[Variable("field1", ["bar", "baz", "my_type"]),
-                                Variable("field2", ["local_type"]),
-                                Variable("field3", ["bar", "foo", "blub", "some_type"])]).AdaSpecification();
+                       members=[Variable("field1", Type(["bar", "baz", "my_type"], 40, False)),
+                                Variable("field2", Type(["local_type"], 16)),
+                                Variable("field3", Type(["bar", "foo", "blub", "some_type"], 100, False))]).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
-
 
     def test_class_elements_local_types(self):
         expected = open("tests/data/test_class_with_local_types.txt", "r").read()
         result = Class(["bar", "foo", "brabbel"],
                        constructor=Function(name="brabbel", symbol="SYM_FIXME"),
-                       members=[Variable("field1", ["bar", "baz", "my_type"]),
-                                Variable("field2", ["local_type"]),
-                                Variable("field3", ["bar", "foo", "blub", "some_type"]),
-                                Variable("field4", ["bar", "foo", "brabbel", "some_type"]),
+                       members=[Variable("field1", Type(["bar", "baz", "my_type"], 40, False)),
+                                Variable("field2", Type(["local_type"], 16)),
+                                Variable("field3", Type(["bar", "foo", "blub", "some_type"], 4)),
+                                Variable("field4", Type(["bar", "foo", "brabbel", "some_type"], 100, False)),
                         ]).AdaSpecification();
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
+
+    def test_class_functions_with_return_type(self):
+        expected = open("tests/data/test_class_functions_with_return_type.txt", "r").read()
+        result = Class(name         = ["bar", "foo", "brabbel"],
+                       constructor  = Function(name="brabbel", symbol="SYM_FIXME"),
+                       members      = [Variable("field1", Type(["bar", "baz", "my_type"], 8)),
+                                       Variable("field2", Type(["local_type"], 24, False)),
+                                       Variable("field3", Type(["bar", "foo", "blub", "some_type"], 12))],
+                       functions    = [Function(name        = ["bar", "foo", "brabbel", "do_something"],
+                                                symbol      = "this_function_has_a_funny_symbol",
+                                                parameters  = [Variable("param1", Type(["foo", "bar"], 20, False)),
+                                                               Variable("param2", Type(["foo", "baz"], 10))],
+                                                return_type = Type(["Blah", "Some_Type"], 10))]
+                      ).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
