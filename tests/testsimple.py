@@ -7,8 +7,8 @@ class SimpleTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_1(self):
+    def Xtest_1(self):
         print(convert_header("tests/simple/parser/number.h", ""))
 
-    def test_2(self):
+    def Xtest_2(self):
         print(convert_header("tests/simple/parser/number.cc", ""))

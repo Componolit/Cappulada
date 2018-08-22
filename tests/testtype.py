@@ -40,5 +40,5 @@ class TypeTestCase(unittest.TestCase):
             self.print_variable(indentation + 2, a)
 
 
-    def test_number(self):
+    def xtest_number(self):
         self.print_namespace(0, number)
