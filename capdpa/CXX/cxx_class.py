@@ -19,8 +19,12 @@ class Class(cxx.Base):
             raise NotImplmented("Type handling for function parameters")
         result = set()
         for m in self.members:
+            type_prefix    = m.ctype[:-1]
             # Local type, no package needed
-            if len(m.ctype) <= 1:
+            if not type_prefix:
+                continue
+            # Fully quallified local type, no package needed
+            if type_prefix == self.name:
                 continue
             result.add(".".join(map(self.ConvertIdentifier, m.ctype[:-1])))
         return sorted(list(result))

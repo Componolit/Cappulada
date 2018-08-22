@@ -75,3 +75,15 @@ class GenerateConstant(unittest.TestCase):
                                 Variable("field2", ["local_type"]),
                                 Variable("field3", ["bar", "foo", "blub", "some_type"])]).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
+
+
+    def test_class_elements_local_types(self):
+        expected = open("tests/data/test_class_with_local_types.txt", "r").read()
+        result = Class(["bar", "foo", "brabbel"],
+                       constructor=Function(name="brabbel", symbol="SYM_FIXME"),
+                       members=[Variable("field1", ["bar", "baz", "my_type"]),
+                                Variable("field2", ["local_type"]),
+                                Variable("field3", ["bar", "foo", "blub", "some_type"]),
+                                Variable("field4", ["bar", "foo", "brabbel", "some_type"]),
+                        ]).AdaSpecification();
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
