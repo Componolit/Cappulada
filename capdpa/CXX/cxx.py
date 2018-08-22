@@ -53,8 +53,7 @@ class Base(object):
         return tmp
 
     def ConvertType(self, name):
-        # FIXME: Implement type registry
-        return str(name)
+        return '.'.join(map(self.ConvertIdentifier,name))
 
     def AdaSpecification(self):
 	raise NoSerializationDefined
