@@ -1,0 +1,9 @@
+package Bar.Foo.Class
+is
+   type Enum1 is (Elem11, Elem12);
+   type Enum2 is (Elem21, Elem22, Elem23);
+   type Class is
+   tagged null record;
+   function Constructor return Class
+   with Import => "symbol_404";
+end Bar.Foo.Class;

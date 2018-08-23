@@ -2,7 +2,7 @@ import cxx
 
 class Constant(cxx.Base):
 
-    def __init__(self, name, value=0):
+    def __init__(self, name, value=None):
         super(Constant, self).__init__()
         self.name = name
         self.value = value

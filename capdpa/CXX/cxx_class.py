@@ -75,6 +75,8 @@ class Class(cxx.Base):
                     ops += "   " + f.AdaSpecification()
 
         enums = ""
+        for e in self.enums:
+            enums += "   " + e.AdaSpecification() + ";\n"
 
         constants = ""
         for c in self.constants:
