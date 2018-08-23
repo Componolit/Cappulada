@@ -78,6 +78,8 @@ class Class(cxx.Base):
         enums = ""
         for e in self.enums:
             enums += "   " + e.AdaSpecification() + ";\n"
+            if e.HasValues():
+                enums += "   " + e.AdaRepresentation() + ";\n"
 
         constants = ""
         for c in self.constants:

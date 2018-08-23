@@ -140,19 +140,19 @@ class GenerateConstant(unittest.TestCase):
                                    Constant(name = Identifier(["some", "elem2"]))]).AdaSpecification()
         self.assertTrue(result == "type Foo is (Elem1, Elem2)", "Invalid: >>>" + result + "<<<")
 
-    def test_invalid_enum(self):
-        with self.assertRaises(Exception) as context:
-            result = Enum(name      = Identifier(["Foo"]),
-                          constants = [Constant(name = Identifier(["some", "elem1"]), value = 42)])
-        self.assertIn("Element Elem1 of enum Foo must not have a value", context.exception)
-
     def test_class_with_enum(self):
         expected = open("tests/data/test_class_with_enum.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "class"]),
                        constructor = Function(Identifier(["create_me"]), symbol="symbol_404"),
-                       enums       = [Enum(name = Identifier(["enum1"]), constants = [Constant(Identifier(["Elem11"])),
-                                                                                      Constant(Identifier(["Elem12"]))]),
+                       enums       = [Enum(name = Identifier(["enum1"]), constants = [Constant(Identifier(["Elem11"]), 5),
+                                                                                      Constant(Identifier(["Elem12"]), 6)]),
                                       Enum(name = Identifier(["enum2"]), constants = [Constant(Identifier(["Elem21"])),
                                                                                       Constant(Identifier(["Elem22"])),
                                                                                       Constant(Identifier(["Elem23"]))])]).AdaSpecification()
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<")
+
+    def test_enum_representation(self):
+        result = Enum(name      = Identifier(["foo"]),
+                      constants = [Constant(name = Identifier(["some", "elem1"]), value = 50),
+                                   Constant(name = Identifier(["some", "elem2"]), value = 1234)]).AdaRepresentation()
+        self.assertTrue(result == "for Foo use (Elem1 => 50, Elem2 => 1234)", "Invalid: >>>" + result + "<<<")

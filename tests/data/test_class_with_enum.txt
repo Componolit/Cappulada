@@ -1,6 +1,7 @@
 package Bar.Foo.Class
 is
    type Enum1 is (Elem11, Elem12);
+   for Enum1 use (Elem11 => 5, Elem12 => 6);
    type Enum2 is (Elem21, Elem22, Elem23);
    type Class is
    tagged limited null record
