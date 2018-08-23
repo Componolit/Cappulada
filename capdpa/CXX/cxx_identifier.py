@@ -10,13 +10,13 @@ class Identifier(cxx.Base):
         return self.name
 
     def PackageFullName(self):
-        return ".".join(map(self.ConvertIdentifier, self.PackageFull()))
+        return ".".join(map(self.ConvertName, self.PackageFull()))
 
     def PackagePath(self):
         return self.name[:-1]
 
     def PackagePathName(self):
-        return ".".join(map(self.ConvertIdentifier, self.PackagePath()))
+        return ".".join(map(self.ConvertName, self.PackagePath()))
 
     def PackageBaseName(self):
-        return self.ConvertIdentifier(self.name[-1])
+        return self.ConvertName(self.name[-1])

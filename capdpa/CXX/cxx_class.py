@@ -1,20 +1,19 @@
 import cxx
+import cxx_unit
 
 class NotImplemented(Exception):
 
     def __init__(self, message):
         super(NotImplemented, self).__init__(message);
 
-class Class(cxx.Base):
+class Class(cxx_unit.Unit):
 
-    def __init__(self, name, constructor=None, members=None, functions=None):
-        super(Class, self).__init__()
-        self.name        = name
+    def __init__(self, name, constructor=None, members=None, functions=None, constants=None, enums=None):
+
         self.constructor = constructor
         self.members     = members or []
         self.functions   = functions or []
 
-    def UsedPackages(self):
         types = []
         for f in self.functions:
             for p in f.parameters:
@@ -25,24 +24,16 @@ class Class(cxx.Base):
         for m in self.members:
             types.append(m.ctype)
 
-        result = set()
+        used_packages = set()
         for t in types:
             # Local varialbe or fully quallified local type, no package needed
-            if not t.name.PackagePath() or t.name.PackagePath() == self.name.PackageFull():
+            if not t.name.PackagePath() or t.name.PackagePath() == name.PackageFull():
                 continue
-            result.add(t.name.PackagePathName())
-        return sorted(list(result))
+            used_packages.add(t.name.PackagePathName())
+
+        super(Class, self).__init__(name, constants, enums, sorted(list(used_packages)))
 
     def AdaSpecification(self):
-        package   = self.name.PackageFullName()
-        type_name = self.name.PackageBaseName()
-
-        # Generate with statements
-        withs = ""
-        for w in self.UsedPackages():
-            withs += "with " + w + ";\n"
-        if withs:
-            withs += "\n"
 
         # Generate record members
         if self.members:
@@ -61,19 +52,17 @@ class Class(cxx.Base):
 
         # Main package structure
         p = \
-            '%(with)s'                                  + \
-            'package %(package)s\n'                     + \
-            'is\n'                                      + \
+            '%(header)s'                                + \
             '   type %(type)s is\n'                     + \
             '   tagged %(record)s;\n'                   + \
             '   function Constructor return %(type)s\n' + \
             '   with Import => "%(symbol)s";\n'         + \
             '%(ops)s'                                   + \
-            'end %(package)s;\n'
+            '%(footer)s'
 
-        return p % { 'with':    withs,
-                     'package': package,
-                     'type':    type_name,
+        return p % { 'header':  self.SerializeHeader(),
+                     'type':    self.name.PackageBaseName(),
                      'record':  class_record,
                      'ops':     ops,
-                     'symbol':  self.constructor.symbol }
+                     'symbol':  self.constructor.symbol,
+                     'footer':  self.SerializeFooter() }

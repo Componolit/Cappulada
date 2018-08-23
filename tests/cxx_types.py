@@ -3,10 +3,10 @@ from capdpa.CXX import *
 
 number = Namespace("Number",
         None,
-        [Class("Number",
-            Function("", "", [Variable("value", Type("int", 4, True))], Type("Number", 8, False)),
-            [Variable("_value", Type("int", 4, True))],
-            [Function("abs", "", [Variable("value", Type("int", 4, True))], Type("int", 4, True))],
+        [Class(Identifier(["Number"]),
+            Function("", "", [Variable(Identifier(["value"]), Type(Identifier(["int"]), 4, True))], Type(Identifier(["Number"]), 8, False)),
+            [Variable(Identifier(["_value"]), Type(Identifier(["int"]), 4, True))],
+            [Function(Identifier(["abs"]), "", [Variable(Identifier(["value"]), Type(Identifier(["int"]), 4, True))], Type(Identifier(["int"]), 4, True))],
             )],
-        [Constant("ONE", 1), Constant("TWO", 2)],
-        [Enum("NEGATIVE", [Constant("ONE", -1), Constant("TWO", -2)])])
+        [Constant(Identifier(["ONE"]), 1), Constant(Identifier(["TWO"]), 2)],
+        [Enum("NEGATIVE", [Constant(Identifier(["ONE"]), -1), Constant(Identifier(["TWO"]), -2)])])

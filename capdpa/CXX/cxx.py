@@ -1,4 +1,14 @@
-Keywords = ["abort", "else", "new", "return", "abs", "elsif", "not", "reverse", "abstract", "end", "null", "accept", "entry", "select", "access", "exception", "of", "separate", "aliased", "exit", "or", "some", "all", "others", "subtype", "and", "for", "out", "synchronized", "array", "function", "overriding", "at", "tagged", "generic", "package", "task", "begin", "goto", "pragma", "terminate", "body", "private", "then", "if", "procedure", "type", "case", "in", "protected", "constant", "interface", "until", "is", "raise", "use", "declare", "range", "delay", "limited", "record", "when", "delta", "loop", "rem", "while", "digits", "renames", "with", "do", "mod", "requeue", "xor"]
+Keywords = ["abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
+            "abstract", "end", "null", "accept", "entry", "select", "access",
+            "exception", "of", "separate", "aliased", "exit", "or", "some",
+            "all", "others", "subtype", "and", "for", "out", "synchronized",
+            "array", "function", "overriding", "at", "tagged", "generic",
+            "package", "task", "begin", "goto", "pragma", "terminate", "body",
+            "private", "then", "if", "procedure", "type", "case", "in",
+            "protected", "constant", "interface", "until", "is", "raise",
+            "use", "declare", "range", "delay", "limited", "record", "when",
+            "delta", "loop", "rem", "while", "digits", "renames", "with", "do",
+            "mod", "requeue", "xor"]
 
 class NoSerializationDefined: pass
 
@@ -6,7 +16,7 @@ class Base(object):
 
     def __init__(self): pass
 
-    def ConvertIdentifier(self, identifier):
+    def ConvertName(self, identifier):
 
         result = identifier.lower()
         digit  = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

@@ -8,4 +8,4 @@ class Constant(cxx.Base):
         self.value = value
 
     def AdaSpecification(self):
-        return self.ConvertIdentifier(self.name) + " : constant := " + str(self.value) + ";"
+        return self.name.PackageBaseName() + " : constant := " + str(self.value) + ";"
