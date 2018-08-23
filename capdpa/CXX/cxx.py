@@ -52,8 +52,5 @@ class Base(object):
 
         return tmp
 
-    def ConvertTypeName(self, name):
-        return '.'.join(map(self.ConvertIdentifier,name))
-
     def AdaSpecification(self):
 	raise NoSerializationDefined

@@ -9,5 +9,5 @@ class Variable(cxx.Base):
 
     def AdaSpecification(self):
         return "%(name)s : %(type)s" % \
-               { 'name': self.ConvertIdentifier(self.name),
-                 'type': self.ConvertTypeName(self.ctype.name) }
+               { 'name': self.name.PackageFullName(),
+                 'type': self.ctype.AdaSpecification() }

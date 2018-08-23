@@ -27,24 +27,15 @@ class Class(cxx.Base):
 
         result = set()
         for t in types:
-            type_prefix = t.name[:-1]
-            # Local type, no package needed
-            if not type_prefix:
+            # Local varialbe or fully quallified local type, no package needed
+            if not t.name.PackagePath() or t.name.PackagePath() == self.name.PackageFull():
                 continue
-            # Fully quallified local type, no package needed
-            if type_prefix == self.name:
-                continue
-            result.add(".".join(map(self.ConvertIdentifier, type_prefix)))
+            result.add(t.name.PackagePathName())
         return sorted(list(result))
 
     def AdaSpecification(self):
-        package = ""
-        first = True
-        for part in self.name:
-            name = self.ConvertIdentifier(part)
-            package += ("." + name if not first else name)
-            first = False
-        type_name=(self.ConvertIdentifier(self.name[-1]))
+        package   = self.name.PackageFullName()
+        type_name = self.name.PackageBaseName()
 
         # Generate with statements
         withs = ""

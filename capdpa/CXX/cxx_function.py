@@ -12,7 +12,7 @@ class Function(cxx.Base):
     def AdaSpecification(self):
 
         result = "function " if self.return_type else "procedure "
-        result += self.ConvertIdentifier(self.name[-1])
+        result += self.name.PackageBaseName()
 
         if self.parameters:
             result += " ("

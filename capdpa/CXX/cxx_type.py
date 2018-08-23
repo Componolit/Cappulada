@@ -9,4 +9,4 @@ class Type(cxx.Base):
         self.is_primitive = is_primitive
 
     def AdaSpecification(self):
-        return ".".join(map(self.ConvertIdentifier, self.name))
+        return self.name.PackageFullName()
