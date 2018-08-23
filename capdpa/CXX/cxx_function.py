@@ -25,6 +25,6 @@ class Function(cxx.Base):
             result += ")"
 
         result += " return " + self.return_type.AdaSpecification() + "\n"
-        result += '   with Symbol => "' + self.symbol + '";\n'
+        result += '   with Import => (CPP, "' + self.symbol + '");\n'
 
         return result

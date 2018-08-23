@@ -1,10 +1,11 @@
 package Bar.Foo.Brabbel
 is
    type Brabbel is
-   tagged record
+   tagged limited record
       Field1 : Int;
       Field2 : Long;
-   end record;
-   function Constructor return Brabbel
-   with Import => "SYM_FIXME";
+   end record
+   with Import => CPP;
+   function Constructor return Brabbel;
+   pragma Cpp_Constructor (Constructor, "SYM_FIXME");
 end Bar.Foo.Brabbel;

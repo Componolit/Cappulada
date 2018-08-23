@@ -51,22 +51,23 @@ class Class(cxx.Base):
 
         if self.constructor:
             # Generate record members
-            class_record = '   type %(type)s is\n   tagged ' \
-                % { 'type': self.name.PackageBaseName() }
+            class_record = '   type %(type)s is\n   tagged limited '
             if self.members:
                 class_record += "record\n"
                 for member in self.members:
                     class_record += "      " + member.AdaSpecification() + ";\n"
-                class_record += "   end record;\n"
+                class_record += "   end record\n"
             else:
-                class_record += "null record;\n"
+                class_record += "null record\n"
+            class_record += "   with Import => CPP;\n"
+            class_record = class_record  % { 'type': self.name.PackageBaseName() }
 
             # generate constructor
             constructor = \
-                ('   function Constructor return %(type)s\n' +
-                 '   with Import => "%(symbol)s";\n') \
-                    % { 'type':   self.name.PackageBaseName(),
-                        'symbol': self.constructor.symbol }
+                ('   function Constructor return %(type)s;\n' + \
+                 '   pragma Cpp_Constructor (Constructor, "%(symbol)s");\n') \
+                   % { 'type':   self.name.PackageBaseName(),
+                       'symbol': self.constructor.symbol }
 
             # generate primitive operations for tagged type
             ops=""

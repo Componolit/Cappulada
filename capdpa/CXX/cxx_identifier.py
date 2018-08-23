@@ -20,3 +20,6 @@ class Identifier(cxx.Base):
 
     def PackageBaseName(self):
         return self.ConvertName(self.name[-1])
+
+    def PackageBaseNameRaw(self):
+        return self.name[-1]

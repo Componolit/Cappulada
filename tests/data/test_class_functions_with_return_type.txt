@@ -6,13 +6,14 @@ with Foo;
 package Bar.Foo.Brabbel
 is
    type Brabbel is
-   tagged record
+   tagged limited record
       Field1 : Bar.Baz.My_Type;
       Field2 : Local_Type;
       Field3 : Bar.Foo.Blub.Some_Type;
-   end record;
-   function Constructor return Brabbel
-   with Import => "SYM_FIXME";
+   end record
+   with Import => CPP;
+   function Constructor return Brabbel;
+   pragma Cpp_Constructor (Constructor, "SYM_FIXME");
    function Do_Something (Param1 : Foo.Bar; Param2 : Foo.Baz) return Blah.Some_Type
-   with Symbol => "this_function_has_a_funny_symbol";
+   with Import => (CPP, "this_function_has_a_funny_symbol");
 end Bar.Foo.Brabbel;
