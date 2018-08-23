@@ -1,0 +1,9 @@
+package Bar.Foo.Class
+is
+   Constant1 : constant := 5;
+   Constant2 : constant := 42;
+   type Class is
+   tagged null record;
+   function Constructor return Class
+   with Import => "symbol_404";
+end Bar.Foo.Class;

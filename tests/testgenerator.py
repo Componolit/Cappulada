@@ -120,3 +120,11 @@ class GenerateConstant(unittest.TestCase):
                           ).AdaSpecification();
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
 
+    def test_class_with_constants (self):
+        expected = open("tests/data/test_class_with_constants.txt", "r").read()
+        result = Class(name        = Identifier(["bar", "foo", "class"]),
+                       constructor = Function(Identifier(["create_me"]), symbol="symbol_404"),
+                       constants   = [Constant(name = Identifier(["constant1"]), value = 5),
+                                      Constant(name = Identifier(["constant2"]), value = 42)]
+                      ).AdaSpecification();
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<");
