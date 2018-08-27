@@ -1,4 +1,6 @@
 import ir
+import ir_type
+import ir_identifier
 
 class Function(ir.Base):
 
@@ -7,7 +9,7 @@ class Function(ir.Base):
         self.name = name
         self.symbol = symbol
         self.parameters = parameters or []
-        self.return_type = return_type # or void
+        self.return_type = return_type or ir_type.Type(ir_identifier.Identifier(["void"]), size = 0, is_primitive = True)
 
     def AdaSpecification(self):
 

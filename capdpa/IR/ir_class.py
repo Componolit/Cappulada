@@ -1,4 +1,6 @@
 import ir
+import ir_function
+import ir_identifier
 
 class NotImplemented(Exception):
 
@@ -7,15 +9,15 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, constructor=None, members=None, functions=None, constants=None, enums=None):
+    def __init__(self, name, constructors=None, members=None, functions=None, constants=None, enums=None):
 
         super(Class, self).__init__()
-        self.name        = name
-        self.constructor = constructor
-        self.members     = members or []
-        self.functions   = functions or []
-        self.constants   = constants or []
-        self.enums       = enums or []
+        self.name         = name
+        self.constructors = constructors or [ir_function.Function(name = ir_identifier.Identifier([name]), symbol = "")]
+        self.members      = members or []
+        self.functions    = functions or []
+        self.constants    = constants or []
+        self.enums        = enums or []
 
     def UsedPackages(self):
         types = []
@@ -46,10 +48,10 @@ class Class(ir.Base):
             withs += "\n"
 
         class_record = ""
-        constructor = ""
+        constructors = []
         ops = ""
 
-        if self.constructor:
+        if self.constructors:
             # Generate record members
             class_record = '   type %(type)s is\n   tagged limited '
             if self.members:
@@ -62,12 +64,18 @@ class Class(ir.Base):
             class_record += "   with Import => CPP;\n"
             class_record = class_record  % { 'type': self.name.PackageBaseName() }
 
-            # generate constructor
-            constructor = \
-                ('   function Constructor return %(type)s;\n' + \
+            # generate constructors
+            constructors = [
+                ('   function Constructor%(args)s return %(type)s;\n' + \
                  '   pragma Cpp_Constructor (Constructor, "%(symbol)s");\n') \
                    % { 'type':   self.name.PackageBaseName(),
-                       'symbol': self.constructor.symbol }
+                       'symbol': constructor.symbol,
+                       'args' : " (" + "; ".join([
+                           arg.name.PackageBaseName() +
+                           " : " +
+                           arg.ctype.name.PackageBaseName()
+                           for arg in constructor.parameters]) + ")"
+                       if constructor.parameters else ""} for constructor in self.constructors]
 
             # generate primitive operations for tagged type
             ops=""
@@ -93,7 +101,7 @@ class Class(ir.Base):
             '%(constants)s'                             + \
             '%(enums)s'                                 + \
             '%(record)s'                                + \
-            '%(constructor)s'                           + \
+            '%(constructors)s'                           + \
             '%(ops)s'                                   + \
             'end %(package)s;\n'
 
@@ -102,5 +110,5 @@ class Class(ir.Base):
                      'constants':   constants,
                      'enums':       enums,
                      'record':      class_record,
-                     'constructor': constructor,
+                     'constructors': "".join(constructors),
                      'ops':         ops }

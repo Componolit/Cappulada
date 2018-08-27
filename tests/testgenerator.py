@@ -58,16 +58,16 @@ class GenerateConstant(unittest.TestCase):
     def test_class_simple(self):
         expected = open("tests/data/test_class_simple.txt", "r").read()
         result = Class(name        = Identifier(["foo", "brabbel"]),
-                       constructor = Function(name   = Identifier(["brabbel"]),
-                                              symbol = "SYM_FIXME")
+                       constructors = [Function(name   = Identifier(["brabbel"]),
+                                              symbol = "SYM_FIXME")]
                       ).AdaSpecification()
         self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<")
 
     def test_class_elements(self):
         expected = open("tests/data/test_class_with_elements.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "brabbel"]),
-                       constructor = Function(name   = Identifier(["brabbel"]),
-                                              symbol = "SYM_FIXME"),
+                       constructors = [Function(name   = Identifier(["brabbel"]),
+                                              symbol = "SYM_FIXME")],
                        members     = [Variable(Identifier(["field1"]), Type(Identifier(["int"]), 4)),
                                      Variable(Identifier(["field2"]), Type(Identifier(["long"]), 8))]
                       ).AdaSpecification()
@@ -76,7 +76,7 @@ class GenerateConstant(unittest.TestCase):
     def test_class_elements_external_types(self):
         expected = open("tests/data/test_class_with_external_types.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "brabbel"]),
-                       constructor = Function(name = Identifier(["brabbel"]), symbol="SYM_FIXME"),
+                       constructors = [Function(name = Identifier(["brabbel"]), symbol="SYM_FIXME")],
                        members     = [Variable(Identifier(["field1"]), Type(Identifier(["bar", "baz", "my_type"]), 40, False)),
                                       Variable(Identifier(["field2"]), Type(Identifier(["local_type"]), 16)),
                                       Variable(Identifier(["field3"]), Type(Identifier(["bar", "foo", "blub", "some_type"]), 100, False))]
@@ -86,7 +86,7 @@ class GenerateConstant(unittest.TestCase):
     def test_class_elements_local_types(self):
         expected = open("tests/data/test_class_with_local_types.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "brabbel"]),
-                       constructor = Function(name=Identifier(["brabbel"]), symbol="SYM_FIXME"),
+                       constructors = [Function(name=Identifier(["brabbel"]), symbol="SYM_FIXME")],
                        members     = [Variable(Identifier(["field1"]), Type(Identifier(["bar", "baz", "my_type"]), 40, False)),
                                       Variable(Identifier(["field2"]), Type(Identifier(["local_type"]), 16)),
                                       Variable(Identifier(["field3"]), Type(Identifier(["bar", "foo", "blub", "some_type"]), 4)),
@@ -97,7 +97,7 @@ class GenerateConstant(unittest.TestCase):
     def test_class_functions_with_return_type(self):
         expected = open("tests/data/test_class_functions_with_return_type.txt", "r").read()
         result = Class(name         = Identifier(["bar", "foo", "brabbel"]),
-                       constructor  = Function(Identifier(["brabbel"]), symbol="SYM_FIXME"),
+                       constructors  = [Function(Identifier(["brabbel"]), symbol="SYM_FIXME")],
                        members      = [Variable(Identifier(["field1"]), Type(Identifier(["bar", "baz", "my_type"]), 8)),
                                        Variable(Identifier(["field2"]), Type(Identifier(["local_type"]), 24, False)),
                                        Variable(Identifier(["field3"]), Type(Identifier(["bar", "foo", "blub", "some_type"]), 12))],
@@ -123,7 +123,7 @@ class GenerateConstant(unittest.TestCase):
     def test_class_with_constants(self):
         expected = open("tests/data/test_class_with_constants.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "class"]),
-                       constructor = Function(Identifier(["create_me"]), symbol="symbol_404"),
+                       constructors = [Function(Identifier(["create_me"]), symbol="symbol_404")],
                        constants   = [Constant(name = Identifier(["constant1"]), value = 5),
                                       Constant(name = Identifier(["constant2"]), value = 42)]
                       ).AdaSpecification()
@@ -143,7 +143,7 @@ class GenerateConstant(unittest.TestCase):
     def test_class_with_enum(self):
         expected = open("tests/data/test_class_with_enum.txt", "r").read()
         result = Class(name        = Identifier(["bar", "foo", "class"]),
-                       constructor = Function(Identifier(["create_me"]), symbol="symbol_404"),
+                       constructors = [Function(Identifier(["create_me"]), symbol="symbol_404")],
                        enums       = [Enum(name = Identifier(["enum1"]), constants = [Constant(Identifier(["Elem11"]), 5),
                                                                                       Constant(Identifier(["Elem12"]), 6)]),
                                       Enum(name = Identifier(["enum2"]), constants = [Constant(Identifier(["Elem21"])),
@@ -156,3 +156,15 @@ class GenerateConstant(unittest.TestCase):
                       constants = [Constant(name = Identifier(["some", "elem1"]), value = 50),
                                    Constant(name = Identifier(["some", "elem2"]), value = 1234)]).AdaRepresentation()
         self.assertTrue(result == "for Foo use (Elem1 => 50, Elem2 => 1234)", "Invalid: >>>" + result + "<<<")
+
+    def test_class_multiple_constructors(self):
+        expected = open("tests/data/test_class_multiple_constructors.txt", "r").read()
+        result = Class(name        = Identifier(["foo", "brabbel"]),
+                       constructors = [Function(name   = Identifier(["brabbel"]),
+                                              symbol = "SYM_FIXME"),
+                                       Function(name = Identifier(["brabbel"]),
+                                              symbol = "SYM_FIXME",
+                                              parameters = [Variable(name = Identifier(["arg"]),
+                                                  ctype = Type(name=Identifier(["integer"]), size=4))])]
+                      ).AdaSpecification()
+        self.assertTrue(result == expected, "Invalid class: >>>" + result + "<<< expected: >>>" + expected + "<<<")

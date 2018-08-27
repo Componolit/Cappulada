@@ -9,3 +9,4 @@ class Namespace(ir_class.Class):
         super(Namespace, self).__init__(name      = name,
                                         constants = constants,
                                         enums     = enums)
+        self.constructors = None
