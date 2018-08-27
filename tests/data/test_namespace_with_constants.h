@@ -1,5 +1,5 @@
 
-namespace With_Constants
+namespace With_constants
 {
     enum {
         X = 1,

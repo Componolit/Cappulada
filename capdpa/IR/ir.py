@@ -16,6 +16,12 @@ class Base(object):
 
     def __init__(self): pass
 
+    def __eq__(self, other):
+        return self.__repr__() == repr(other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def ConvertName(self, identifier):
 
         result = identifier.lower()
