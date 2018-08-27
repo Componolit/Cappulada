@@ -1,6 +1,6 @@
-import cxx
+import ir
 
-class Constant(cxx.Base):
+class Constant(ir.Base):
 
     def __init__(self, name, value=None):
         super(Constant, self).__init__()

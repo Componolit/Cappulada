@@ -1,6 +1,6 @@
-import cxx;
+import ir;
 
-class Type(cxx.Base):
+class Type(ir.Base):
 
     def __init__(self, name, size, is_primitive=True):
         super(Type, self).__init__()

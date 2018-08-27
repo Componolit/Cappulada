@@ -1,7 +1,7 @@
-import cxx
-import cxx_class
+import ir
+import ir_class
 
-class Namespace(cxx_class.Class):
+class Namespace(ir_class.Class):
 
     def __init__(self, name, namespaces=None, classes=None, constants=None, enums=None):
         self.namespaces = namespaces or []

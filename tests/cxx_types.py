@@ -1,5 +1,5 @@
 
-from capdpa.CXX import *
+from capdpa.IR import *
 
 number = Namespace("Number",
         None,
