@@ -1,6 +1,6 @@
-import cxx
+import ir
 
-class Function(cxx.Base):
+class Function(ir.Base):
 
     def __init__(self, name, symbol, parameters=None, return_type=None):
         super(Function, self).__init__()

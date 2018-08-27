@@ -1,11 +1,11 @@
-import cxx
+import ir
 
 class NotImplemented(Exception):
 
     def __init__(self, message):
         super(NotImplemented, self).__init__(message);
 
-class Class(cxx.Base):
+class Class(ir.Base):
 
     def __init__(self, name, constructor=None, members=None, functions=None, constants=None, enums=None):
 

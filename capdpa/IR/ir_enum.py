@@ -1,6 +1,6 @@
-import cxx
+import ir
 
-class Enum(cxx.Base):
+class Enum(ir.Base):
 
     def __init__(self, name, constants=None):
         super(Enum, self).__init__()

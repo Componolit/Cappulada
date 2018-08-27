@@ -1,6 +1,6 @@
-import cxx
+import ir
 
-class Identifier(cxx.Base):
+class Identifier(ir.Base):
 
     def __init__(self, name):
         super(Identifier, self).__init__()

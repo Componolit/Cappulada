@@ -1,4 +1,4 @@
 
 from .convert import *
-from .CXX import *
+from .IR import *
 from .mangle import *

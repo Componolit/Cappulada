@@ -1,6 +1,6 @@
-import cxx;
+import ir;
 
-class Variable(cxx.Base):
+class Variable(ir.Base):
 
     def __init__(self, name, ctype):
         super(Variable, self).__init__()
