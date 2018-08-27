@@ -7,5 +7,9 @@ class Constant(ir.Base):
         self.name = name
         self.value = value
 
+    def __repr__(self):
+        return "Constant(name={}, value={})".format(
+                self.name, self.value)
+
     def AdaSpecification(self):
         return self.name.PackageBaseName() + " : constant := " + str(self.value) + ";"

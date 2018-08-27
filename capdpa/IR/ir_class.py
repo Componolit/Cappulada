@@ -19,6 +19,10 @@ class Class(ir.Base):
         self.constants    = constants or []
         self.enums        = enums or []
 
+    def __repr__(self):
+        return "Class(name={}, constructors={}, members={}, functions={}, constants={}, enums={})".format(
+                self.name, self.constructors, self.members, self.functions, self.constants, self.enums)
+
     def UsedPackages(self):
         types = []
         for f in self.functions:

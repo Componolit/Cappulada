@@ -12,6 +12,10 @@ class Enum(ir.Base):
             if c.value:
                 self.has_values = True
 
+    def __repr__(self):
+        return "Enum(name={}, constants={})".format(
+                self.name, self.constants)
+
     def HasValues(self):
         return self.has_values
 

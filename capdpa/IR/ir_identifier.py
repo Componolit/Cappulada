@@ -6,6 +6,10 @@ class Identifier(ir.Base):
         super(Identifier, self).__init__()
         self.name = name
 
+    def __repr__(self):
+        return "Identifier(name={})".format(
+                self.name)
+
     def PackageFull(self):
         return self.name
 

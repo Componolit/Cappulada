@@ -7,7 +7,12 @@ class Variable(ir.Base):
         self.name = name
         self.ctype = ctype
 
+    def __repr__(self):
+        return "Variable(name={}, ctype={})".format(
+                self.name, self.ctype)
+
     def AdaSpecification(self):
         return "%(name)s : %(type)s" % \
                { 'name': self.name.PackageFullName(),
                  'type': self.ctype.AdaSpecification() }
+

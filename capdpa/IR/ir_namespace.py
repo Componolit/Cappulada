@@ -10,3 +10,7 @@ class Namespace(ir_class.Class):
                                         constants = constants,
                                         enums     = enums)
         self.constructors = None
+
+    def __repr__(self):
+        return "Namespace(name={}, namespaces={}, classes={}, constants={}, enums={})".format(
+                self.name, self.namespaces, self.classes, self.constants, self.enums)
