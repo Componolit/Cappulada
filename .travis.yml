@@ -1,0 +1,15 @@
+sudo: required
+dist: trusty
+addons:
+    apt:
+        update: true
+        packages:
+            - python-clang-3.8
+            - libclang-3.8-dev
+language: python
+python:
+  - "2.7"
+virtualenv:
+    system_site_packages: true
+script:
+  - python -m unittest discover tests
