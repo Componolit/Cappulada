@@ -6,6 +6,7 @@ class Enum(ir.Base):
         super(Enum, self).__init__()
         self.name       = name
         self.constants  = constants or []
+        self._parentize_list(self.constants)
         self.has_values = False
 
         for c in self.constants:
@@ -20,23 +21,23 @@ class Enum(ir.Base):
         return self.has_values
 
     def AdaSpecification(self):
-        result = "type " + self.name.PackageBaseName() + " is ("
+        result = "type " + self.ConvertName(self.name) + " is ("
         first = True
         for c in self.constants:
             if not first:
                 result += ", "
             first = False
-            result += c.name.PackageBaseName()
+            result += self.ConvertName(c.name)
         result += ")"
         return result
 
     def AdaRepresentation(self):
-        result = "for " + self.name.PackageBaseName() + " use ("
+        result = "for " + self.ConvertName(self.name) + " use ("
         first = True
         for c in self.constants:
             if not first:
                 result += ", "
             first = False
-            result += c.name.PackageBaseName() + " => " + str(c.value)
+            result += self.ConvertName(c.name) + " => " + str(c.value)
         result += ")"
         return result

@@ -17,13 +17,13 @@ class CXX:
         if cursor.kind != clang.cindex.CursorKind.CLASS_DECL:
             raise InvalidNodeError
         return IR.Class(
-                name = IR.Identifier([cursor.displayname]))
+                name = cursor.displayname)
 
     def __parse_constant(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.ENUM_CONSTANT_DECL:
             raise InvalidNodeError
         return IR.Constant(
-                name = IR.Identifier([cursor.displayname]),
+                name = cursor.displayname,
                 value = cursor.enum_value)
 
     def __parse_named_enum(self, cursors):
@@ -31,7 +31,7 @@ class CXX:
         for cursor in cursors:
             if cursor.kind == clang.cindex.CursorKind.ENUM_DECL and cursor.displayname:
                 enums.append(IR.Enum(
-                    name = IR.Identifier([cursor.displayname]),
+                    name = cursor.displayname,
                     constants = [self.__parse_constant(constant) for constant in cursor.get_children()]))
         return enums
 
@@ -46,7 +46,7 @@ class CXX:
         if cursor.kind != clang.cindex.CursorKind.NAMESPACE:
             raise InvalidNodeError
         return IR.Namespace(
-                name = IR.Identifier([cursor.displayname]),
+                name = cursor.displayname,
                 enums = self.__parse_named_enum(cursor.get_children()),
                 constants = self.__parse_anonymous_enum(cursor.get_children())
                 )

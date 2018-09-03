@@ -14,6 +14,8 @@ class NoSerializationDefined: pass
 
 class Base(object):
 
+    parent = None
+
     def __init__(self): pass
 
     def __eq__(self, other):
@@ -21,6 +23,20 @@ class Base(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def _parentize_list(self, children):
+        [child.SetParent(self) for child in children]
+
+    def SetParent(self, parent):
+        self.parent = parent
+
+    def FullyQualifiedName(self):
+        if self.parent:
+            fqn = self.parent.FullyQualifiedName()
+            fqn.append(self.name)
+            return fqn
+        else:
+            return [self.name]
 
     def ConvertName(self, identifier):
 

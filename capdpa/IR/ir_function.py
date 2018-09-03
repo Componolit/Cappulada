@@ -9,7 +9,8 @@ class Function(ir.Base):
         self.name = name
         self.symbol = symbol
         self.parameters = parameters or []
-        self.return_type = return_type or ir_type.Type(ir_identifier.Identifier(["void"]), size = 0, is_primitive = True)
+        self._parentize_list(self.parameters)
+        self.return_type = return_type or ir_type.Type_Reference(ir_identifier.Identifier(["void"]))
 
     def __repr__(self):
         return "Function(name={}, symbol={}, parameters={}, return_type={})".format(
@@ -18,7 +19,7 @@ class Function(ir.Base):
     def AdaSpecification(self):
 
         result = "function " if self.return_type else "procedure "
-        result += self.name.PackageBaseName()
+        result += self.ConvertName(self.name)
 
         if self.parameters:
             result += " ("

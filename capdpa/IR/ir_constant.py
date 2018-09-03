@@ -12,4 +12,4 @@ class Constant(ir.Base):
                 self.name, self.value)
 
     def AdaSpecification(self):
-        return self.name.PackageBaseName() + " : constant := " + str(self.value) + ";"
+        return self.ConvertName(self.name) + " : constant := " + str(self.value) + ";"

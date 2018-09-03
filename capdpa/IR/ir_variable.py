@@ -13,6 +13,6 @@ class Variable(ir.Base):
 
     def AdaSpecification(self):
         return "%(name)s : %(type)s" % \
-               { 'name': self.name.PackageFullName(),
+               { 'name': self.ConvertName(self.name),
                  'type': self.ctype.AdaSpecification() }
 
