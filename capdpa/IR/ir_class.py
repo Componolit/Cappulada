@@ -13,7 +13,7 @@ class Class(ir.Base):
 
         super(Class, self).__init__()
         self.name         = name
-        self.constructors = constructors or [ir_function.Function(name = ir_identifier.Identifier([name]), symbol = "")]
+        self.constructors = constructors or [ir_function.Function(name = name, symbol = "")]
         self.members      = members or []
         self.functions    = functions or []
         self.constants    = constants or []

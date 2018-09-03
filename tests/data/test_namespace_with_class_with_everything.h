@@ -9,8 +9,8 @@ namespace With_class
         };
 
         enum NEGATIVE {
-            ONE = -1,
-            TWO = -2
+            MINUS_ONE = -1,
+            MINUS_TWO = -2
         };
 
         private:
