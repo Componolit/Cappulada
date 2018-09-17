@@ -21,23 +21,9 @@ class Enum(ir.Base):
         return self.has_values
 
     def AdaSpecification(self):
-        result = "type " + self.ConvertName(self.name) + " is ("
-        first = True
-        for c in self.children:
-            if not first:
-                result += ", "
-            first = False
-            result += self.ConvertName(c.name)
-        result += ")"
-        return result
+        return "type " + self.ConvertName(self.name) + " is ({})".format(
+                ", ".join(map(lambda c: self.ConvertName(c.name), self.children)))
 
     def AdaRepresentation(self):
-        result = "for " + self.ConvertName(self.name) + " use ("
-        first = True
-        for c in self.children:
-            if not first:
-                result += ", "
-            first = False
-            result += self.ConvertName(c.name) + " => " + str(c.value)
-        result += ")"
-        return result
+        return "for " + self.ConvertName(self.name) + " use ({})".format(
+                ", ".join(map(lambda c: self.ConvertName(c.name) + " => " + str(c.value), self.children)))

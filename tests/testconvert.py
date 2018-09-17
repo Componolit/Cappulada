@@ -69,7 +69,7 @@ class Parser(unittest.TestCase):
                         Variable (name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"])))],
                         return_type = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))
                         ),
-                    Constructor(name = "With_functions", symbol = "")])]
+                    Constructor(symbol = "")])]
         result = CXX("tests/data/test_class_with_functions.h").ToIR()
         self.assertEqual(result, expected, "Expected \n" + str(expected) + "\n got \n" + str(result))
 
@@ -84,7 +84,7 @@ class Parser(unittest.TestCase):
                         Constant(name = "MINUS_TWO", value = -2)]),
                     Function(name = "public_function", symbol = ""),
                     Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))),
-                    Constructor(name = "With_everything", symbol = "")])])]
+                    Constructor(symbol = "")])])]
         result = CXX("tests/data/test_namespace_with_class_with_everything.h").ToIR()
         self.assertEqual(result, expected, "Expected \n" + str(expected) + "\n got \n" + str(result))
 

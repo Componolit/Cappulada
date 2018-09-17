@@ -34,7 +34,6 @@ class CXX:
 
     def __convert_constructor(self, cursor):
         return IR.Constructor(
-                name = cursor.spelling,
                 symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()))
 
@@ -50,44 +49,41 @@ class CXX:
         while type_cursor.kind == clang.cindex.TypeKind.POINTER:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
-        try:
-            return {
-                    clang.cindex.TypeKind.UNEXPOSED:
-                        lambda: IR.Type_Reference(name = IR.Identifier(self.__resolve_name(type_cursor.get_declaration())), pointer = ptr, builtin=False),
-                    clang.cindex.TypeKind.VOID:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["void"]), pointer = ptr),
-                    clang.cindex.TypeKind.BOOL:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Boolean"]), pointer = ptr),
-                    clang.cindex.TypeKind.UCHAR:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_char"]), pointer = ptr),
-                    clang.cindex.TypeKind.USHORT:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_short"]), pointer = ptr),
-                    clang.cindex.TypeKind.UINT:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_int"]), pointer = ptr),
-                    clang.cindex.TypeKind.ULONG:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_long"]), pointer = ptr),
-                    clang.cindex.TypeKind.SCHAR:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "signed_char"]), pointer = ptr),
-                    clang.cindex.TypeKind.WCHAR:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "wchar_t"]), pointer = ptr),
-                    clang.cindex.TypeKind.SHORT:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "short"]), pointer = ptr),
-                    clang.cindex.TypeKind.INT:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "int"]), pointer = ptr),
-                    clang.cindex.TypeKind.LONG:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long"]), pointer = ptr),
-                    clang.cindex.TypeKind.LONGLONG:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long_long"]), pointer = ptr),
-                    clang.cindex.TypeKind.FLOAT:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "C_float"]), pointer = ptr),
-                    clang.cindex.TypeKind.DOUBLE:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "double"]), pointer = ptr),
-                    clang.cindex.TypeKind.LONGDOUBLE:
-                        lambda: IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long_double"]), pointer = ptr),
-                    clang.cindex.TypeKind.TYPEDEF:
-                        lambda: IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr, builtin = False)
-                    }[type_cursor.kind]()
-        except KeyError:
+        if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
+            return IR.Type_Reference(name = IR.Identifier(self.__resolve_name(type_cursor.get_declaration())), pointer = ptr, builtin=False)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
+            return IR.Type_Reference(name = IR.Identifier(["void"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.BOOL:
+            return IR.Type_Reference(name = IR.Identifier(["Boolean"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.UCHAR:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_char"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.USHORT:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_short"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.UINT:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_int"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.ULONG:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "unsigned_long"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.SCHAR:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "signed_char"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.WCHAR:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "wchar_t"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.SHORT:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "short"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.INT:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "int"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.LONG:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.LONGLONG:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long_long"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.FLOAT:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "C_float"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.DOUBLE:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "double"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.LONGDOUBLE:
+            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "Types", "long_double"]), pointer = ptr)
+        elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
+            return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr, builtin = False)
+        else:
             raise NotImplementedError("Unsupported type: {} (from {})".format(str(type_cursor.kind), type_cursor.spelling))
 
     def __convert_arguments(self, cursors):

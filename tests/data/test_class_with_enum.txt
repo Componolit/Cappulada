@@ -4,7 +4,9 @@ is
    for Enum1 use (Elem11 => 5, Elem12 => 6);
    type Enum2 is (Elem21, Elem22, Elem23);
    type Class is
-   tagged limited null record
+   tagged limited record
+      null;
+   end record
    with Import => CPP;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "symbol_404");
