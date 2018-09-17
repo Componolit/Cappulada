@@ -4,7 +4,7 @@ is
    tagged limited record
       null;
    end record
-   with Import => CPP;
+   with Import, Convention => CPP;
    function Constructor return Brabbel;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
    function Constructor (Arg : Integer) return Brabbel;

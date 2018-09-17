@@ -9,7 +9,7 @@ is
       Field2 : Local_Type;
       Field3 : Bar.Foo.Blub.Some_Type;
    end record
-   with Import => CPP;
+   with Import, Convention => CPP;
    function Constructor return Brabbel;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
 end Bar.Foo.Brabbel;

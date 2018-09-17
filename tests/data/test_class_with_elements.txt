@@ -5,7 +5,7 @@ is
       Field1 : Int;
       Field2 : Long;
    end record
-   with Import => CPP;
+   with Import, Convention => CPP;
    function Constructor return Brabbel;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
 end Bar.Foo.Brabbel;
