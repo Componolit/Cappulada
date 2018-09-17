@@ -1,6 +1,9 @@
 import ir
+import ir_constant
+import ir_enum
 import ir_function
 import ir_identifier
+import ir_variable
 
 class NotImplemented(Exception):
 
@@ -9,43 +12,30 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, constructors=None, members=None, functions=None, constants=None, enums=None):
+    def __init__(self, name, children=None):
 
         super(Class, self).__init__()
-        self.name         = name
-        self.constructors = constructors or [ir_function.Function(name = name, symbol = "")]
-        self.members      = members or []
-        self.functions    = functions or []
-        self.constants    = constants or []
-        self.enums        = enums or []
-        self._parentize_list(self.constructors)
-        self._parentize_list(self.members)
-        self._parentize_list(self.functions)
-        self._parentize_list(self.constants)
-        self._parentize_list(self.enums)
+        self.name       = name
+        self.children   = children or []
+        self._parentize_list(self.children)
 
     def __repr__(self):
-        return "Class(name={}, constructors={}, members={}, functions={}, constants={}, enums={})".format(
-                self.name, self.constructors, self.members, self.functions, self.constants, self.enums)
+        return "Class(name={}, children={})".format(self.name, self.children)
 
     def UsedPackages(self):
         types = []
-        for f in self.functions:
-            for p in f.parameters:
-                types.append(p.ctype)
-                if f.return_type:
-                    types.append(f.return_type)
+        isFunction = lambda f: isinstance(f, ir_function.Function)
+        isVariable = lambda v: isinstance(v, ir_variable.Variable)
+        isLocalType = lambda t: t.name.PackagePath() and t.name.PackagePath() != self.FullyQualifiedName()
 
-        for m in self.members:
-            types.append(m.ctype)
+        for f in filter(isFunction, self.children):
+            map(lambda p: types.append(p.ctype), f.parameters)
+            if f.return_type:
+                types.append(f.return_type)
 
-        used_packages = set()
-        for t in types:
-            # Local varialbe or fully quallified local type, no package needed
-            if not t.name.PackagePath() or t.name.PackagePath() == self.FullyQualifiedName():
-                continue
-            used_packages.add(t.name.PackagePathName())
-        return sorted(list(used_packages))
+        map(lambda v: types.append(v.ctype), filter(isVariable, self.children))
+
+        return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
 
     def AdaSpecification(self):
 
@@ -56,51 +46,25 @@ class Class(ir.Base):
         if withs:
             withs += "\n"
 
-        class_record = ""
-        constructors = []
-        ops = ""
+        # Generate record members
+        null = type("", (), dict(AdaSpecification=lambda self: "null"))()
+        isVar = lambda e: isinstance(e, ir_variable.Variable)
 
-        if self.constructors:
-            # Generate record members
-            class_record = '   type %(type)s is\n   tagged limited '
-            if self.members:
-                class_record += "record\n"
-                for member in self.members:
-                    class_record += "      " + member.AdaSpecification() + ";\n"
-                class_record += "   end record\n"
-            else:
-                class_record += "null record\n"
-            class_record += "   with Import => CPP;\n"
-            class_record = class_record  % { 'type': self.ConvertName(self.name) }
+        class_record = '   type %(type)s is\n   tagged limited '
+        class_record += "record\n"
+        for member in filter(isVar, self.children) or [null]:
+            class_record += "      " + member.AdaSpecification() + ";\n"
+        class_record += "   end record\n"
+        class_record += "   with Import => CPP;\n"
+        class_record = class_record  % { 'type': self.ConvertName(self.name) }
 
-            # generate constructors
-            constructors = [
-                ('   function Constructor%(args)s return %(type)s;\n' + \
-                 '   pragma Cpp_Constructor (Constructor, "%(symbol)s");\n') \
-                   % { 'type':   self.ConvertName(self.name),
-                       'symbol': constructor.symbol,
-                       'args' : " (" + "; ".join([
-                           self.ConvertName(arg.name) +
-                           " : " +
-                           arg.ctype.name.PackageBaseName()
-                           for arg in constructor.parameters]) + ")"
-                       if constructor.parameters else ""} for constructor in self.constructors]
+        # Generate functions and procedures
+        isOp = lambda e: isinstance(e, ir_function.Function) or isinstance(e, ir_function.Constructor)
+        ops = filter(isOp, self.children)
 
-            # generate primitive operations for tagged type
-            ops=""
-            if self.functions:
-                for f in self.functions:
-                    ops += "   " + f.AdaSpecification()
-
-        enums = ""
-        for e in self.enums:
-            enums += "   " + e.AdaSpecification() + ";\n"
-            if e.HasValues():
-                enums += "   " + e.AdaRepresentation() + ";\n"
-
-        constants = ""
-        for c in self.constants:
-            constants += "   " + c.AdaSpecification() + "\n"
+        # Generate constants
+        isConst = lambda e: isinstance(e, ir_constant.Constant) or isinstance(e, ir_enum.Enum)
+        constants = filter(isConst, self.children)
 
         # Main package structure
         p = \
@@ -108,16 +72,15 @@ class Class(ir.Base):
             'package %(package)s\n'                     + \
             'is\n'                                      + \
             '%(constants)s'                             + \
-            '%(enums)s'                                 + \
             '%(record)s'                                + \
-            '%(constructors)s'                           + \
             '%(ops)s'                                   + \
             'end %(package)s;\n'
 
+        specOf = lambda obj: "   " + obj.AdaSpecification() + (
+                (";\n   " + obj.AdaRepresentation() + ";") if isinstance(obj, ir_enum.Enum) and obj.has_values else ";")
+
         return p % { 'withs':       withs,
                      'package':     ".".join([self.ConvertName(name) for name in self.FullyQualifiedName()]),
-                     'constants':   constants,
-                     'enums':       enums,
+                     'constants':   "\n".join(map(specOf, constants) + [""]),
                      'record':      class_record,
-                     'constructors': "".join(constructors),
-                     'ops':         ops }
+                     'ops':         "".join(["   " + o.AdaSpecification() for o in ops]) }

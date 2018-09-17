@@ -36,3 +36,18 @@ class Function(ir.Base):
 
         return result
 
+class Constructor(Function):
+
+    def __init__(self, symbol, parameters=None):
+        self.symbol = symbol
+        self.parameters = parameters or []
+        super(Constructor, self).__init__("__constructor__", symbol, parameters, None)
+
+    def __repr__(self):
+        return "Constructor(symbol={}, parameters={})".format(
+                self.symbol, self.parameters)
+
+    def AdaSpecification(self):
+        return "function Constructor{} return {};\n   pragma Cpp_Constructor (Constructor, \"{}\");\n".format(
+                " ({})".format("; ".join([p.AdaSpecification() for p in self.parameters])) if self.parameters else "",
+                           self.ConvertName(self.parent.name), self.symbol)

@@ -1,7 +1,9 @@
 package Foo.Brabbel
 is
    type Brabbel is
-   tagged limited null record
+   tagged limited record
+      null;
+   end record
    with Import => CPP;
    function Constructor return Brabbel;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
