@@ -9,24 +9,15 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, constructors=None, members=None, functions=None, constants=None, enums=None):
+    def __init__(self, name, children=None):
 
         super(Class, self).__init__()
-        self.name         = name
-        self.constructors = constructors or [ir_function.Function(name = name, symbol = "")]
-        self.members      = members or []
-        self.functions    = functions or []
-        self.constants    = constants or []
-        self.enums        = enums or []
-        self._parentize_list(self.constructors)
-        self._parentize_list(self.members)
-        self._parentize_list(self.functions)
-        self._parentize_list(self.constants)
-        self._parentize_list(self.enums)
+        self.name       = name
+        self.children   = children or []
+        self._parentize_list(self.children)
 
     def __repr__(self):
-        return "Class(name={}, constructors={}, members={}, functions={}, constants={}, enums={})".format(
-                self.name, self.constructors, self.members, self.functions, self.constants, self.enums)
+        return "Class(name={}, children={})".format(self.name, self.children)
 
     def UsedPackages(self):
         types = []

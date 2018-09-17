@@ -25,12 +25,18 @@ class CXX:
                 name = cursor.displayname,
                 children = self.__convert_children(cursor.get_children()))
 
-    def __convert_function(self, cursors):
+    def __convert_function(self, cursor):
         return IR.Function(
                 name = cursor.spelling,
                 symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()),
                 return_type = self.__convert_type(cursor.result_type))
+
+    def __convert_constructor(self, cursor):
+        return IR.Constructor(
+                name = cursor.spelling,
+                symbol = "",
+                parameters = self.__convert_arguments(cursor.get_children()))
 
     def __resolve_name(self, cursor):
         identifier = []
@@ -97,7 +103,7 @@ class CXX:
                 argc += 1
         return argv
 
-    def __convert_member(self, cursors):
+    def __convert_member(self, cursor):
         return IR.Variable(name = cursor.displayname, ctype = self.__convert_type(cursor.type))
 
     def __convert_constant(self, cursor):
@@ -107,7 +113,7 @@ class CXX:
                 name = cursor.displayname,
                 value = cursor.enum_value)
 
-    def __convert_enum(self, cursors):
+    def __convert_enum(self, cursor):
         return IR.Enum(
                     name = cursor.displayname,
                     children = [self.__convert_constant(constant) for constant in cursor.get_children()])
@@ -123,9 +129,9 @@ class CXX:
     def __convert_typedef(self, cursor):
         children = list(cursor.get_children())
         if children:
-            resolved = self.__parse_type(children[0].type)
+            resolved = self.__convert_type(children[0].type)
         else:
-            resolved = self.__parse_type(cursor.type.get_canonical())
+            resolved = self.__convert_type(cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
 
     def __convert_children(self, cursors):
@@ -134,7 +140,7 @@ class CXX:
         for cursor in cursors:
             if cursor.kind == clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL:
                 public = list(cursor.get_tokens())[0].spelling == "public"
-            if public:
+            elif public:
                 if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
                     children.append(self.__convert_namespace(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
@@ -143,7 +149,7 @@ class CXX:
                     if cursor.displayname:
                         children.append(self.__convert_enum(cursor))
                     else:
-                        [children.append(self.__convert_constant(constant)) for constant in cursor.get_children]
+                        [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
                 elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                     children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
@@ -152,8 +158,11 @@ class CXX:
                     children.append(self.__convert_member(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                     children.append(self.__convert_typedef(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
+                    children.append(self.__convert_constructor(cursor))
                 else:
                     raise ValueError("Conversion of {} not implemented".format(cursor.kind))
+        return children
 
     def ToIR(self):
 #        self.__print_tree(self.translation_unit.cursor, 0)

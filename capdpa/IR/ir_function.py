@@ -36,3 +36,14 @@ class Function(ir.Base):
 
         return result
 
+class Constructor(Function):
+
+    def __init__(self, name, symbol, parameters=None):
+        self.name = name
+        self.symbol = symbol
+        self.parameters = parameters or []
+        super(Constructor, self).__init__( name, symbol, parameters, None)
+
+    def __repr__(self):
+        return "Constructor(name={}, symbol={}, parameters={})".format(
+                self.name, self.symbol, self.parameters)

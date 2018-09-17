@@ -2,20 +2,20 @@ import ir
 
 class Enum(ir.Base):
 
-    def __init__(self, name, constants=None):
+    def __init__(self, name, children=None):
         super(Enum, self).__init__()
         self.name       = name
-        self.constants  = constants or []
-        self._parentize_list(self.constants)
+        self.children  = children or []
+        self._parentize_list(self.children)
         self.has_values = False
 
-        for c in self.constants:
+        for c in self.children:
             if c.value:
                 self.has_values = True
 
     def __repr__(self):
-        return "Enum(name={}, constants={})".format(
-                self.name, self.constants)
+        return "Enum(name={}, children={})".format(
+                self.name, self.children)
 
     def HasValues(self):
         return self.has_values
@@ -23,7 +23,7 @@ class Enum(ir.Base):
     def AdaSpecification(self):
         result = "type " + self.ConvertName(self.name) + " is ("
         first = True
-        for c in self.constants:
+        for c in self.children:
             if not first:
                 result += ", "
             first = False
@@ -34,7 +34,7 @@ class Enum(ir.Base):
     def AdaRepresentation(self):
         result = "for " + self.ConvertName(self.name) + " use ("
         first = True
-        for c in self.constants:
+        for c in self.children:
             if not first:
                 result += ", "
             first = False

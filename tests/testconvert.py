@@ -44,10 +44,10 @@ class Parser(unittest.TestCase):
                 children = [Constant(name = "ONE", value = 1),
                     Constant(name = "TWO", value = 2),
                     Constant(name = "THREE", value = 3),
-                    [Enum(name = "NEGATIVE", children = [
+                    Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_ONE", value = -1),
                         Constant(name = "MINUS_TWO", value = -2),
-                        Constant(name = "MINUS_THREE", value = -3)])]])]
+                        Constant(name = "MINUS_THREE", value = -3)])])]
         result = CXX("tests/data/test_class_with_constants.h").ToIR()
         self.assertEqual(result, expected, "Expected \n" + str(expected) + "\n got \n" + str(result))
 
@@ -68,8 +68,8 @@ class Parser(unittest.TestCase):
                     Function(name = "named_param", symbol = "", parameters = [
                         Variable (name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"])))],
                         return_type = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))
-                        )],
-                constructors = [Function(name = "With_functions", symbol = "")])]
+                        ),
+                    Constructor(name = "With_functions", symbol = "")])]
         result = CXX("tests/data/test_class_with_functions.h").ToIR()
         self.assertEqual(result, expected, "Expected \n" + str(expected) + "\n got \n" + str(result))
 
@@ -79,12 +79,12 @@ class Parser(unittest.TestCase):
                 children = [
                     Constant(name = "ONE", value = 1),
                     Constant(name = "TWO", value = 2),
-                    Enum(name = "NEGATIVE", constants = [
+                    Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_ONE", value = -1),
                         Constant(name = "MINUS_TWO", value = -2)]),
                     Function(name = "public_function", symbol = ""),
                     Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))),
-                    Function(name = "With_everything", symbol = "")])])]
+                    Constructor(name = "With_everything", symbol = "")])])]
         result = CXX("tests/data/test_namespace_with_class_with_everything.h").ToIR()
         self.assertEqual(result, expected, "Expected \n" + str(expected) + "\n got \n" + str(result))
 

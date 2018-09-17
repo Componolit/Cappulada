@@ -2,21 +2,14 @@ import ir
 
 class Namespace(ir.Base):
 
-    def __init__(self, name, namespaces=None, classes=None, constants=None, enums=None):
+    def __init__(self, name, children=None):
         self.name = name
-        self.namespaces = namespaces or []
-        self.classes = classes or []
-        self.constants = constants or []
-        self.enums = enums or []
-        self._parentize_list(self.namespaces)
-        self._parentize_list(self.classes)
-        self._parentize_list(self.constants)
-        self._parentize_list(self.enums)
+        self.children = children or []
+        self._parentize_list(self.children)
         super(Namespace, self).__init__()
 
     def __repr__(self):
-        return "Namespace(name={}, namespaces={}, classes={}, constants={}, enums={})".format(
-                self.name, self.namespaces, self.classes, self.constants, self.enums)
+        return "Namespace(name={}, children={})".format(self.name, self.children)
 
     def AdaEnumSpecification(self):
         enums = ""
