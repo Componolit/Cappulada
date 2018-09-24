@@ -18,7 +18,7 @@ class Class(ir.Base):
         super(Class, self).__init__()
         self.name       = name
         self.children   = children or []
-        if not filter(lambda c: isinstance(c, ir_function.Constructor), self.children):
+        if not filter(ir_function.Constructor.isInst, self.children):
             self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
 
@@ -27,18 +27,15 @@ class Class(ir.Base):
 
     def UsedPackages(self):
         types = []
-        isFunction = lambda f: isinstance(f, ir_function.Function)
-        isVariable = lambda v: isinstance(v, ir_variable.Variable)
-        isTypedef = lambda t: isinstance(t, ir_type.Type_Definition)
         isLocalType = lambda t: t.name.PackagePath() and t.name.PackagePath() != self.FullyQualifiedName()
 
-        for f in filter(isFunction, self.children):
+        for f in filter(ir_function.Function.isInst, self.children):
             map(lambda p: types.append(p.ctype), f.parameters)
             if f.return_type:
                 types.append(f.return_type)
 
-        map(lambda v: types.append(v.ctype), filter(isVariable, self.children))
-        map(lambda t: types.append(t.reference), filter(isTypedef, self.children))
+        map(lambda v: types.append(v.ctype), filter(ir_variable.Variable.isInst, self.children))
+        map(lambda t: types.append(t.reference), filter(ir_type.Type_Definition.isInst, self.children))
 
         return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
 
@@ -53,26 +50,24 @@ class Class(ir.Base):
 
         # Generate record members
         null = type("", (), dict(AdaSpecification=lambda self, indentation: " " * indentation + "null"))()
-        isVar = lambda e: isinstance(e, ir_variable.Variable)
 
         class_record = '   type Class is\n   tagged limited '
         class_record += "record\n"
-        for member in filter(isVar, self.children) or [null]:
+        for member in filter(ir_variable.Variable.isInst, self.children) or [null]:
             class_record += member.AdaSpecification(indentation=6) + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"
 
         # Generate functions and procedures
-        isOp = lambda e: isinstance(e, ir_function.Function) or isinstance(e, ir_function.Constructor)
+        isOp = lambda e: ir_function.Function.isInst(e) or ir_function.Constructor.isInst(e)
         ops = filter(isOp, self.children)
 
         # Generate constants
-        isConst = lambda e: isinstance(e, ir_constant.Constant) or isinstance(e, ir_enum.Enum)
+        isConst = lambda e: ir_constant.Constant.isInst(e) or ir_enum.Enum.isInst(e)
         constants = filter(isConst, self.children)
 
         # Generate typedefs
-        isTypedef = lambda t: isinstance(t, ir_type.Type_Definition)
-        types = filter(isTypedef, self.children)
+        types = filter(ir_type.Type_Definition.isInst, self.children)
 
         # Main package structure
         p = \

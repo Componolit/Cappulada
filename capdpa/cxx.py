@@ -69,7 +69,7 @@ class CXX:
         if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
             return IR.Type_Reference(name = IR.Identifier(self.__resolve_name(type_cursor.get_declaration())), pointer = ptr)
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
-            return IR.Type_Reference(name = IR.Identifier(["void"]), pointer = ptr)
+            return IR.Type_Reference(name = IR.Identifier(["void"]), pointer = ptr) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr)
         elif type_cursor.kind in TypeMap.keys():

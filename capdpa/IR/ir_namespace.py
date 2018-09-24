@@ -25,7 +25,7 @@ class Namespace(ir.Base):
                     "\n".join([""] + map(
                         lambda c: c.AdaSpecification(indentation=3),
                         filter(
-                            lambda c: isinstance(c, ir_constant.Constant) or isinstance(c, ir_enum.Enum) or isinstance(c, ir_type.Type_Definition),
+                            lambda c: ir_constant.Constant.isInst(c) or ir_enum.Enum.isInst(c) or ir_type.Type_Definition.isInst(c),
                             self.children)))
                 )]
         for p in self.children:

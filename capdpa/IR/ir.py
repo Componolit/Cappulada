@@ -27,6 +27,10 @@ class Base(object):
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)
 
+    @classmethod
+    def isInst(cls, obj):
+        return isinstance(obj, cls)
+
     def SetParent(self, parent):
         self.parent = parent
 

@@ -10,7 +10,7 @@ class Function(ir.Base):
         self.symbol = symbol
         self.parameters = parameters or []
         self._parentize_list(self.parameters)
-        self.return_type = return_type or ir_type.Type_Reference(ir_identifier.Identifier(["void"]))
+        self.return_type = return_type
 
     def __repr__(self):
         return "Function(name={}, symbol={}, parameters={}, return_type={})".format(
