@@ -39,7 +39,7 @@ class Class(ir.Base):
 
         return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
 
-    def AdaSpecification(self):
+    def AdaSpecification(self, indentation=0):
 
         # Generate with statements
         withs = ""
@@ -49,13 +49,13 @@ class Class(ir.Base):
             withs += "\n"
 
         # Generate record members
-        null = type("", (), dict(AdaSpecification=lambda self: "null"))()
+        null = type("", (), dict(AdaSpecification=lambda self, indentation: " " * indentation + "null"))()
         isVar = lambda e: isinstance(e, ir_variable.Variable)
 
         class_record = '   type Class is\n   tagged limited '
         class_record += "record\n"
         for member in filter(isVar, self.children) or [null]:
-            class_record += "      " + member.AdaSpecification() + ";\n"
+            class_record += member.AdaSpecification(indentation=6) + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"
 
@@ -77,11 +77,8 @@ class Class(ir.Base):
             '%(ops)s'                                   + \
             'end %(package)s;\n'
 
-        specOf = lambda obj: "   " + obj.AdaSpecification() + (
-                (";\n   " + obj.AdaRepresentation() + ";") if isinstance(obj, ir_enum.Enum) and obj.has_values else ";")
-
         return p % { 'withs':       withs,
-                     'package':     ".".join([self.ConvertName(name) for name in self.FullyQualifiedName()]),
-                     'constants':   "\n".join(map(specOf, constants) + [""]),
+                     'package':     ".".join(map(self.ConvertName, self.FullyQualifiedName())),
+                     'constants':   "\n".join(map(lambda c: c.AdaSpecification(indentation=3), constants) + [""]),
                      'record':      class_record,
-                     'ops':         "".join(["   " + o.AdaSpecification() for o in ops]) }
+                     'ops':         "".join(map(lambda o: o.AdaSpecification(indentation=3), ops)) }

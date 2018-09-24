@@ -84,5 +84,5 @@ class Base(object):
 
         return tmp
 
-    def AdaSpecification(self):
+    def AdaSpecification(self, indentation=0):
 	raise NoSerializationDefined

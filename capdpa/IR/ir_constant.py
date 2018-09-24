@@ -2,7 +2,7 @@ import ir
 
 class Constant(ir.Base):
 
-    def __init__(self, name, value=None):
+    def __init__(self, name, value):
         super(Constant, self).__init__()
         self.name = name
         self.value = value
@@ -11,5 +11,5 @@ class Constant(ir.Base):
         return "Constant(name={}, value={})".format(
                 self.name, self.value)
 
-    def AdaSpecification(self):
-        return self.ConvertName(self.name) + " : constant := " + str(self.value)
+    def AdaSpecification(self, indentation=0):
+        return " " * indentation + self.ConvertName(self.name) + " : constant := " + str(self.value) + ";"

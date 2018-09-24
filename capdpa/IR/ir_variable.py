@@ -11,8 +11,8 @@ class Variable(ir.Base):
         return "Variable(name={}, ctype={})".format(
                 self.name, self.ctype)
 
-    def AdaSpecification(self):
-        return "%(name)s : %(type)s" % \
+    def AdaSpecification(self, indentation=0):
+        return " " * indentation + "%(name)s : %(type)s" % \
                { 'name': self.ConvertName(self.name),
                  'type': self.ctype.AdaSpecification() }
 

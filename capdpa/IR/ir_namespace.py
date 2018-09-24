@@ -14,31 +14,17 @@ class Namespace(ir.Base):
     def __repr__(self):
         return "Namespace(name={}, children={})".format(self.name, self.children)
 
-    def AdaEnumSpecification(self):
-        enums = ""
-        for e in self.enums:
-            enums += "   " + e.AdaSpecification() + ";\n"
-            if e.HasValues():
-                enums += "   " + e.AdaRepresentation() + ";\n"
-        return enums
-
-    def AdaConstantSpecification(self):
-        constants = ""
-        for c in self.constants:
-            constants += "   " + c.AdaSpecification() + "\n"
-        return constants
-
-    def AdaSpecification(self):
-        fqn_ada = ".".join([self.ConvertName(name) for name in self.FullyQualifiedName()])
-        indent = lambda line: "   " + line
+    def AdaSpecification(self, indentation=0):
+        fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
         compilation_units = [
-                "package {}\nis{}\nend {};\n"
+                "package {0}\nis{1}\nend {0};\n"
                 .format(
                     fqn_ada,
-                    "\n".join([""] + map(indent, [c.AdaSpecification() + ";" for c in self.children if
-                        isinstance(c, ir_constant.Constant) or
-                        isinstance(c, ir_enum.Enum)])),
-                    fqn_ada
+                    "\n".join([""] + map(
+                        lambda c: c.AdaSpecification(indentation=3),
+                        filter(
+                            lambda c: isinstance(c, ir_constant.Constant) or isinstance(c, ir_enum.Enum),
+                            self.children)))
                 )]
         for p in self.children:
             if isinstance(p, Namespace):

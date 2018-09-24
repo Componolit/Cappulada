@@ -16,9 +16,9 @@ class Function(ir.Base):
         return "Function(name={}, symbol={}, parameters={}, return_type={})".format(
                 self.name, self.symbol, self.parameters, self.return_type)
 
-    def AdaSpecification(self):
+    def AdaSpecification(self, indentation=0):
 
-        result = "function " if self.return_type else "procedure "
+        result = " " * indentation + "function " if self.return_type else "procedure "
         result += self.ConvertName(self.name)
 
         if self.parameters:
@@ -32,7 +32,7 @@ class Function(ir.Base):
             result += ")"
 
         result += " return " + self.return_type.AdaSpecification() + "\n"
-        result += '   with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
+        result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
 
         return result
 
@@ -47,7 +47,8 @@ class Constructor(Function):
         return "Constructor(symbol={}, parameters={})".format(
                 self.symbol, self.parameters)
 
-    def AdaSpecification(self):
-        return "function Constructor{} return Class;\n   pragma Cpp_Constructor (Constructor, \"{}\");\n".format(
+    def AdaSpecification(self, indentation=0):
+        return "{0}function Constructor{1} return Class;\n{0}pragma Cpp_Constructor (Constructor, \"{2}\");\n".format(
+                " " * indentation,
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)

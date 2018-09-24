@@ -14,8 +14,8 @@ class Type_Reference(ir.Base):
                 self.pointer,
                 self.builtin)
 
-    def AdaSpecification(self):
-        return self.name.PackageFullName()
+    def AdaSpecification(self, indentation=0):
+        return " " * indentation + self.name.PackageFullName()
 
 
 class Type_Definition(ir.Base):
