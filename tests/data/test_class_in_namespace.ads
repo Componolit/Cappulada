@@ -4,7 +4,7 @@ is
    tagged limited record
       null;
    end record
-   with => Import, Convention => CPP;
+   with Import, Convention => CPP;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end With_Class.In_Namespace;

@@ -3,6 +3,7 @@ is
    type Enum1 is (Elem11, Elem12);
    for Enum1 use (Elem11 => 5, Elem12 => 6);
    type Enum2 is (Elem21, Elem22, Elem23);
+   for Enum2 use (Elem21 => 0, Elem22 => 1, Elem23 => 2);
    type Class is
    tagged limited record
       null;
