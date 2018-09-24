@@ -1,6 +1,6 @@
 package Foo.Brabbel
 is
-   type Brabbel is
+   type Class is
    tagged limited record
       null;
    end record

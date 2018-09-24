@@ -1,6 +1,6 @@
 package Bar.Foo.Brabbel
 is
-   type Brabbel is
+   type Class is
    tagged limited record
       Field1 : Int;
       Field2 : Long;

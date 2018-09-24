@@ -50,13 +50,12 @@ class Class(ir.Base):
         null = type("", (), dict(AdaSpecification=lambda self: "null"))()
         isVar = lambda e: isinstance(e, ir_variable.Variable)
 
-        class_record = '   type %(type)s is\n   tagged limited '
+        class_record = '   type Class is\n   tagged limited '
         class_record += "record\n"
         for member in filter(isVar, self.children) or [null]:
             class_record += "      " + member.AdaSpecification() + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"
-        class_record = class_record  % { 'type': self.ConvertName(self.name) }
 
         # Generate functions and procedures
         isOp = lambda e: isinstance(e, ir_function.Function) or isinstance(e, ir_function.Constructor)
