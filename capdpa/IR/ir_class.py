@@ -17,6 +17,8 @@ class Class(ir.Base):
         super(Class, self).__init__()
         self.name       = name
         self.children   = children or []
+        if not filter(lambda c: isinstance(c, ir_function.Constructor), self.children):
+            self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
 
     def __repr__(self):

@@ -25,7 +25,7 @@ class Base(object):
         return not self.__eq__(other)
 
     def _parentize_list(self, children):
-        [child.SetParent(self) for child in children]
+        map(lambda c: c.SetParent(self), children)
 
     def SetParent(self, parent):
         self.parent = parent
