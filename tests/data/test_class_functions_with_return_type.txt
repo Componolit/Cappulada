@@ -15,5 +15,5 @@ is
    function Constructor return Brabbel;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
    function Do_Something (Param1 : Foo.Bar; Param2 : Foo.Baz) return Blah.Some_Type
-   with Import, Convention => CPP, External_Name => "this_function_has_a_funny_symbol");
+   with Import, Convention => CPP, External_Name => "this_function_has_a_funny_symbol";
 end Bar.Foo.Brabbel;

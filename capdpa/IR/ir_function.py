@@ -32,7 +32,7 @@ class Function(ir.Base):
             result += ")"
 
         result += " return " + self.return_type.AdaSpecification() + "\n"
-        result += '   with Import => (CPP, "' + self.symbol + '");\n'
+        result += '   with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
 
         return result
 

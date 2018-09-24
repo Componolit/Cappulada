@@ -55,7 +55,7 @@ class Class(ir.Base):
         for member in filter(isVar, self.children) or [null]:
             class_record += "      " + member.AdaSpecification() + ";\n"
         class_record += "   end record\n"
-        class_record += "   with Import => CPP;\n"
+        class_record += "   with Import, Convention => CPP;\n"
         class_record = class_record  % { 'type': self.ConvertName(self.name) }
 
         # Generate functions and procedures
