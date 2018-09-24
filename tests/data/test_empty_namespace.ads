@@ -1,2 +1,3 @@
-package Empty is
+package Empty
+is
 end Empty;
