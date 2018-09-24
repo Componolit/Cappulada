@@ -2,6 +2,7 @@ import ir
 import ir_class
 import ir_constant
 import ir_enum
+import ir_type
 
 class Namespace(ir.Base):
 
@@ -16,6 +17,7 @@ class Namespace(ir.Base):
 
     def AdaSpecification(self, indentation=0):
         fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
+
         compilation_units = [
                 "package {0}\nis{1}\nend {0};\n"
                 .format(
@@ -23,7 +25,7 @@ class Namespace(ir.Base):
                     "\n".join([""] + map(
                         lambda c: c.AdaSpecification(indentation=3),
                         filter(
-                            lambda c: isinstance(c, ir_constant.Constant) or isinstance(c, ir_enum.Enum),
+                            lambda c: isinstance(c, ir_constant.Constant) or isinstance(c, ir_enum.Enum) or isinstance(c, ir_type.Type_Definition),
                             self.children)))
                 )]
         for p in self.children:

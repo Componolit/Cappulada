@@ -2,17 +2,15 @@ import ir;
 
 class Type_Reference(ir.Base):
 
-    def __init__(self, name, pointer = 0, builtin = True):
+    def __init__(self, name, pointer = 0):
         super(Type_Reference, self).__init__()
         self.name = name
         self.pointer = pointer
-        self.builtin = builtin
 
     def __repr__(self):
-        return "Type_Reference(name={}, pointer={}, builtin={})".format(
+        return "Type_Reference(name={}, pointer={})".format(
                 self.name,
-                self.pointer,
-                self.builtin)
+                self.pointer)
 
     def AdaSpecification(self, indentation=0):
         return " " * indentation + self.name.PackageFullName()
@@ -28,3 +26,9 @@ class Type_Definition(ir.Base):
     def __repr__(self):
         return "Type_Definition(name={}, reference={})".format(
                 self.name, self.reference)
+
+    def AdaSpecification(self, indentation=0):
+        return "{0}subtype {1} is {2};".format(
+                " " * indentation,
+                self.ConvertName(self.name),
+                self.reference.AdaSpecification())

@@ -3,6 +3,7 @@ import ir_constant
 import ir_enum
 import ir_function
 import ir_identifier
+import ir_type
 import ir_variable
 
 class NotImplemented(Exception):
@@ -28,6 +29,7 @@ class Class(ir.Base):
         types = []
         isFunction = lambda f: isinstance(f, ir_function.Function)
         isVariable = lambda v: isinstance(v, ir_variable.Variable)
+        isTypedef = lambda t: isinstance(t, ir_type.Type_Definition)
         isLocalType = lambda t: t.name.PackagePath() and t.name.PackagePath() != self.FullyQualifiedName()
 
         for f in filter(isFunction, self.children):
@@ -36,6 +38,7 @@ class Class(ir.Base):
                 types.append(f.return_type)
 
         map(lambda v: types.append(v.ctype), filter(isVariable, self.children))
+        map(lambda t: types.append(t.reference), filter(isTypedef, self.children))
 
         return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
 
@@ -67,11 +70,16 @@ class Class(ir.Base):
         isConst = lambda e: isinstance(e, ir_constant.Constant) or isinstance(e, ir_enum.Enum)
         constants = filter(isConst, self.children)
 
+        # Generate typedefs
+        isTypedef = lambda t: isinstance(t, ir_type.Type_Definition)
+        types = filter(isTypedef, self.children)
+
         # Main package structure
         p = \
             '%(withs)s'                                 + \
             'package %(package)s\n'                     + \
             'is\n'                                      + \
+            '%(types)s'                                 + \
             '%(constants)s'                             + \
             '%(record)s'                                + \
             '%(ops)s'                                   + \
@@ -79,6 +87,7 @@ class Class(ir.Base):
 
         return p % { 'withs':       withs,
                      'package':     ".".join(map(self.ConvertName, self.FullyQualifiedName())),
+                     'types' :      "\n".join(map(lambda t: t.AdaSpecification(indentation=3), types) + [""]),
                      'constants':   "\n".join(map(lambda c: c.AdaSpecification(indentation=3), constants) + [""]),
                      'record':      class_record,
                      'ops':         "".join(map(lambda o: o.AdaSpecification(indentation=3), ops)) }

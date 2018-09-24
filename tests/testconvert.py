@@ -58,9 +58,9 @@ class Parser(Capdpa_Test):
     def test_class_with_members(self):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_members",
                 children = [
-                    Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))),
+                    Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                     Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["void"]), pointer = 1)),
-                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "C_float"])))])])
+                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])))])])
         result = CXX("tests/data/test_class_with_members.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -68,10 +68,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_functions",
                 children = [
                     Function(name = "public_function", symbol = "", parameters = [
-                        Variable (name = "arg1", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"])))]),
+                        Variable (name = "arg1", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                     Function(name = "named_param", symbol = "", parameters = [
-                        Variable (name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"])))],
-                        return_type = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))
+                        Variable (name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                        return_type = Type_Reference(name = Identifier(["Capdpa", "int"]))
                         ),
                     Constructor(symbol = "")])])
         result = CXX("tests/data/test_class_with_functions.h").ToIR(project="Capdpa")
@@ -87,7 +87,7 @@ class Parser(Capdpa_Test):
                         Constant(name = "MINUS_ONE", value = -1),
                         Constant(name = "MINUS_TWO", value = -2)]),
                     Function(name = "public_function", symbol = ""),
-                    Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "Types", "int"]))),
+                    Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                     Constructor(symbol = "")])])])
         result = CXX("tests/data/test_namespace_with_class_with_everything.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -98,8 +98,8 @@ class Parser(Capdpa_Test):
                     children = [Class(name = "In_namespace")]),
                 Class(name = "Full",
                     children = [
-                        Variable(name = "value", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]), builtin = False)),
-                        Variable(name = "value_ptr", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]), pointer = 1, builtin = False))
+                        Variable(name = "value", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]))),
+                        Variable(name = "value_ptr", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]), pointer = 1))
                     ])])
         result = CXX("tests/data/test_class_with_class_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -108,10 +108,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
                 Type_Definition(
                     name="uint8_t",
-                    reference=Type_Reference(name=Identifier(name=["Capdpa", "Types", "unsigned_char"]), pointer=0, builtin=True)),
+                    reference=Type_Reference(name=Identifier(name=["Capdpa", "unsigned_char"]), pointer=0)),
                 Type_Definition(
                     name="int32_t",
-                    reference=Type_Reference(name=Identifier(name=["Capdpa", "Types", "int"]), pointer=0, builtin=True)),
-                Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0, builtin=False))])
+                    reference=Type_Reference(name=Identifier(name=["Capdpa", "int"]), pointer=0)),
+                Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0))])
         result = CXX("tests/data/test_types.h").ToIR(project="Capdpa")
         self.check(result, expected)

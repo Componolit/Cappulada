@@ -73,3 +73,7 @@ class check_integration(Capdpa_Test):
             "test_namespace_with_class.ads",
             "test_class_in_namespace.ads",
             "test_class_with_class_type.ads"])
+
+    def test_types(self):
+        self.check_integration("test_types.h", [
+            "test_capdpa_with_types.ads"])
