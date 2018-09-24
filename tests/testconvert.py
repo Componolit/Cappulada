@@ -32,8 +32,11 @@ class Parser(Capdpa_Test):
 
     def test_namespace_with_enum(self):
         expected = [Namespace (name = "With_enum",
-                children = [Enum(name = "Constants",
-                    children = [
+                children = [
+                    Enum(name = "WEEKEND", children = [
+                        Constant(name = "SATURDAY", value = 0),
+                        Constant(name = "SUNDAY", value = 1)]),
+                    Enum(name = "Constants", children = [
                         Constant(name = "ONE", value = 1),
                         Constant(name = "TWO", value = 2),
                         Constant(name = "THREE", value = 3)])])]

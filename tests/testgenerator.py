@@ -8,43 +8,43 @@ class GenerateConstant(Capdpa_Test):
 
     def test_simple_constant(self):
         result = Constant("whats_the_question", 42).AdaSpecification()
-        self.check(result, "Whats_The_Question : constant := 42")
+        self.check(result, "Whats_The_Question : constant := 42;")
 
     def test_simple_negative_constant(self):
         result = Constant("negative", -42).AdaSpecification()
-        self.check(result, "Negative : constant := -42")
+        self.check(result, "Negative : constant := -42;")
 
     def test_identifier_escape_begin(self):
         result = Constant("_invalid", 0).AdaSpecification()
-        self.check(result, "X_Invalid : constant := 0")
+        self.check(result, "X_Invalid : constant := 0;")
 
     def test_identifier_escape_begin_digit(self):
         result = Constant("42invalid", 0).AdaSpecification()
-        self.check(result, "X42invalid : constant := 0")
+        self.check(result, "X42invalid : constant := 0;")
 
     def test_identifier_escape_end(self):
         result = Constant("invalid_", 0).AdaSpecification()
-        self.check(result, "Invalid_X : constant := 0")
+        self.check(result, "Invalid_X : constant := 0;")
 
     def test_identifier_double_underscore(self):
         result = Constant("inv__alid", 0).AdaSpecification()
-        self.check(result, "Inv_X_Alid : constant := 0")
+        self.check(result, "Inv_X_Alid : constant := 0;")
 
     def test_identifier_multiple_underscores(self):
         result = Constant("inv____alid", 0).AdaSpecification()
-        self.check(result, "Inv_X_X_X_Alid : constant := 0")
+        self.check(result, "Inv_X_X_X_Alid : constant := 0;")
 
     def test_identifier_reserved_word1(self):
         result = Constant("begin", 0).AdaSpecification()
-        self.check(result, "X_Begin : constant := 0")
+        self.check(result, "X_Begin : constant := 0;")
 
     def test_identifier_reserved_word2(self):
         result = Constant("while", 0).AdaSpecification()
-        self.check(result, "X_While : constant := 0")
+        self.check(result, "X_While : constant := 0;")
 
     def test_unsupported_character(self):
         result = Constant("Thüringer_Klöße", 0).AdaSpecification()
-        self.check(result, "Thc3bcringer_Klc3b6c39fe : constant := 0")
+        self.check(result, "Thc3bcringer_Klc3b6c39fe : constant := 0;")
 
     def test_class_simple(self):
         expected_class = self.load("test_class_simple.txt")
@@ -135,7 +135,7 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[0], bar)
 
     def test_constant(self):
-        self.check(Constant("someconstant", 123).AdaSpecification(), "Someconstant : constant := 123")
+        self.check(Constant("someconstant", 123).AdaSpecification(), "Someconstant : constant := 123;")
 
     def test_namespace_with_constants(self):
         expected = self.load("test_namespace_with_constants.txt")
@@ -181,9 +181,9 @@ class GenerateConstant(Capdpa_Test):
 
     def test_enumeration(self):
         result = Enum(name      = "foo",
-                      children  = [Constant(name = "elem1"),
-                                   Constant(name = "elem2")]).AdaSpecification()
-        self.check(result, "type Foo is (Elem1, Elem2)")
+                      children  = [Constant(name = "elem1", value = 0),
+                                   Constant(name = "elem2", value = 1)]).AdaSpecification()
+        self.check(result, "type Foo is (Elem1, Elem2);\nfor Foo use (Elem1 => 0, Elem2 => 1);")
 
     def test_class_with_enum(self):
         expected = self.load("test_class_with_enum.txt")
@@ -198,9 +198,9 @@ class GenerateConstant(Capdpa_Test):
                         Constant("Elem11", 5),
                         Constant("Elem12", 6)]),
                     Enum(name = "enum2", children = [
-                        Constant("Elem21"),
-                        Constant("Elem22"),
-                        Constant("Elem23")])]
+                        Constant("Elem21", 0),
+                        Constant("Elem22", 1),
+                        Constant("Elem23", 2)])]
                     )])]).AdaSpecification()
 
         self.check(result[2], expected)
@@ -210,8 +210,8 @@ class GenerateConstant(Capdpa_Test):
     def test_enum_representation(self):
         result = Enum(name      = "foo",
                       children  = [Constant(name = "elem1", value = 50),
-                                   Constant(name = "elem2", value = 1234)]).AdaRepresentation()
-        self.check(result, "for Foo use (Elem1 => 50, Elem2 => 1234)")
+                                   Constant(name = "elem2", value = 1234)]).AdaSpecification()
+        self.check(result, "type Foo is (Elem1, Elem2);\nfor Foo use (Elem1 => 50, Elem2 => 1234);")
 
     def test_class_multiple_constructors(self):
         expected = self.load("test_class_multiple_constructors.txt")
