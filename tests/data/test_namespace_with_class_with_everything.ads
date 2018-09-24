@@ -1,4 +1,4 @@
-package With_Class.With_Everything
+package Capdpa.With_Class.With_Everything
 is
    One : constant := 1;
    Two : constant := 2;
@@ -14,4 +14,4 @@ is
    with Import, Convention => CPP, External_Name => "";
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end With_Class.With_Everything;
+end Capdpa.With_Class.With_Everything;

@@ -160,8 +160,11 @@ class CXX:
                     raise ValueError("Conversion of {} not implemented".format(cursor.kind))
         return children
 
-    def ToIR(self):
+    def ToIR(self, project):
 #        self.__print_tree(self.translation_unit.cursor, 0)
         if self.translation_unit.cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
             raise InvalidNodeError
-        return self.__convert_children(self.translation_unit.cursor.get_children())
+        return IR.Namespace(
+                name=project,
+                children = self.__convert_children(self.translation_unit.cursor.get_children())
+                )

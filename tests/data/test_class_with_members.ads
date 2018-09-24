@@ -1,5 +1,5 @@
 with System;
-package With_Members
+package Capdpa.With_Members
 is
    type Class is
    tagged limited record
@@ -10,4 +10,4 @@ is
    with Import => CPP;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end With_Members;
+end Capdpa.With_Members;

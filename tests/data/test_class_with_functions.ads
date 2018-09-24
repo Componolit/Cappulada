@@ -1,4 +1,4 @@
-package With_Functions
+package Capdpa.With_Functions
 is
    type Class is
    tagged limited record
@@ -11,4 +11,4 @@ is
    with Import, Convention => CPP, External_Name => "";
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end With_Functions;
+end Capdpa.With_Functions;
