@@ -6,6 +6,6 @@ is
       Field2 : Long;
    end record
    with Import, Convention => CPP;
-   function Constructor return Brabbel;
+   function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
 end Bar.Foo.Brabbel;

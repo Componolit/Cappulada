@@ -11,6 +11,6 @@ is
       Field4 : Bar.Foo.Brabbel.Some_Type;
    end record
    with Import, Convention => CPP;
-   function Constructor return Brabbel;
+   function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
 end Bar.Foo.Brabbel;

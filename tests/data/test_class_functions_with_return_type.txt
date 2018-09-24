@@ -12,7 +12,7 @@ is
       Field3 : Bar.Foo.Blub.Some_Type;
    end record
    with Import, Convention => CPP;
-   function Constructor return Brabbel;
+   function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "SYM_FIXME");
    function Do_Something (Param1 : Foo.Bar; Param2 : Foo.Baz) return Blah.Some_Type
    with Import, Convention => CPP, External_Name => "this_function_has_a_funny_symbol";
