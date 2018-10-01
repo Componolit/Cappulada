@@ -115,3 +115,19 @@ class Parser(Capdpa_Test):
                 Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0))])
         result = CXX("tests/data/test_types.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_template(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "Container_T_int_char", children = [
+                Variable(name = "A", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"]))),
+                Variable(name = "B", ctype = Type_Reference(name = Identifier(["Capdpa", "Char"])))]),
+            Class(name = "Container_T_int_int", children = [
+                Variable(name = "A", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"]))),
+                Variable(name = "B", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))]),
+            Class(name = "User", children = [
+                Variable(name = "cic", ctype = Type_Reference(name = Identifier(["Capdpa", "Container_T_int_char"]))),
+                Variable(name = "cii", ctype = Type_Reference(name = Identifier(["Capdpa", "Container_T_int_int"]))),
+                Variable(name = "cic2", ctype = Type_Reference(name = Identifier(["Capdpa", "Container_T_int_char"])))
+                ])])
+        result = CXX("tests/data/test_with_template.h").ToIR(project="Capdpa")
+        self.check(result, expected)
