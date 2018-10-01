@@ -1,13 +1,14 @@
 with System;
+
 package Capdpa.With_Members
 is
    type Class is
    tagged limited record
-      Public_Int : Integer;
+      Public_Int : Capdpa.Int;
       Public_Pointer : System.Address;
-      Public_Float : Float;
+      Public_Float : Capdpa.C_Float;
    end record
-   with Import => CPP;
+   with Import, Convention => CPP;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end Capdpa.With_Members;

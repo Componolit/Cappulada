@@ -13,7 +13,7 @@ class Type_Reference(ir.Base):
                 self.pointer)
 
     def AdaSpecification(self, indentation=0):
-        return " " * indentation + self.name.PackageFullName()
+        return " " * indentation + ("access " if self.pointer else "") + self.name.PackageFullName()
 
 
 class Type_Definition(ir.Base):

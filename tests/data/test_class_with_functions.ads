@@ -5,9 +5,9 @@ is
       null;
    end record
    with Import, Convention => CPP;
-   procedure Public_Function (Arg1 : Integer);
+   procedure Public_Function (Arg1 : Capdpa.Int)
    with Import, Convention => CPP, External_Name => "";
-   function Named_Param (Param : Integer) return Integer
+   function Named_Param (Param : Capdpa.Int) return Capdpa.Int
    with Import, Convention => CPP, External_Name => "";
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");

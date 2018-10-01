@@ -67,9 +67,11 @@ class CXX:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
         if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
-            return IR.Type_Reference(name = IR.Identifier(self.__resolve_name(type_cursor.get_declaration())), pointer = ptr)
+            return IR.Type_Reference(
+                    name = IR.Identifier(["Capdpa"] + self.__resolve_name(type_cursor.get_declaration()) + ["Class"]),
+                    pointer = ptr)
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
-            return IR.Type_Reference(name = IR.Identifier(["void"]), pointer = ptr) if ptr else None
+            return IR.Type_Reference(name = IR.Identifier(["System", "Address"]), pointer = ptr - 1) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr)
         elif type_cursor.kind in TypeMap.keys():

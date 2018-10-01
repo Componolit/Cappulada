@@ -27,7 +27,7 @@ class Class(ir.Base):
 
     def UsedPackages(self):
         types = []
-        isLocalType = lambda t: t.name.PackagePath() and t.name.PackagePath() != self.FullyQualifiedName()
+        isLocalType = lambda t: t.name.PackagePath() and self.FullyQualifiedName()[:len(t.name.PackagePath())] != t.name.PackagePath()
 
         for f in filter(ir_function.Function.isInst, self.children):
             map(lambda p: types.append(p.ctype), f.parameters)

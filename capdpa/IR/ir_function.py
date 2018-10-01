@@ -18,7 +18,7 @@ class Function(ir.Base):
 
     def AdaSpecification(self, indentation=0):
 
-        result = " " * indentation + "function " if self.return_type else "procedure "
+        result = " " * indentation + ("function " if self.return_type else "procedure ")
         result += self.ConvertName(self.name)
 
         if self.parameters:
@@ -31,7 +31,7 @@ class Function(ir.Base):
                 result += p.AdaSpecification()
             result += ")"
 
-        result += " return " + self.return_type.AdaSpecification() + "\n"
+        result += (" return " + self.return_type.AdaSpecification() + "\n") if self.return_type else "\n"
         result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
 
         return result

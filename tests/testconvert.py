@@ -59,7 +59,7 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_members",
                 children = [
                     Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["void"]), pointer = 1)),
+                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["System", "Address"]), pointer = 0)),
                     Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])))])])
         result = CXX("tests/data/test_class_with_members.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -98,8 +98,8 @@ class Parser(Capdpa_Test):
                     children = [Class(name = "In_namespace")]),
                 Class(name = "Full",
                     children = [
-                        Variable(name = "value", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]))),
-                        Variable(name = "value_ptr", ctype = Type_Reference(name = Identifier(["With_class", "In_namespace"]), pointer = 1))
+                        Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]))),
+                        Variable(name = "value_ptr", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]), pointer = 1))
                     ])])
         result = CXX("tests/data/test_class_with_class_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
