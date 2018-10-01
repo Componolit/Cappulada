@@ -56,7 +56,7 @@ class CXX:
 
     def __resolve_name(self, cursor):
         identifier = []
-        while cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
+        while cursor and cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
             identifier.append(cursor.spelling)
             cursor = cursor.semantic_parent
         return list(reversed(identifier))
@@ -67,9 +67,15 @@ class CXX:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
         if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
-            return IR.Type_Reference(
-                    name = IR.Identifier(["Capdpa"] + self.__resolve_name(type_cursor.get_declaration()) + ["Class"]),
-                    pointer = ptr)
+            decl = type_cursor.get_declaration()
+            if decl.kind == clang.cindex.CursorKind.CLASS_DECL:
+                return IR.Type_Reference(
+                        name = IR.Identifier(["Capdpa"] + self.__resolve_name(type_cursor.get_declaration()) + ["Class"]),
+                        pointer = ptr)
+            elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
+                return IR.Template_Argument(type_cursor.spelling)
+            else:
+                NotImplementedError("Unsupported declaration kind {}".format(decl.kind))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
             return IR.Type_Reference(name = IR.Identifier(["System", "Address"]), pointer = ptr - 1) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
@@ -77,7 +83,7 @@ class CXX:
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]), pointer = ptr)
         else:
-            raise NotImplementedError("Unsupported type: {} (from {})".format(str(type_cursor.kind), type_cursor.spelling))
+            raise NotImplementedError("Unsupported type: {} (from {})".format(type_cursor.kind, type_cursor.spelling))
 
     def __convert_arguments(self, cursors):
         argv = []
@@ -123,8 +129,22 @@ class CXX:
             resolved = self.__convert_type(cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
 
+    def __convert_template(self, cursor):
+        self.__print_tree(cursor, 0)
+        targs = []
+        for c in cursor.get_children():
+            if c.kind == clang.cindex.CursorKind.TEMPLATE_TYPE_PARAMETER:
+                targs.append(c)
+        return IR.Template(
+                entity = IR.Class(
+                    name = cursor.spelling,
+                    children = self.__convert_children(list(cursor.get_children())[len(targs):])),
+                typenames = [IR.Template_Argument(c.spelling) for c in targs])
+
+
     def __convert_children(self, cursors):
         children = []
+        templates = []
         public = True
         for cursor in cursors:
             if cursor.kind == clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL:
@@ -149,6 +169,9 @@ class CXX:
                     children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
                     children.append(self.__convert_constructor(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
+                    templates.append(self.__convert_template(cursor))
+                    self.__print_tree(self.translation_unit.cursor, 0)
                 else:
                     raise ValueError("Conversion of {} not implemented".format(cursor.kind))
         return children
