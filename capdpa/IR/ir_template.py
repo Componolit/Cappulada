@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 class UnspecifiedTemplate: pass
 
 class Template(object):
@@ -5,6 +7,13 @@ class Template(object):
     def __init__(self, entity, typenames):
         self.entity = entity
         self.typenames = typenames
+
+    def __eq__(self, other):
+        return self.__repr__() == repr(other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
     def __repr__(self):
         return "Template(entity={}, typenames={})".format(
@@ -29,9 +38,10 @@ class Template(object):
                 entity.return_type = resolves[entity.return_type]
 
     def instantiate(self, args):
-        resolves = {t[0]:t[1] for t in zip(self.typenames, self.args)}
-        entity = self.entity.deepcopy()
+        resolves = {t[0]:t[1] for t in zip(self.typenames, args)}
+        entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
+        entity.name += "_T_" + "_".join(["_".join(a.name.name) for a in args])
         return entity
 
     def postfix(self):
@@ -52,3 +62,7 @@ class Template_Argument(object):
     def __repr__(self):
         return "Template_Argument(name={})".format(
                 self.name)
+
+    def __hash__(self):
+        return hash(self.__repr__())
+

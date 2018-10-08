@@ -1,6 +1,6 @@
 
 template <typename A, typename B>
-class Containter
+class Container
 {
     public:
         A a;

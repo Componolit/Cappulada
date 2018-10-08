@@ -1,5 +1,6 @@
 
 import unittest
+import clang.cindex
 from capdpa import *
 from capdpa_test import *
 
@@ -115,6 +116,35 @@ class Parser(Capdpa_Test):
                 Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0))])
         result = CXX("tests/data/test_types.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_template_conversion(self):
+        cxx = CXX("tests/data/test_with_template.h")
+        cursor = list(cxx.translation_unit.cursor.get_children())[0]
+        template = getattr(CXX, "_CXX__convert_template")(cxx, cursor)
+        expected = Template(entity=Class(name="Container", children=[
+            Variable(name="a", ctype=Template_Argument(name="A")),
+            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+                Template_Argument(name="A"),
+                Template_Argument(name="B")])
+
+    def test_template_engine(self):
+        typea = Type_Reference(name=Identifier(["typeA"]))
+        typeb = Type_Reference(name=Identifier(["typeB"]))
+        expected = Class(name="Container_T_typeA_typeB", children=[
+            Variable(name="a", ctype=Type_Reference(name=Identifier(["typeA"]))),
+            Variable(name="b", ctype=Type_Reference(name=Identifier(["typeB"])))])
+        template = Template(entity=Class(name="Container", children=[
+            Variable(name="a", ctype=Template_Argument(name="A")),
+            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+                Template_Argument(name="A"),
+                Template_Argument(name="B")])
+        result = template.instantiate([typea, typeb])
+        self.check(result, expected)
+        self.check(template, Template(entity=Class(name="Container", children=[
+            Variable(name="a", ctype=Template_Argument(name="A")),
+            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+                Template_Argument(name="A"),
+                Template_Argument(name="B")]))
 
     def test_template(self):
         expected = Namespace(name = "Capdpa", children = [

@@ -86,3 +86,4 @@ class Class(ir.Base):
                      'constants':   "\n".join(map(lambda c: c.AdaSpecification(indentation=3), constants) + [""]),
                      'record':      class_record,
                      'ops':         "".join(map(lambda o: o.AdaSpecification(indentation=3), ops)) }
+

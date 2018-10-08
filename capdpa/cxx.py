@@ -130,7 +130,6 @@ class CXX:
         return IR.Type_Definition(cursor.type.spelling, resolved)
 
     def __convert_template(self, cursor):
-        self.__print_tree(cursor, 0)
         targs = []
         for c in cursor.get_children():
             if c.kind == clang.cindex.CursorKind.TEMPLATE_TYPE_PARAMETER:
