@@ -22,9 +22,6 @@ class Class(ir.Base):
             self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
 
-    def __repr__(self):
-        return "Class(name={}, children={})".format(self.name, self.children)
-
     def UsedPackages(self):
         types = []
         isLocalType = lambda t: t.name.PackagePath() and self.FullyQualifiedName()[:len(t.name.PackagePath())] != t.name.PackagePath()

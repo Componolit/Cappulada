@@ -12,10 +12,6 @@ class Function(ir.Base):
         self._parentize_list(self.parameters)
         self.return_type = return_type
 
-    def __repr__(self):
-        return "Function(name={}, symbol={}, parameters={}, return_type={})".format(
-                self.name, self.symbol, self.parameters, self.return_type)
-
     def AdaSpecification(self, indentation=0):
 
         result = " " * indentation + ("function " if self.return_type else "procedure ")

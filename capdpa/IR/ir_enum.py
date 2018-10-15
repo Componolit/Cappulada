@@ -8,10 +8,6 @@ class Enum(ir.Base):
         self.children  = children or []
         self._parentize_list(self.children)
 
-    def __repr__(self):
-        return "Enum(name={}, children={})".format(
-                self.name, self.children)
-
     def AdaSpecification(self, indentation=0):
         return "{0}type {1} is ({2});\n{0}for {1} use ({3});".format(
                 " " * indentation,

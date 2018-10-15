@@ -12,9 +12,6 @@ class Namespace(ir.Base):
         self._parentize_list(self.children)
         super(Namespace, self).__init__()
 
-    def __repr__(self):
-        return "Namespace(name={}, children={})".format(self.name, self.children)
-
     def AdaSpecification(self, indentation=0):
         fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
 

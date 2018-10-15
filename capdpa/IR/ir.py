@@ -24,6 +24,11 @@ class Base(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __repr__(self):
+        return "{}({})".format(
+                self.__class__.__name__,
+                ",".join("{}='{}'".format(k, v) for k,v in self.__dict__.items() if k != 'parent'))
+
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)
 
