@@ -11,6 +11,8 @@ class Type_Reference(ir.Base):
     def AdaSpecification(self, indentation=0):
         return " " * indentation + ("access " if self.pointer else "") + self.name.PackageFullName()
 
+    def FullyQualifiedName(self):
+        return self.name.name
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
@@ -33,3 +35,6 @@ class Type_Definition(ir.Base):
                 " " * indentation,
                 self.ConvertName(self.name),
                 self.reference.AdaSpecification())
+
+    def InstantiateTemplates(self):
+        pass

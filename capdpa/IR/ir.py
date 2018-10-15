@@ -24,20 +24,35 @@ class Base(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __repr__(self):
+    def __repr__(self, ignores=None):
+        ignorelist = ['parent']
+        if ignores:
+            ignorelist.extend(ignores)
         return "{}({})".format(
                 self.__class__.__name__,
-                ",".join("{}={}".format(k, v) for k,v in self.__dict__.items() if k != 'parent'))
+                ",".join("{}={}".format(k, v) for k,v in self.__dict__.items() if k not in ignorelist))
+
+    def __hash__(self):
+        return hash(self.__repr__())
+
+    def __getitem__(self, arg):
+        if hasattr(self, "children"):
+            if isinstance(arg, list):
+                return self.__getitem__(tuple(arg))
+            elif isinstance(arg, tuple):
+                if len(arg) > 1:
+                    return self[arg[0]][arg[1:]]
+                else:
+                    return self[arg[0]]
+            else:
+                for c in self.children:
+                    if c.name == arg:
+                        return c
+                else:
+                    raise KeyError(arg)
 
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)
-
-    def __getitem__(self, arg):
-        for c in self.children:
-            if c.name == arg:
-                return c
-        else:
-            raise KeyError(arg)
 
     @classmethod
     def isInst(cls, obj):
@@ -54,6 +69,10 @@ class Base(object):
             return parent
         else:
             return self
+
+    def InstantiateTemplates(self):
+        for c in self.children:
+            c.InstantiateTemplates()
 
     def FullyQualifiedName(self):
         if self.parent:

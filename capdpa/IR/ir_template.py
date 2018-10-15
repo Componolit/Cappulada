@@ -5,11 +5,19 @@ class UnspecifiedTemplate: pass
 
 class Template(ir.Base):
 
-    def __init__(self, entity, typenames):
+    def __init__(self, entity, typenames, parent_index=1):
         self.entity = entity
         self.typenames = typenames
         self.name = self.entity.name
+        self.parent_index = parent_index
         super(Template, self).__init__()
+
+    def __repr__(self):
+        return super(Template, self).__repr__(['parent_index'])
+
+    def SetParent(self, parent):
+        self.parent = parent
+        self.entity.parent = parent
 
     def __replace(self, entity, resolves):
         if hasattr(entity, "children"):
@@ -29,6 +37,9 @@ class Template(ir.Base):
             if entity.return_type in resolves.keys():
                 entity.return_type = resolves[entity.return_type]
 
+    def InstantiateTemplates(self):
+        pass
+
     def instantiate(self, ref):
         resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
         entity = deepcopy(self.entity)
@@ -36,23 +47,11 @@ class Template(ir.Base):
         entity.name += ref.postfix()
         return entity
 
-class Template_Argument(object):
+class Template_Argument(ir.Base):
 
     def __init__(self, name):
         self.name = name
-
-    def __eq__(self, other):
-        return self.__repr__() == repr(other)
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __repr__(self):
-        return "Template_Argument(name={})".format(
-                self.name)
-
-    def __hash__(self):
-        return hash(self.__repr__())
+        super(Template_Argument, self).__init__()
 
 class Template_Reference(ir.Base):
 

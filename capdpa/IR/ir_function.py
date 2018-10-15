@@ -11,6 +11,8 @@ class Function(ir.Base):
         self.parameters = parameters or []
         self._parentize_list(self.parameters)
         self.return_type = return_type
+        if self.return_type:
+            self.return_type.parent = self
 
     def AdaSpecification(self, indentation=0):
 
@@ -31,6 +33,10 @@ class Function(ir.Base):
         result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
 
         return result
+
+    def InstantiateTemplates(self):
+        # TODO
+        pass
 
 class Constructor(Function):
 

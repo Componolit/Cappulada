@@ -86,8 +86,9 @@ class CXX:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
-                return IR.Type_Reference_Template(self.__resolve_name(decl),
-                        [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
+                return IR.Type_Reference_Template(
+                        name = IR.Identifier(self.__resolve_name(decl)),
+                        arguments = [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
                         pointer = ptr)
             elif decl.kind == clang.cindex.CursorKind.CLASS_DECL:
                 return IR.Type_Reference(
@@ -201,7 +202,9 @@ class CXX:
         self.project = project
         if self.translation_unit.cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
             raise InvalidNodeError
-        return IR.Namespace(
+        namespace = IR.Namespace(
                 name=project,
                 children = self.__convert_children(self.translation_unit.cursor.get_children())
                 )
+        namespace.InstantiateTemplates()
+        return namespace

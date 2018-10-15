@@ -9,3 +9,6 @@ class Constant(ir.Base):
 
     def AdaSpecification(self, indentation=0):
         return " " * indentation + self.ConvertName(self.name) + " : constant := " + str(self.value) + ";"
+
+    def InstantiateTemplates(self):
+        pass

@@ -23,3 +23,6 @@ class Identifier(ir.Base):
 
     def PackageBaseNameRaw(self):
         return self.name[-1]
+
+    def InstantiateTemplates(self):
+        pass

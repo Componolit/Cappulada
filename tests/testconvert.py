@@ -155,22 +155,22 @@ class Parser(Capdpa_Test):
                 Constructor(symbol="", parameters=[])]), typenames=[
                     Template_Argument(name="A"),
                     Template_Argument(name="B")]),
-            Class(name = "Container_T_int_char", children = [
-                Variable(name = "A", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"]))),
-                Variable(name = "B", ctype = Type_Reference(name = Identifier(["Capdpa", "Char"])))]),
+            Class(name = "Container_T_int_signed_char", children = [
+                Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "signed_char"])))]),
             Class(name = "Container_T_int_int", children = [
-                Variable(name = "A", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"]))),
-                Variable(name = "B", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))]),
+                Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
             Class(name = "User", children = [
                 Variable(name = "cic", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
-                    Type_Reference(name=Identifier(["Capdpa", "char"]))])),
+                    Type_Reference(name=Identifier(["Capdpa", "signed_char"]))])),
                 Variable(name = "cii", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "int"]))])),
                 Variable(name = "cic2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
-                    Type_Reference(name=Identifier(["Capdpa", "char"]))]))
+                    Type_Reference(name=Identifier(["Capdpa", "signed_char"]))]))
                 ])])
         result = CXX("tests/data/test_with_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
