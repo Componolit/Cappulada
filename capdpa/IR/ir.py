@@ -32,12 +32,28 @@ class Base(object):
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)
 
+    def __getitem__(self, arg):
+        for c in self.children:
+            if c.name == arg:
+                return c
+        else:
+            raise KeyError(arg)
+
     @classmethod
     def isInst(cls, obj):
         return isinstance(obj, cls)
 
     def SetParent(self, parent):
         self.parent = parent
+
+    def GetRoot(self):
+        parent = self.parent
+        if parent:
+            while parent.parent:
+                parent = parent.parent
+            return parent
+        else:
+            return self
 
     def FullyQualifiedName(self):
         if self.parent:

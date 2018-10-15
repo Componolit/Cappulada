@@ -8,6 +8,7 @@ class Template(ir.Base):
     def __init__(self, entity, typenames):
         self.entity = entity
         self.typenames = typenames
+        self.name = self.entity.name
         super(Template, self).__init__()
 
     def __replace(self, entity, resolves):
