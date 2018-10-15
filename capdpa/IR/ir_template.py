@@ -1,13 +1,14 @@
-from ir import Base
+import ir
 from copy import deepcopy
 
 class UnspecifiedTemplate: pass
 
-class Template(Base):
+class Template(ir.Base):
 
     def __init__(self, entity, typenames):
         self.entity = entity
         self.typenames = typenames
+        super(Template, self).__init__()
 
     def __replace(self, entity, resolves):
         if hasattr(entity, "children"):
@@ -27,16 +28,12 @@ class Template(Base):
             if entity.return_type in resolves.keys():
                 entity.return_type = resolves[entity.return_type]
 
-    def instantiate(self, args):
-        resolves = {t[0]:t[1] for t in zip(self.typenames, args)}
+    def instantiate(self, ref):
+        resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
-        entity.name += "_T_" + "_".join(["_".join(a.name.name) for a in args])
+        entity.name += ref.postfix()
         return entity
-
-    def postfix(self):
-        return "_T_{}".format(
-                "_".join([arg.name for arg in self.arguments]))
 
 class Template_Argument(object):
 
@@ -55,4 +52,18 @@ class Template_Argument(object):
 
     def __hash__(self):
         return hash(self.__repr__())
+
+class Template_Reference(ir.Base):
+
+    # don't use this class alone, inherit from it and provide arguments
+
+    def postfix(self):
+        idlist = []
+        for arg in self.arguments:
+            name = arg.name.PackageBaseNameRaw()
+            if Template_Reference.isInst(arg):
+                name += arg.postfix()
+            idlist.append(name)
+        return "_T_{}".format(
+                "_".join(idlist))
 

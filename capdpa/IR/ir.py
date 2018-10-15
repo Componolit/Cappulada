@@ -27,7 +27,7 @@ class Base(object):
     def __repr__(self):
         return "{}({})".format(
                 self.__class__.__name__,
-                ",".join("{}='{}'".format(k, v) for k,v in self.__dict__.items() if k != 'parent'))
+                ",".join("{}={}".format(k, v) for k,v in self.__dict__.items() if k != 'parent'))
 
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)

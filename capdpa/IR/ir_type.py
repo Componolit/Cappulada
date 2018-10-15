@@ -1,20 +1,25 @@
-import ir;
+import ir
+import ir_template
 
 class Type_Reference(ir.Base):
 
-    def __init__(self, name, pointer = 0):
+    def __init__(self, name, pointer = 0, **kwargs):
         super(Type_Reference, self).__init__()
         self.name = name
         self.pointer = pointer
 
-    def __repr__(self):
-        return "Type_Reference(name={}, pointer={})".format(
-                self.name,
-                self.pointer)
-
     def AdaSpecification(self, indentation=0):
         return " " * indentation + ("access " if self.pointer else "") + self.name.PackageFullName()
 
+
+class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
+
+    def __init__(self, name, arguments, pointer = 0):
+        super(Type_Reference_Template, self).__init__(name=name, pointer=pointer)
+        self.arguments = arguments
+
+    def AdaSpecification(self, indentation=0):
+        return super(Type_Reference_Template, self).AdaSpecification(indentation) + self.postfix()
 
 class Type_Definition(ir.Base):
 
@@ -22,10 +27,6 @@ class Type_Definition(ir.Base):
         super(Type_Definition, self).__init__()
         self.name = name
         self.reference = reference
-
-    def __repr__(self):
-        return "Type_Definition(name={}, reference={})".format(
-                self.name, self.reference)
 
     def AdaSpecification(self, indentation=0):
         return "{0}subtype {1} is {2};".format(

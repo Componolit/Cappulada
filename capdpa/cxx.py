@@ -1,15 +1,31 @@
 
 import clang.cindex
 import IR
+import cymbal
+import ctypes
+
+cymbal.monkeypatch_type(
+        'get_template_argument_type',
+        'clang_Type_getTemplateArgumentAsType',
+        [clang.cindex.Type, ctypes.c_uint],
+        clang.cindex.Type)
+
+cymbal.monkeypatch_type(
+        'get_num_template_arguments',
+        'clang_Type_getNumTemplateArguments',
+        [clang.cindex.Type],
+        ctypes.c_int)
 
 class InvalidNodeError: pass
 
 TypeMap = {
         clang.cindex.TypeKind.BOOL      : "boolean",
+        clang.cindex.TypeKind.CHAR_U    : "unsigned_char",
         clang.cindex.TypeKind.UCHAR     : "unsigned_char",
         clang.cindex.TypeKind.USHORT    : "unsigned_short",
         clang.cindex.TypeKind.UINT      : "unsigned_int",
         clang.cindex.TypeKind.ULONG     : "unsigned_long",
+        clang.cindex.TypeKind.CHAR_S    : "signed_char",
         clang.cindex.TypeKind.SCHAR     : "signed_char",
         clang.cindex.TypeKind.WCHAR     : "wide_char",
         clang.cindex.TypeKind.SHORT     : "short",
@@ -59,7 +75,7 @@ class CXX:
         while cursor and cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
             identifier.append(cursor.spelling)
             cursor = cursor.semantic_parent
-        return list(reversed(identifier))
+        return [self.project] + list(reversed(identifier))
 
     def __convert_type(self, type_cursor):
         ptr = 0;
@@ -67,10 +83,15 @@ class CXX:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
         if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
+            targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
-            if decl.kind == clang.cindex.CursorKind.CLASS_DECL:
+            if targs > 0:
+                return IR.Type_Reference_Template(self.__resolve_name(decl),
+                        [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
+                        pointer = ptr)
+            elif decl.kind == clang.cindex.CursorKind.CLASS_DECL:
                 return IR.Type_Reference(
-                        name = IR.Identifier(["Capdpa"] + self.__resolve_name(type_cursor.get_declaration()) + ["Class"]),
+                        name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
                         pointer = ptr)
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
                 return IR.Template_Argument(type_cursor.spelling)
@@ -143,7 +164,6 @@ class CXX:
 
     def __convert_children(self, cursors):
         children = []
-        templates = []
         public = True
         for cursor in cursors:
             if cursor.kind == clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL:
@@ -169,8 +189,9 @@ class CXX:
                 elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
                     children.append(self.__convert_constructor(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
-                    templates.append(self.__convert_template(cursor))
-                    self.__print_tree(self.translation_unit.cursor, 0)
+                    template = self.__convert_template(cursor)
+                    children.append(template)
+#                    self.__print_tree(self.translation_unit.cursor, 0)
                 else:
                     raise ValueError("Conversion of {} not implemented".format(cursor.kind))
         return children

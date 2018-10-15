@@ -226,3 +226,23 @@ class GenerateConstant(Capdpa_Test):
 
         self.check(result[1], expected)
         self.check(result[0], foo)
+
+    def test_type_template_one_arg(self):
+        result = Type_Reference_Template(Identifier(["Capdpa", "Class"]),
+                arguments=[Type_Reference(name=Identifier(["Capdpa", "Int"]))]).AdaSpecification()
+        self.check(result, "Capdpa.Class_T_Int")
+
+    def test_type_template_two_args(self):
+        result = Type_Reference_Template(Identifier(["Capdpa", "Class"]),
+                arguments=[
+                    Type_Reference(name=Identifier(["Capdpa", "Int"])),
+                    Type_Reference(name=Identifier(["Capdap", "Char"]))]).AdaSpecification()
+        self.check(result, "Capdpa.Class_T_Int_Char")
+
+    def test_type_template_template_arg(self):
+        result = Type_Reference_Template(name=Identifier(["Capdpa", "Class"]),
+                arguments=[
+                    Type_Reference_Template(name=Identifier(["Capdpa", "Tclass"]),
+                        arguments=[
+                            Type_Reference(name=Identifier(["Capdpa", "Int"]))])]).AdaSpecification()
+        self.check(result, "Capdpa.Class_T_Tclass_T_Int")
