@@ -6,9 +6,12 @@ is
    for Negative use (Minus_One => -1, Minus_Two => -2);
    type Class is
    limited record
+      Private_Private_Int : Capdpa.Private_Int;
       Public_Int : Capdpa.Int;
    end record
    with Import, Convention => CPP;
+   type Private_Class is limited null record
+   with Size => Class'Size;
    procedure Public_Function
    with Import, Convention => CPP, External_Name => "";
    function Constructor return Class;

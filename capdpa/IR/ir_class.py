@@ -54,6 +54,8 @@ class Class(ir.Base):
             class_record += member.AdaSpecification(indentation=6) + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"
+        class_record += "   type Private_Class is limited null record\n"
+        class_record += "   with Size => Class'Size;\n"
 
         # Generate functions and procedures
         isOp = lambda e: ir_function.Function.isInst(e) or ir_function.Constructor.isInst(e)

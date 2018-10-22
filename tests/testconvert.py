@@ -60,8 +60,12 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_members",
                 children = [
                     Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["System", "Address"]), pointer = 0)),
-                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])))])])
+                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                    Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                    Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+                    ])])
         result = CXX("tests/data/test_class_with_members.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -87,6 +91,7 @@ class Parser(Capdpa_Test):
                     Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_ONE", value = -1),
                         Constant(name = "MINUS_TWO", value = -2)]),
+                    Variable(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
                     Function(name = "public_function", symbol = ""),
                     Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                     Constructor(symbol = "")])])])
