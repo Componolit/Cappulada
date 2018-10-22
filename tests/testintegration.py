@@ -88,3 +88,10 @@ class check_integration(Capdpa_Test):
             "test_capdpa.ads",
             "test_namespace_with_typedef.ads",
             "test_namespace_with_typedef_with_class.ads"])
+
+    def test_with_template(self):
+        self.check_integration("test_with_template.h", [
+            "test_capdpa.ads",
+            "test_template_int_char.ads",
+            "test_template_int_int.ads",
+            "test_template_user.ads"])

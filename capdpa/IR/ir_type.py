@@ -21,7 +21,8 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
         self.arguments = arguments
 
     def AdaSpecification(self, indentation=0):
-        return super(Type_Reference_Template, self).AdaSpecification(indentation) + self.postfix()
+        post = "_" + self.ConvertName(self.postfix()[1:])
+        return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
 
 class Type_Definition(ir.Base):
 
