@@ -1,7 +1,7 @@
 package Capdpa.User
 is
    type Class is
-   tagged limited record
+   limited record
       Cic : Container_T_Int_Char;
       Cii : Container_T_Int_Int;
       Cic2 : Container_T_Int_Char;

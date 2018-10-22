@@ -1,7 +1,7 @@
 package Capdpa.With_Typedef.Use_Type
 is
    type Class is
-   tagged limited record
+   limited record
       C : U8;
       I : I32;
    end record

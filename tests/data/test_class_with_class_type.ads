@@ -3,7 +3,7 @@ with Capdpa.With_Class.In_Namespace;
 package Capdpa.Full
 is
    type Class is
-   tagged limited record
+   limited record
       Value : Capdpa.With_Class.In_Namespace.Class;
       Value_Ptr : access Capdpa.With_Class.In_Namespace.Class;
    end record

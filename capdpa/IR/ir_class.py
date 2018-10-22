@@ -48,7 +48,7 @@ class Class(ir.Base):
         # Generate record members
         null = type("", (), dict(AdaSpecification=lambda self, indentation: " " * indentation + "null"))()
 
-        class_record = '   type Class is\n   tagged limited '
+        class_record = '   type Class is\n   limited '
         class_record += "record\n"
         for member in filter(ir_variable.Variable.isInst, self.children) or [null]:
             class_record += member.AdaSpecification(indentation=6) + ";\n"

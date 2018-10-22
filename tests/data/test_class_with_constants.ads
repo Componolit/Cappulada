@@ -6,7 +6,7 @@ is
    type Negative is (Minus_One, Minus_Two, Minus_Three);
    for Negative use (Minus_One => -1, Minus_Two => -2, Minus_Three => -3);
    type Class is
-   tagged limited record
+   limited record
       null;
    end record
    with Import, Convention => CPP;

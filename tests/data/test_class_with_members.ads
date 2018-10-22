@@ -3,7 +3,7 @@ with System;
 package Capdpa.With_Members
 is
    type Class is
-   tagged limited record
+   limited record
       Public_Int : Capdpa.Int;
       Public_Pointer : System.Address;
       Public_Float : Capdpa.C_Float;

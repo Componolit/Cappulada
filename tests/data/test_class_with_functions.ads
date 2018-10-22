@@ -1,7 +1,7 @@
 package Capdpa.With_Functions
 is
    type Class is
-   tagged limited record
+   limited record
       null;
    end record
    with Import, Convention => CPP;

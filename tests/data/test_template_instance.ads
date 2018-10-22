@@ -1,7 +1,7 @@
 package Capdpa.Container_T_Int_Char
 is
    type Class is
-   tagged limited record
+   limited record
       A : Capdpa.Int;
       B : Capdpa.Char;
    end record

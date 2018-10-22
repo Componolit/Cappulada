@@ -5,7 +5,7 @@ is
    type Enum2 is (Elem21, Elem22, Elem23);
    for Enum2 use (Elem21 => 0, Elem22 => 1, Elem23 => 2);
    type Class is
-   tagged limited record
+   limited record
       null;
    end record
    with Import, Convention => CPP;

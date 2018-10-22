@@ -5,7 +5,7 @@ is
    type Negative is (Minus_One, Minus_Two);
    for Negative use (Minus_One => -1, Minus_Two => -2);
    type Class is
-   tagged limited record
+   limited record
       Public_Int : Capdpa.Int;
    end record
    with Import, Convention => CPP;
