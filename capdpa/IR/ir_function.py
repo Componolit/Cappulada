@@ -4,7 +4,7 @@ import ir_identifier
 
 class Function(ir.Base):
 
-    def __init__(self, name, symbol, parameters=None, return_type=None):
+    def __init__(self, name, symbol, parameters=None, return_type=None, virtual=False):
         super(Function, self).__init__()
         self.name = name
         self.symbol = symbol
@@ -13,6 +13,7 @@ class Function(ir.Base):
         self.return_type = return_type
         if self.return_type:
             self.return_type.parent = self
+        self.virtual = virtual
 
     def AdaSpecification(self, indentation=0):
 

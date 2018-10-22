@@ -246,3 +246,18 @@ class GenerateConstant(Capdpa_Test):
                         arguments=[
                             Type_Reference(name=Identifier(["Capdpa", "Int"]))])]).AdaSpecification()
         self.check(result, "Capdpa.Class_T_Tclass_T_Int")
+
+    def test_class_with_virtual(self):
+        expected = self.load("test_base_with_virtual.txt")
+        result = Class(name = "With_Virtual", children = [
+            Function(name = "Foo", symbol = "", virtual = True)]).AdaSpecification()
+        self.check(result, expected)
+
+    def test_inherit_from_virtual(self):
+        exptected = self.load("test_inherit_from_virtual.txt")
+        result = Class(name = "From_Virtual",
+                children = [
+                    Variable(name = "V", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))],
+                inherits = [
+                    Class(name = "With_Virtual")]).AdaSpecification()
+        self.check(result, expected)

@@ -23,4 +23,5 @@ class Variable(ir.Base):
             if instance not in template.parent.children:
                 index = template.parent.children.index(template) + template.parent_index
                 template.parent.children.insert(index, instance)
+                #FIXME: set instance parent correctly
                 template.parent_index += 1

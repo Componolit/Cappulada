@@ -99,7 +99,7 @@ class CXX:
             else:
                 NotImplementedError("Unsupported declaration kind {}".format(decl.kind))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
-            return IR.Type_Reference(name = IR.Identifier(["Capdpa", "C_Address"]), pointer = ptr - 1) if ptr else None
+            return IR.Type_Reference(name = IR.Identifier([self.project, "C_Address"]), pointer = ptr - 1) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr)
         elif type_cursor.kind in TypeMap.keys():

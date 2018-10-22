@@ -42,6 +42,7 @@ class Template(ir.Base):
 
     def instantiate(self, ref):
         resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
+        #TODO: custom deepcopy
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
         entity.name += ref.postfix()

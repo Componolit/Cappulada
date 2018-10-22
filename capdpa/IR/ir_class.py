@@ -13,7 +13,7 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, children=None):
+    def __init__(self, name, children=None, inherits=None):
 
         super(Class, self).__init__()
         self.name       = name
@@ -21,6 +21,7 @@ class Class(ir.Base):
         if not filter(ir_function.Constructor.isInst, self.children):
             self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
+        self.inherits   = inherits
 
     def UsedPackages(self):
         types = []
