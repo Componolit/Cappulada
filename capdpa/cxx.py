@@ -58,12 +58,19 @@ class CXX:
                 name = cursor.displayname,
                 children = self.__convert_children(cursor.get_children()))
 
+    def __convert_base(self, cursor):
+        if cursor.kind != clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
+            raise InvalidNodeError
+        return IR.Class_Reference(name=
+                IR.Identifier(self.__resolve_name(cursor.type.get_declaration())))
+
     def __convert_function(self, cursor):
         return IR.Function(
                 name = cursor.spelling,
                 symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()),
-                return_type = self.__convert_type(cursor.result_type))
+                return_type = self.__convert_type(cursor.result_type),
+                virtual = cursor.is_virtual_method())
 
     def __convert_constructor(self, cursor):
         return IR.Constructor(
@@ -190,6 +197,8 @@ class CXX:
                         children.append(self.__convert_constructor(cursor))
                     elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
                         children.append(self.__convert_template(cursor))
+                    elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
+                        children.append(self.__convert_base(cursor))
                 if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor, access))
         return children

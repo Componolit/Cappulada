@@ -182,49 +182,60 @@ class Parser(Capdpa_Test):
 
     def test_inheritance_simple(self):
         expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_members", children = [
+                Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+            ]),
             Class(name = "Inheritance", children = [
-                    Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
-                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                    Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
-                    Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private"),
-                    Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
-                ])])
+                Class_Reference(name = Identifier(["Capdpa", "With_members"])),
+                Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
+            ])])
         result = CXX("tests/data/test_class_inheritance.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_inheritance_chain(self):
         expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_members", children = [
+                Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+            ]),
             Class(name = "Inheritance", children = [
-                    Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
-                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                    Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
-                    Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private"),
-                    Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "c", ctype = Type_Reference(name = Identifier(["Capdpa", "long"])))
-                ])])
+                Class_Reference(name = Identifier(["Capdpa", "With_members"])),
+                Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
+            ]),
+            Class(name = "Child", children = [
+                Class_Reference(name = Identifier(["Capdpa", "Inheritance"])),
+                Variable (name = "c", ctype = Type_Reference(name = Identifier(["Capdpa", "long"])))
+            ])])
         result = CXX("tests/data/test_class_inheritance_child.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_class_with_virtual(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Virtual", children = [
-                    Function(name = "foo", return_type = None, virtual = True)
+                    Function(name = "foo", symbol = "", return_type = None, virtual = True)
                 ])])
         result = CXX("tests/data/test_base_with_virtual.h").ToIR(project="Capdpa")
         self.check(result, expected)
+        self.check(result["With_Virtual"].isVirtual(), True)
 
     def test_inherit_from_virtual(self):
-        vclass = Class(name = "With_Virtual", children = [
-                    Function(name = "foo", return_type = None, virtual = True)
-                ])
         expected = Namespace(name = "Capdpa", children = [
-            vclass,
+            Class(name = "With_Virtual", children = [
+                Function(name = "foo", symbol = "", return_type = None, virtual = True)
+            ]),
             Class(name = "From_Virtual",
                 children = [
-                    Variable(name = "v", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
-                inherits = vclass)])
-        result = CXX("test_inherit_from_virtual.h").ToIR(project="Capdpa")
+                    Class_Reference(name = Identifier(["Capdpa", "With_Virtual"])),
+                    Variable(name = "v", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
+        result = CXX("tests/data/test_inherit_from_virtual.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+        self.check(result["From_Virtual"].isVirtual(), True)

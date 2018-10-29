@@ -15,6 +15,9 @@ class Function(ir.Base):
             self.return_type.parent = self
         self.virtual = virtual
 
+    def isVirtual(self):
+        return self.virtual
+
     def AdaSpecification(self, indentation=0):
 
         result = " " * indentation + ("function " if self.return_type else "procedure ")

@@ -13,7 +13,7 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, children=None, inherits=None):
+    def __init__(self, name, children=None):
 
         super(Class, self).__init__()
         self.name       = name
@@ -21,7 +21,9 @@ class Class(ir.Base):
         if not filter(ir_function.Constructor.isInst, self.children):
             self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
-        self.inherits   = inherits
+
+    def isVirtual(self):
+        return True in [c.isVirtual() for c in self.children]
 
     def UsedPackages(self):
         types = []
@@ -87,3 +89,17 @@ class Class(ir.Base):
                      'record':      class_record,
                      'ops':         "".join(map(lambda o: o.AdaSpecification(indentation=3), ops)) }
 
+
+class Class_Reference(ir.Base):
+
+    def __init__(self, name):
+        self.name = name
+
+    def getClass(self):
+        return self.GetRoot()[self.name.PackageFull()[1:]]
+
+    def isVirtual(self):
+        return self.getClass().isVirtual()
+
+    def InstantiateTemplates(self):
+        pass

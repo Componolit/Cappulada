@@ -82,6 +82,9 @@ class Base(object):
         else:
             return [self.name]
 
+    def isVirtual(self):
+        return False
+
     def ConvertName(self, identifier):
 
         result = identifier.lower()
