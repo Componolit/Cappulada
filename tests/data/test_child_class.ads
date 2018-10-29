@@ -1,4 +1,4 @@
-package Capdpa.Inheritance
+package Capdpa.Child
 is
    type Class is
    limited record
@@ -9,10 +9,11 @@ is
       Private_Private_Pointer : Capdpa.Private_C_Address;
       Private_Private_Float : Capdpa.Private_C_Float;
       Additional : Capdpa.Int;
+      C : Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Private_Class is limited null record
    with Size => Class'Size;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end Capdpa.Inheritance;
+end Capdpa.Child;

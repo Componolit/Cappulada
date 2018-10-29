@@ -69,8 +69,8 @@ class Class(ir.Base):
         base = [Class_Reference.isInst(c) for c in self.children]
         base = self.children[base.index(True)].name.PackageFullName() if True in base else ""
 
-        class_record = '   type Class is{}\n'.format((" new " + base) if base and self.isVirtual() else "")
-        class_record += '   {}limited '.format("tagged " if self.isVirtual() else "")
+        class_record = '   type Class is{}\n'.format((" new " + base + " with") if base and self.isVirtual() else "")
+        class_record += '   {}limited '.format("tagged " if self.isVirtual() and not base else "")
         class_record += "record\n"
         for member in self.Members() or [null]:
             class_record += member.AdaSpecification(indentation=6) + ";\n"

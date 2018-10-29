@@ -113,7 +113,17 @@ class check_integration(Capdpa_Test):
             "test_base_with_virtual.ads",
             "test_inherit_from_virtual.ads"])
 
-    #TODO: test chains:
-    # simple simple simple
-    # simple virtual virtual
-    # simple virtual simple
+    def test_simple_inheritance_chain(self):
+        self.check_integration("test_child_class.h", [
+            "test_capdpa.ads",
+            "test_class_with_members.ads",
+            "test_class_inheritance.ads",
+            "test_child_class.ads"])
+
+    def test_virtual_from_simple(self):
+        self.check_integration("test_inherit_virtual_from_simple.h", [
+            "test_capdpa.ads",
+            "test_class_with_members.ads",
+            "test_class_inheritance.ads",
+            "test_inherit_virtual_from_simple.ads"])
+

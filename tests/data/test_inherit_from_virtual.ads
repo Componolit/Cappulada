@@ -1,8 +1,8 @@
 package Capdpa.From_Virtual
 is
-   type Class is new With_Virtual
-   tagged limited record
-      V : Capdap.Int;
+   type Class is new Capdpa.With_Virtual with
+   limited record
+      V : Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Private_Class is limited null record
