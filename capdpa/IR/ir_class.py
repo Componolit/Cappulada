@@ -42,8 +42,18 @@ class Class(ir.Base):
 
         map(lambda v: types.append(v.ctype), filter(ir_variable.Variable.isInst, self.children))
         map(lambda t: types.append(t.reference), filter(ir_type.Type_Definition.isInst, self.children))
+        map(lambda c: types.append(c), filter(Class_Reference.isInst, self.children))
 
         return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
+
+    def Members(self):
+        members = []
+        for c in self.children:
+            if Class_Reference.isInst(c) and not c.isVirtual():
+                members.extend(c.getClass().Members())
+            if ir_variable.Variable.isInst(c):
+                members.append(c)
+        return members
 
     def AdaSpecification(self, indentation=0):
 
@@ -56,10 +66,13 @@ class Class(ir.Base):
 
         # Generate record members
         null = type("", (), dict(AdaSpecification=lambda self, indentation: " " * indentation + "null"))()
+        base = [Class_Reference.isInst(c) for c in self.children]
+        base = self.children[base.index(True)].name.PackageFullName() if True in base else ""
 
-        class_record = '   type Class is\n   limited '
+        class_record = '   type Class is{}\n'.format((" new " + base) if base and self.isVirtual() else "")
+        class_record += '   {}limited '.format("tagged " if self.isVirtual() else "")
         class_record += "record\n"
-        for member in filter(ir_variable.Variable.isInst, self.children) or [null]:
+        for member in self.Members() or [null]:
             class_record += member.AdaSpecification(indentation=6) + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"

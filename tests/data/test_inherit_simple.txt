@@ -1,14 +1,13 @@
-package Capdpa.With_Virtual
+package Capdpa.Inherit_Simple
 is
    type Class is
-   tagged limited record
-      null;
+   limited record
+      A : Int;
+      B : Int;
    end record
    with Import, Convention => CPP;
    type Private_Class is limited null record
    with Size => Class'Size;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-   procedure Foo
-   with Import, Convention => CPP, External_Name => "";
-end Capdpa.With_Virtual;
+end Capdpa.Inherit_Simple;

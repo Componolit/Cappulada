@@ -247,17 +247,34 @@ class GenerateConstant(Capdpa_Test):
                             Type_Reference(name=Identifier(["Capdpa", "Int"]))])]).AdaSpecification()
         self.check(result, "Capdpa.Class_T_Tclass_T_Int")
 
+    def test_inheritance_simple(self):
+        result = Namespace(name="Capdpa", children=[
+            Class(name="Simple", children=[
+                Variable(name="A", ctype=Type_Reference(name=Identifier(["Int"])))
+                ]),
+            Class(name="Inherit_Simple", children=[
+                Class_Reference(name=Identifier(["Capdpa", "Simple"])),
+                Variable(name="B", ctype=Type_Reference(name=Identifier(["Int"])))])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_base_simple.txt"))
+        self.check(result[2], self.load("test_inherit_simple.txt"))
+
     def test_class_with_virtual(self):
-        expected = self.load("test_base_with_virtual.txt")
-        result = Class(name = "With_Virtual", children = [
-            Function(name = "Foo", symbol = "", virtual = True)]).AdaSpecification()
-        self.check(result, expected)
+        result = Namespace(name="Capdpa", children=[
+            Class(name = "With_Virtual", children = [
+                Function(name = "Foo", symbol = "", virtual = True)])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_base_with_virtual.txt"))
 
     def test_inherit_from_virtual(self):
-        exptected = self.load("test_inherit_from_virtual.txt")
-        result = Class(name = "From_Virtual",
+        expected = self.load("test_inherit_from_virtual.txt")
+        result = Namespace(name="Capdpa", children=[
+            Class(name = "With_Virtual", children = [
+                Function(name = "Foo", symbol = "", virtual = True)]),
+            Class(name = "From_Virtual",
                 children = [
-                    Variable(name = "V", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))],
-                inherits = [
-                    Class(name = "With_Virtual")]).AdaSpecification()
-        self.check(result, expected)
+                    Class_Reference(name=Identifier(["Capdpa", "With_Virtual"])),
+                    Variable(name = "V", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_base_with_virtual.txt"))
+        self.check(result[2], self.load("test_inherit_from_virtual.txt"))
