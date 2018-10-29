@@ -19,7 +19,13 @@ class Class(ir.Base):
         self.name       = name
         self.children   = children or []
         if not filter(ir_function.Constructor.isInst, self.children):
-            self.children.append(ir_function.Constructor(""))
+            flist = [ir_function.Function.isInst(c) for c in self.children]
+            if True in flist:
+                self.children.insert(
+                        flist.index(True),
+                        ir_function.Constructor(""))
+            else:
+                self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
 
     def isVirtual(self):

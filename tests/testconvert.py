@@ -25,6 +25,14 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_empty_class.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_default_constructor(self):
+        expected = Class(name="Test", children=[
+            Constructor(symbol=""),
+            Function(name="f1", symbol="")])
+        result = Class(name="Test", children=[
+            Function(name="f1", symbol="")])
+        self.check(result, expected)
+
     def test_namespace_with_class(self):
         expected = Namespace(name = "Capdpa", children = [Namespace (name = "With_class",
                 children = [Class(name = "In_namespace")])])
