@@ -268,3 +268,23 @@ class Parser(Capdpa_Test):
                 Function(name = "foo", symbol = "", virtual=True)])])
         result = CXX("tests/data/test_inherit_virtual_from_simple.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_empty_struct(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "S")])
+        result = CXX("tests/data/test_empty_struct.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
+    def test_class_without_access_spec(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "No_access", children = [
+                Variable(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private")])])
+        result = CXX("tests/data/test_class_without_access_spec.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
+    def test_struct_without_access_spec(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "No_access", children = [
+                Variable(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="public")])])
+        result = CXX("tests/data/test_struct_without_access_spec.h").ToIR(project="Capdpa")
+        self.check(result, expected)
