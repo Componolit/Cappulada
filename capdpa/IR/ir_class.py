@@ -65,21 +65,22 @@ class Class(ir.Base):
             withs += "\n"
 
         # Generate record members
-        null = type("", (), dict(AdaSpecification=lambda self, indentation: " " * indentation + "null"))()
+        null = type("", (), dict(AdaSpecification=lambda self, indentation, private_name: " " * indentation + "null"))()
         base = [Class_Reference.isInst(c) for c in self.children]
         base = self.children[base.index(True)] if True in base else None
         hasvirtualbase = base.isVirtual() if base else False
 
-        class_record = '   type Class is{}\n'.format(
+        class_record = '\n'.join(['   type {} is null record\n      with Size => {}\'Size;'.format(
+            m.ctype.AdaSpecification(private=self.name),
+            m.ctype.AdaSpecification()) for m in self.Members() if m.IsPrivate()] + [''])
+        class_record += '   type Class is{}\n'.format(
                 (" new " + base.name.PackageFullName() + " with") if hasvirtualbase and self.isVirtual() else "")
         class_record += '   {}limited '.format("tagged " if self.isVirtual() and not hasvirtualbase else "")
         class_record += "record\n"
         for member in self.Members() or [null]:
-            class_record += member.AdaSpecification(indentation=6) + ";\n"
+            class_record += member.AdaSpecification(indentation=6, private_name=self.name) + ";\n"
         class_record += "   end record\n"
         class_record += "   with Import, Convention => CPP;\n"
-        class_record += "   type Private_Class is limited null record\n"
-        class_record += "   with Size => Class'Size;\n"
 
         # Generate functions and procedures
         isOp = lambda e: ir_function.Function.isInst(e) or ir_function.Constructor.isInst(e)

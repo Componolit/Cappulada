@@ -10,11 +10,11 @@ class Variable(ir.Base):
         self.ctype.SetParent(self)
         self.access = access
 
-    def AdaSpecification(self, indentation=0):
+    def AdaSpecification(self, indentation=0, private_name=""):
         return " " * indentation + "%(private)s%(name)s : %(type)s" % \
                 { 'private' : "" if self.access == "public" else "Private_",
                   'name': self.ConvertName(self.name),
-                  'type': self.ctype.AdaSpecification(access=self.access) }
+                  'type': self.ctype.AdaSpecification(private=("" if self.access == "public" else private_name)) }
 
     def InstantiateTemplates(self):
         if isinstance(self.ctype, ir_type.Type_Reference_Template):
@@ -25,3 +25,6 @@ class Variable(ir.Base):
                 template.parent.children.insert(index, instance)
                 #FIXME: set instance parent correctly
                 template.parent_index += 1
+
+    def IsPrivate(self):
+        return self.access != "public"
