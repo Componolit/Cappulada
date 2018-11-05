@@ -3,6 +3,7 @@ namespace With_class
 {
     class With_everything
     {
+        public:
         enum {
             ONE = 1,
             TWO = 2

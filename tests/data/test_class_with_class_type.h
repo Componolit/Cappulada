@@ -3,6 +3,7 @@
 
 class Full
 {
-    With_class::In_namespace value;
-    With_class::In_namespace *value_ptr;
+    public:
+        With_class::In_namespace value;
+        With_class::In_namespace *value_ptr;
 };

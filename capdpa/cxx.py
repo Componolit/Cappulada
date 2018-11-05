@@ -52,7 +52,7 @@ class CXX:
             self.__print_tree(c, indent + 2)
 
     def __convert_class(self, cursor):
-        if cursor.kind != clang.cindex.CursorKind.CLASS_DECL:
+        if cursor.kind not in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
             raise InvalidNodeError
         return IR.Class(
                 name = cursor.displayname,
@@ -127,8 +127,11 @@ class CXX:
                 argc += 1
         return argv
 
-    def __convert_member(self, cursor, access):
-        return IR.Variable(name = cursor.displayname, ctype = self.__convert_type(cursor.type), access=access)
+    def __convert_member(self, cursor):
+        return IR.Variable(
+                name = cursor.displayname,
+                ctype = self.__convert_type(cursor.type),
+                access="public" if cursor.access_specifier == clang.cindex.AccessSpecifier.PUBLIC else "private")
 
     def __convert_constant(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.ENUM_CONSTANT_DECL:
@@ -172,35 +175,31 @@ class CXX:
 
     def __convert_children(self, cursors):
         children = []
-        access = "public"
         for cursor in cursors:
-            if cursor.kind == clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL:
-                access = list(cursor.get_tokens())[0].spelling
-            else:
-                if access == "public":
-                    if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
-                        children.append(self.__convert_namespace(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
-                        children.append(self.__convert_class(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.ENUM_DECL:
-                        if cursor.displayname:
-                            children.append(self.__convert_enum(cursor))
-                        else:
-                            [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
-                    elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
-                        children.append(self.__convert_typedef(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
-                        children.append(self.__convert_function(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
-                        children.append(self.__convert_typedef(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
-                        children.append(self.__convert_constructor(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
-                        children.append(self.__convert_template(cursor))
-                    elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
-                        children.append(self.__convert_base(cursor))
-                if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
-                    children.append(self.__convert_member(cursor, access))
+            if cursor.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
+                if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
+                    children.append(self.__convert_namespace(cursor))
+                elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL or cursor.kind, clang.cindex.CursorKind.STRUCT_DECL]:
+                    children.append(self.__convert_class(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.ENUM_DECL:
+                    if cursor.displayname:
+                        children.append(self.__convert_enum(cursor))
+                    else:
+                        [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
+                elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
+                    children.append(self.__convert_typedef(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
+                    children.append(self.__convert_function(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
+                    children.append(self.__convert_typedef(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
+                    children.append(self.__convert_constructor(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
+                    children.append(self.__convert_template(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
+                    children.append(self.__convert_base(cursor))
+            if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
+                children.append(self.__convert_member(cursor))
         return children
 
     def ToIR(self, project):

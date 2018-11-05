@@ -10,7 +10,8 @@ class Container
 
 class User
 {
-    Container<int, char> cic;
-    Container<int, int> cii;
-    Container<int, char> cic2;
+    public:
+        Container<int, char> cic;
+        Container<int, int> cii;
+        Container<int, char> cic2;
 };

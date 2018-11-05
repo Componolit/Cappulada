@@ -5,7 +5,8 @@ namespace With_typedef
 
     class Use_type
     {
-        u8 c;
-        i32 i;
+        public:
+            u8 c;
+            i32 i;
     }
 }
