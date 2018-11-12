@@ -57,30 +57,28 @@ class Class(ir.Base):
 
     def AdaSpecification(self, indentation=0):
 
-        # Generate with statements
-        withs = ""
-        for w in self.UsedPackages():
-            withs += "with " + w + ";\n"
-        if withs:
-            withs += "\n"
-
         # Generate record members
         null = type("", (), dict(AdaSpecification=lambda self, indentation, private_name: " " * indentation + "null"))()
         base = [Class_Reference.isInst(c) for c in self.children]
         base = self.children[base.index(True)] if True in base else None
         hasvirtualbase = base.isVirtual() if base else False
 
-        class_record = '\n'.join(['   type {} is null record\n      with Size => {}\'Size;'.format(
-            m.ctype.AdaSpecification(private=self.name),
-            m.ctype.AdaSpecification()) for m in self.Members() if m.IsPrivate()] + [''])
-        class_record += '   type Class is{}\n'.format(
-                (" new " + base.name.PackageFullName() + " with") if hasvirtualbase and self.isVirtual() else "")
-        class_record += '   {}limited '.format("tagged " if self.isVirtual() and not hasvirtualbase else "")
-        class_record += "record\n"
-        for member in self.Members() or [null]:
-            class_record += member.AdaSpecification(indentation=6, private_name=self.name) + ";\n"
-        class_record += "   end record\n"
-        class_record += "   with Import, Convention => CPP;\n"
+        class_record = (
+                "{private_types}"
+                "{indent}type Class is{classdef}\n"
+                "{indent}{tagged}limited record\n"
+                "{classmembers}"
+                "{indent}end record\n"
+                "{indent}with Import, Convention => CPP;\n"
+                ).format(
+                        indent = (indentation + 3) * " ",
+                        private_types = "\n".join(['{indent}type {private} is null record\n{indent}   with Size => {public}\'Size;'.format(
+                            indent = (indentation + 3) * " ",
+                            private = m.ctype.AdaSpecification(private=self.name),
+                            public = m.ctype.AdaSpecification()) for m in self.Members() if m.IsPrivate()] + ['']),
+                        classdef = (" new " + base.name.PackageFullName() + " with") if hasvirtualbase and self.isVirtual() else "",
+                        tagged = "tagged " if self.isVirtual() and not hasvirtualbase else "",
+                        classmembers = "\n".join([m.AdaSpecification(indentation + 6, self.name) + ";" for m in self.Members() or [null]] + ['']))
 
         # Generate functions and procedures
         isOp = lambda e: ir_function.Function.isInst(e) or ir_function.Constructor.isInst(e)
@@ -94,23 +92,22 @@ class Class(ir.Base):
         types = filter(ir_type.Type_Definition.isInst, self.children)
 
         # Main package structure
-        p = \
-            '%(withs)s'                                 + \
-            'package %(package)s\n'                     + \
-            'is\n'                                      + \
-            '%(types)s'                                 + \
-            '%(constants)s'                             + \
-            '%(record)s'                                + \
-            '%(ops)s'                                   + \
-            'end %(package)s;\n'
 
-        return p % { 'withs':       withs,
-                     'package':     ".".join(map(self.ConvertName, self.FullyQualifiedName())),
-                     'types' :      "\n".join(map(lambda t: t.AdaSpecification(indentation=3), types) + [""]),
-                     'constants':   "\n".join(map(lambda c: c.AdaSpecification(indentation=3), constants) + [""]),
-                     'record':      class_record,
-                     'ops':         "".join(map(lambda o: o.AdaSpecification(indentation=3), ops)) }
-
+        return ("{indent}package {package}\n"
+                "{indent}is\n"
+                "{subpackages}"
+                "{types}"
+                "{constants}"
+                "{classrecord}"
+                "{operations}"
+                "{indent}end {package};\n").format(
+                        indent = indentation * " ",
+                        package = self.name if Class.isInst(self.parent) else ".".join(map(self.ConvertName, self.FullyQualifiedName())),
+                        subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
+                        types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
+                        constants = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), constants) + ['']),
+                        classrecord = class_record,
+                        operations = "".join(map(lambda o: o.AdaSpecification(indentation + 3), ops)))
 
 class Class_Reference(ir.Base):
 
