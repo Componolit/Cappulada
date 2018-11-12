@@ -29,6 +29,10 @@ class Namespace(ir.Base):
             if isinstance(p, Namespace):
                 compilation_units.extend(p.AdaSpecification())
             if isinstance(p, ir_class.Class):
-                compilation_units.append(p.AdaSpecification())
+                if p.UsedPackages():
+                    withs = "\n".join(map("with {};".format, p.UsedPackages()) + ['', ''])
+                else:
+                    withs = ""
+                compilation_units.append(withs + p.AdaSpecification())
 
         return compilation_units
