@@ -6,4 +6,4 @@ class Simple : public Inheritance
     public:
         int s;
         virtual void foo();
-}
+};

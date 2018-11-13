@@ -4,7 +4,7 @@ namespace With_enum
     enum WEEKEND {
         SATURDAY,
         SUNDAY
-    }
+    };
 
     enum Constants {
         ONE = 1,

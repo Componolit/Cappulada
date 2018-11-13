@@ -8,5 +8,5 @@ namespace With_typedef
         public:
             u8 c;
             i32 i;
-    }
+    };
 }

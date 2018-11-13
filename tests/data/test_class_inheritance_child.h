@@ -5,4 +5,4 @@ class Child : public Inheritance
 {
     public:
         long c;
-}
+};
