@@ -5,4 +5,4 @@ class Inheritance : public With_members
 {
     public:
         int Additional;
-}
+};
