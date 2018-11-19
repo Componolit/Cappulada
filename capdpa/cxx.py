@@ -39,9 +39,9 @@ TypeMap = {
 
 class CXX:
 
-    def __init__(self, header):
+    def __init__(self, header, flags = []):
         self.index = clang.cindex.Index.create()
-        self.translation_unit = self.index.parse(header, ["-x", "c++"])
+        self.translation_unit = self.index.parse(header, ["-x", "c++"] + flags)
 
     def __print_layer(self, cursor):
         print(str(cursor.kind) + " (" + cursor.displayname + "): " + str([cursor.kind for cursor in cursor.get_children()]))
