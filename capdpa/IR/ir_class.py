@@ -33,7 +33,9 @@ class Class(ir.Base):
 
     def UsedPackages(self):
         types = []
-        isLocalType = lambda t: t.name.PackagePath() and self.FullyQualifiedName()[:len(t.name.PackagePath())] != t.name.PackagePath()
+        isLocalType = lambda t: t.name.PackagePath() and \
+            self.FullyQualifiedName()[:len(t.name.PackagePath())] != t.name.PackagePath() and \
+            t.name.PackagePath() not in [c.FullyQualifiedName() for c in self.children]
 
         for f in filter(ir_function.Function.isInst, self.children):
             map(lambda p: types.append(p.ctype), f.parameters)
