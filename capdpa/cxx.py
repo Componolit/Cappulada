@@ -89,7 +89,7 @@ class CXX:
         while type_cursor.kind == clang.cindex.TypeKind.POINTER:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
-        if type_cursor.kind ==  clang.cindex.TypeKind.UNEXPOSED:
+        if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
@@ -179,7 +179,7 @@ class CXX:
             if cursor.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
                 if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
                     children.append(self.__convert_namespace(cursor))
-                elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL or cursor.kind, clang.cindex.CursorKind.STRUCT_DECL]:
+                elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                     children.append(self.__convert_class(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.ENUM_DECL:
                     if cursor.displayname:

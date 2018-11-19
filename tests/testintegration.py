@@ -127,3 +127,8 @@ class check_integration(Capdpa_Test):
             "test_class_inheritance.ads",
             "test_inherit_virtual_from_simple.ads"])
 
+    def test_nested_class(self):
+        self.check_integration("test_nested_class.h", [
+            "test_capdpa.ads",
+            "test_nested_package.ads"])
+
