@@ -9,6 +9,7 @@ class check_integration(Capdpa_Test):
         result = CXX("tests/data/" + header).ToIR(project="Capdpa").AdaSpecification()
         self.assertEqual(len(specs), len(result), "Expected {} compilation units, got {}\n====\n{}"
                 .format(len(specs), len(result), result))
+        result = [r.Text() for r in result]
         map(self.cache, result, specs)
         map(self.check, result, map(self.load, specs))
 
