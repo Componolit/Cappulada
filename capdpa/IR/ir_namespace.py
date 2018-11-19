@@ -4,6 +4,8 @@ import ir_constant
 import ir_enum
 import ir_type
 
+from ..ada import Specification
+
 class Namespace(ir.Base):
 
     def __init__(self, name, children=None):
@@ -16,15 +18,16 @@ class Namespace(ir.Base):
         fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
 
         compilation_units = [
-                "package {0}\nis{1}\nend {0};\n"
-                .format(
-                    fqn_ada,
-                    "\n".join([""] + map(
-                        lambda c: c.AdaSpecification(indentation=3),
-                        filter(
-                            lambda c: ir_constant.Constant.isInst(c) or ir_enum.Enum.isInst(c) or ir_type.Type_Definition.isInst(c),
-                            self.children)))
-                )]
+                Specification(
+                    name = [self.ConvertName(name) for name in self.FullyQualifiedName()],
+                    text = "package {0}\nis{1}\nend {0};\n".format(
+                        fqn_ada,
+                        "\n".join([""] + map(
+                            lambda c: c.AdaSpecification(indentation=3),
+                            filter(lambda c: ir_constant.Constant.isInst(c) or ir_enum.Enum.isInst(c) or ir_type.Type_Definition.isInst(c),
+                                self.children)))
+                        ))]
+
         for p in self.children:
             if isinstance(p, Namespace):
                 compilation_units.extend(p.AdaSpecification())
@@ -33,6 +36,8 @@ class Namespace(ir.Base):
                     withs = "\n".join(map("with {};".format, p.UsedPackages()) + ['', ''])
                 else:
                     withs = ""
-                compilation_units.append(withs + p.AdaSpecification())
+                compilation_units.append(Specification(
+                    name = [self.ConvertName(name) for name in p.FullyQualifiedName()],
+                    text = withs + p.AdaSpecification()))
 
         return compilation_units
