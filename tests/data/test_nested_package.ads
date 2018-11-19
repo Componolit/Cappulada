@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Outer
 is
    package Inner
@@ -7,6 +9,7 @@ is
          null;
       end record
       with Import, Convention => CPP;
+      type Class_Address is new System.Address;
       function Constructor return Class;
       pragma Cpp_Constructor (Constructor, "");
    end Inner;
@@ -15,6 +18,7 @@ is
       I : Capdpa.Outer.Inner.Class;
    end record
    with Import, Convention => CPP;
+   type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end Capdpa.Outer;

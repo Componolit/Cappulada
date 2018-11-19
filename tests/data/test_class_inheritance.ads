@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Inheritance
 is
    type Inheritance_Private_Int is null record
@@ -17,6 +19,7 @@ is
       Additional : Capdpa.Int;
    end record
    with Import, Convention => CPP;
+   type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end Capdpa.Inheritance;

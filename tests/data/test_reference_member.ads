@@ -1,15 +1,13 @@
 with System;
 
-package Capdpa.User
+package Capdpa.With_Reference
 is
    type Class is
    limited record
-      Cic : Capdpa.Container_T_Int_Signed_Char;
-      Cii : Capdpa.Container_T_Int_Int;
-      Cic2 : Capdpa.Container_T_Int_Signed_Char;
+      R : access Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end Capdpa.User;
+end Capdpa.With_Reference;

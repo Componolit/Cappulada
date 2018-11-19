@@ -1,3 +1,5 @@
+with System;
+
 package Bar.Foo.Class
 is
    Constant1 : constant := 5;
@@ -7,6 +9,7 @@ is
       null;
    end record
    with Import, Convention => CPP;
+   type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "symbol_404");
 end Bar.Foo.Class;

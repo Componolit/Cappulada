@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Child
 is
    type Child_Private_Int is null record
@@ -18,6 +20,7 @@ is
       C : Capdpa.Int;
    end record
    with Import, Convention => CPP;
+   type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end Capdpa.Child;
