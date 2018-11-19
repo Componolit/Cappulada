@@ -24,6 +24,12 @@ class Type_Reference(ir.Base):
     def FullyQualifiedName(self):
         return self.name.name
 
+    def Mangle(self):
+        if self.name == ['int']:
+            return "i"
+        else:
+            return "INVALID"
+
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
     def __init__(self, name, arguments, pointer = 0, reference = False):

@@ -42,6 +42,29 @@ class Function(ir.Base):
         # TODO
         pass
 
+    def Mangle(self, insert=""):
+
+        # Mangled-name prefix "_Z", nested name "N"
+        result = "_ZN"
+
+        for i in self.FullyQualifiedName():
+            for n in i.name:
+                result += str(len(n)) + n
+
+        result += insert
+
+        # E tag of <nested-name>
+        result += "E"
+
+        # parameters
+        if self.parameters:
+            for p in self.parameters:
+                result += p.Mangle()
+        else:
+            result += "v"
+
+        return result
+
 class Constructor(Function):
 
     def __init__(self, symbol, parameters=None):
@@ -58,3 +81,28 @@ class Constructor(Function):
                 " " * indentation,
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
+
+    def Mangle(self, insert=""):
+
+        # Mangled-name prefix "_Z", nested name "N"
+        result = "_ZN"
+
+        if not self.parent:
+            raise Exception("self.parent not set")
+
+        for i in self.parent.FullyQualifiedName():
+           result += str(len(i)) + i
+
+        result += insert
+
+        # E tag of <nested-name>
+        result += "E"
+
+        # parameters
+        if self.parameters:
+            for p in self.parameters:
+                result += p.Mangle()
+        else:
+            result += "v"
+
+        return result

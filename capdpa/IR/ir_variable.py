@@ -28,3 +28,6 @@ class Variable(ir.Base):
 
     def IsPrivate(self):
         return self.access != "public"
+
+    def Mangle(self):
+        return self.ctype.Mangle()
