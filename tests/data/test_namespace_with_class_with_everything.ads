@@ -12,6 +12,7 @@ is
       Public_Int : Capdpa.Int;
    end record
    with Import, Convention => CPP;
+   type Class_Address is new System.Address;
    procedure Public_Function
    with Import, Convention => CPP, External_Name => "";
    function Constructor return Class;

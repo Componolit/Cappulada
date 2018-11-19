@@ -3,17 +3,23 @@ import ir_template
 
 class Type_Reference(ir.Base):
 
-    def __init__(self, name, pointer = 0, **kwargs):
+    def __init__(self, name, pointer = 0, reference = False, **kwargs):
         super(Type_Reference, self).__init__()
         self.name = name
         self.pointer = pointer
+        self.reference = reference
 
     def AdaSpecification(self, indentation=0, private=""):
         if private:
             name = self.ConvertName(private + "_Private_" + self.name.PackageBaseNameRaw())
+        elif self.pointer > 0:
+            if self.pointer == 1:
+                name = self.name.PackageFullName() + "_Address"
+            else:
+                raise ValueError("Pointer nesting to deep: {}".format(pointer))
         else:
             name = self.name.PackageFullName()
-        return " " * indentation + ("access " if self.pointer else "") + name
+        return " " * indentation + ("access " if self.reference else "") + name
 
     def FullyQualifiedName(self):
         return self.name.name
