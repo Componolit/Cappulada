@@ -2,6 +2,7 @@
 
 import sys
 import os
+import traceback
 import argparse
 from capdpa import *
 
@@ -18,7 +19,10 @@ if __name__ == "__main__":
     compilation_units = []
 
     for header in args.headers:
-        compilation_units.extend(CXX(header, clang_args).ToIR(project=args.project).AdaSpecification())
+        try:
+            compilation_units.extend(CXX(header, clang_args).ToIR(project=args.project).AdaSpecification())
+        except:
+            traceback.print_exc()
 
     ud = {hash(cu.Text() + cu.FileName()):cu for cu in compilation_units}
     compilation_units = [ud[ch] for ch in set(ud.keys())]
