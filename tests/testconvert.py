@@ -288,3 +288,11 @@ class Parser(Capdpa_Test):
                 Variable(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="public")])])
         result = CXX("tests/data/test_struct_without_access_spec.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_nested_class(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "Outer", children = [
+                Class(name = "Inner"),
+                Variable(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])])
+        result = CXX("tests/data/test_nested_class.h").ToIR(project="Capdpa")
+        self.check(result, expected)
