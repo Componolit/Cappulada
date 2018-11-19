@@ -16,7 +16,7 @@ class Type_Reference(ir.Base):
             if self.pointer == 1:
                 name = self.name.PackageFullName() + "_Address"
             else:
-                raise ValueError("Pointer nesting to deep: {}".format(pointer))
+                raise ValueError("Pointer nesting to deep: {}".format(self.pointer))
         else:
             name = self.name.PackageFullName()
         return " " * indentation + ("access " if self.reference else "") + name
@@ -26,8 +26,8 @@ class Type_Reference(ir.Base):
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
-    def __init__(self, name, arguments, pointer = 0):
-        super(Type_Reference_Template, self).__init__(name=name, pointer=pointer)
+    def __init__(self, name, arguments, pointer = 0, reference = False):
+        super(Type_Reference_Template, self).__init__(name=name, pointer=pointer, reference=reference)
         self.arguments = arguments
 
     def AdaSpecification(self, indentation=0, private=""):

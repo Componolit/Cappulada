@@ -86,8 +86,12 @@ class CXX:
 
     def __convert_type(self, type_cursor):
         ptr = 0;
+        reference = False;
         while type_cursor.kind == clang.cindex.TypeKind.POINTER:
             ptr += 1
+            type_cursor = type_cursor.get_pointee()
+        if type_cursor.kind == clang.cindex.TypeKind.LVALUEREFERENCE:
+            reference = True
             type_cursor = type_cursor.get_pointee()
         if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
             targs = type_cursor.get_num_template_arguments()
@@ -96,21 +100,21 @@ class CXX:
                 return IR.Type_Reference_Template(
                         name = IR.Identifier(self.__resolve_name(decl)),
                         arguments = [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
-                        pointer = ptr)
+                        pointer = ptr, reference=reference)
             elif decl.kind == clang.cindex.CursorKind.CLASS_DECL:
                 return IR.Type_Reference(
                         name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
-                        pointer = ptr)
+                        pointer = ptr, reference=reference)
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
                 return IR.Template_Argument(type_cursor.spelling)
             else:
                 NotImplementedError("Unsupported declaration kind {}".format(decl.kind))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
-            return IR.Type_Reference(name = IR.Identifier([self.project, "C_Address"]), pointer = ptr - 1) if ptr else None
+            return IR.Type_Reference(name = IR.Identifier([self.project, "C_Address"]), pointer = ptr - 1, reference=reference) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
-            return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr)
+            return IR.Type_Reference(name = IR.Identifier([type_cursor.spelling]), pointer = ptr, reference=reference)
         elif type_cursor.kind in TypeMap.keys():
-            return IR.Type_Reference(name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]), pointer = ptr)
+            return IR.Type_Reference(name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]), pointer = ptr, reference=reference)
         else:
             raise NotImplementedError("Unsupported type: {} (from {})".format(type_cursor.kind, type_cursor.spelling))
 

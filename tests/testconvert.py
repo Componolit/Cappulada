@@ -296,3 +296,18 @@ class Parser(Capdpa_Test):
                 Variable(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])])
         result = CXX("tests/data/test_nested_class.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_pointer_member(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Pointer", children = [
+                Variable(name="p", ctype=Type_Reference(name = Identifier(["Capdpa", "int"]), pointer = 1))])
+            ])
+        result = CXX("tests/data/test_pointer_member.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
+    def test_reference_member(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Reference", children = [
+                Variable(name="r", ctype=Type_Reference(name=Identifier(["Capdpa", "int"]), reference=True))])])
+        result = CXX("tests/data/test_reference_member.h").ToIR(project="Capdpa")
+        self.check(result, expected)

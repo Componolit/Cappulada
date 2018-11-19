@@ -285,3 +285,21 @@ class GenerateConstant(Capdpa_Test):
                 Variable(name = "field", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])]).AdaSpecification()
         self.check(result[0], self.load("test_capdpa.txt"))
         self.check(result[1], self.load("test_nested_package.txt"))
+
+    def test_pointer_member(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Pointer", children = [
+                Variable(name = "P", ctype = Type_Reference(name = Identifier(["Int"]), pointer = 1))])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_pointer_member.txt"))
+
+    def test_pointer_depth(self):
+        var = Variable(name="var", ctype = Type_Reference(name = Identifier(["Test"]), pointer = 2))
+        self.assertRaises(ValueError, var.AdaSpecification)
+
+    def test_reference_member(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Reference", children = [
+                Variable(name = "R", ctype = Type_Reference(name = Identifier(["Int"]), reference = True))])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_reference_member.txt"))

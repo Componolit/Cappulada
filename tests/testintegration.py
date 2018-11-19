@@ -132,3 +132,12 @@ class check_integration(Capdpa_Test):
             "test_capdpa.ads",
             "test_nested_package.ads"])
 
+    def test_pointer_member(self):
+        self.check_integration("test_pointer_member.h", [
+            "test_capdpa.ads",
+            "test_pointer_member.ads"])
+
+    def test_reference_member(self):
+        self.check_integration("test_reference_member.h", [
+            "test_capdpa.ads",
+            "test_reference_member.ads"])
