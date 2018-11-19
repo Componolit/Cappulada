@@ -114,7 +114,7 @@ class CXX:
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
                 return IR.Template_Argument(type_cursor.spelling)
             else:
-                NotImplementedError("Unsupported declaration kind {}".format(decl.kind))
+                raise NotImplementedError("Unsupported declaration kind {}".format(decl.kind))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
             return IR.Type_Reference(
                     name = IR.Identifier([self.project, "C_Address"]),
