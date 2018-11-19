@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import os
 import argparse
 from capdpa import *
@@ -7,15 +8,17 @@ from capdpa import *
 parser = argparse.ArgumentParser()
 parser.add_argument('-o', '--outdir', help="target directory", default=os.path.abspath(os.curdir))
 parser.add_argument('-p', '--project', help="project name", default="Capdpa")
-parser.add_argument('-c', '--clang', help="additional clang arguments")
 parser.add_argument('headers', help="header files", nargs='+')
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+
+    args = sys.argv[1:sys.argv.index('--')] if '--' in sys.argv else sys.argv[1:]
+    clang_args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+    args = parser.parse_args(args)
     compilation_units = []
 
     for header in args.headers:
-        compilation_units.extend(CXX(header, args.clang.split(',') if args.clang else []).ToIR(project=args.project).AdaSpecification())
+        compilation_units.extend(CXX(header, clang_args).ToIR(project=args.project).AdaSpecification())
 
     ud = {hash(cu.Text() + cu.FileName()):cu for cu in compilation_units}
     compilation_units = [ud[ch] for ch in set(ud.keys())]
