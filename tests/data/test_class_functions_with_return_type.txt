@@ -2,6 +2,7 @@ with Bar.Baz;
 with Bar.Foo.Blub;
 with Blah;
 with Foo;
+with System;
 
 package Bar.Foo.Brabbel
 is

@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Container_T_Int_Signed_Char
 is
    type Class is

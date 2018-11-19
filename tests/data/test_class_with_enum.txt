@@ -1,3 +1,5 @@
+with System;
+
 package Bar.Foo.Class
 is
    type Enum1 is (Elem11, Elem12);

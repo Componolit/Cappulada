@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.With_Class.With_Everything
 is
    One : constant := 1;

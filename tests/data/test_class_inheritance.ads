@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Inheritance
 is
    type Inheritance_Private_Int is null record

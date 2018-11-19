@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Child
 is
    type Child_Private_Int is null record

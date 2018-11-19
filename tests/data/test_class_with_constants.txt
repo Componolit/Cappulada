@@ -1,3 +1,5 @@
+with System;
+
 package Bar.Foo.Class
 is
    Constant1 : constant := 5;

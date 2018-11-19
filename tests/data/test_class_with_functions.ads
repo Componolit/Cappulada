@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.With_Functions
 is
    type Class is

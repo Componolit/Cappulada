@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.Simple
 is
    type Simple_Private_Int is null record

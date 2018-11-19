@@ -279,8 +279,9 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[2], self.load("test_inherit_from_virtual.txt"))
 
     def test_nested_package(self):
-        expected = self.load("test_nested_package.txt")
-        result = Class(name = "Outer", children = [
-            Class(name = "Inner", children = []),
-            Variable(name = "field", ctype = Type_Reference(name = Identifier(["Outer", "Inner", "Class"])))]).AdaSpecification()
-        self.check(result, expected)
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "Outer", children = [
+                Class(name = "Inner", children = []),
+                Variable(name = "field", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])]).AdaSpecification()
+        self.check(result[0], self.load("test_capdpa.txt"))
+        self.check(result[1], self.load("test_nested_package.txt"))

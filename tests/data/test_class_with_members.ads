@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.With_Members
 is
    type With_Members_Private_Int is null record

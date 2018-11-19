@@ -1,5 +1,6 @@
 with Bar.Baz;
 with Bar.Foo.Blub;
+with System;
 
 package Bar.Foo.Brabbel
 is

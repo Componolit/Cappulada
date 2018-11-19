@@ -1,4 +1,6 @@
-package Outer
+with System;
+
+package Capdpa.Outer
 is
    package Inner
    is
@@ -13,10 +15,10 @@ is
    end Inner;
    type Class is
    limited record
-      Field : Outer.Inner.Class;
+      Field : Capdpa.Outer.Inner.Class;
    end record
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
-end Outer;
+end Capdpa.Outer;

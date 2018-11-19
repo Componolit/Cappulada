@@ -1,4 +1,5 @@
 with Capdpa.With_Class.In_Namespace;
+with System;
 
 package Capdpa.Full
 is

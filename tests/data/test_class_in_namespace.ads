@@ -1,3 +1,5 @@
+with System;
+
 package Capdpa.With_Class.In_Namespace
 is
    type Class is
