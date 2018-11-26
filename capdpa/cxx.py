@@ -107,7 +107,7 @@ class CXX:
                         arguments = [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
                         constant = const,
                         pointer = ptr, reference=reference)
-            elif decl.kind == clang.cindex.CursorKind.CLASS_DECL:
+            elif decl.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                 return IR.Type_Reference(
                         name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
                         constant = const,
@@ -204,12 +204,21 @@ class CXX:
 
     def __convert_children(self, cursors):
         children = []
-        for cursor in cursors:
+        clist = list(cursors)
+        for cursor in clist:
             if cursor.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
                 if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
                     children.append(self.__convert_namespace(cursor))
                 elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
-                    children.append(self.__convert_class(cursor))
+                    decl = self.__convert_class(cursor)
+                    if True not in [c.name == decl.name for c in children]:
+                        if not cursor.is_definition():
+                            if cursor.get_definition() and cursor.get_definition() in clist:
+                                children.append(self.__convert_class(cursor.get_definition()))
+                            else:
+                                children.append(IR.Type_Definition(decl.name, None))
+                        else:
+                            children.append(decl)
                 elif cursor.kind == clang.cindex.CursorKind.ENUM_DECL:
                     if cursor.displayname:
                         children.append(self.__convert_enum(cursor))
