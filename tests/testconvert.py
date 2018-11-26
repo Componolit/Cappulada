@@ -126,7 +126,8 @@ class Parser(Capdpa_Test):
                 Type_Definition(
                     name="int32_t",
                     reference=Type_Reference(name=Identifier(name=["Capdpa", "int"]), pointer=0)),
-                Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0))])
+                Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["uint8_t"]), pointer=0)),
+                Type_Definition(name="ull", reference=Type_Reference(name=Identifier(name=["Capdpa", "unsigned_long_long"])))])
         result = CXX("tests/data/test_types.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
