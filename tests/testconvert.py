@@ -328,3 +328,6 @@ class Parser(Capdpa_Test):
 
     def test_array_template(self):
         CXX("tests/data/test_array_template.h").ToIR(project="Capdpa")
+
+    def test_template_typedef(self):
+        CXX("tests/data/test_template_typedef.h").ToIR(project="Capdpa")
