@@ -311,3 +311,13 @@ class Parser(Capdpa_Test):
                 Variable(name="r", ctype=Type_Reference(name=Identifier(["Capdpa", "int"]), reference=True))])])
         result = CXX("tests/data/test_reference_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_enum_member(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Enum", children = [
+                Enum(name = "E_t", children = [
+                    Constant(name = "A", value = 0),
+                    Constant(name = "B", value = 1)]),
+                Variable(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
+        result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
+        self.check(result, expected)

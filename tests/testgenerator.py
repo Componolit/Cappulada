@@ -313,3 +313,14 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[1].FileName(), "capdpa-child1.ads")
         self.check(result[2].FileName(), "capdpa-child2.ads")
         self.check(result[3].FileName(), "capdpa-child2-grandchild.ads")
+
+    def test_enum_member(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Enum", children = [
+                Enum(name = "E_t", children = [
+                    Constant(name = "A", value = 0),
+                    Constant(name = "B", value = 1)]),
+                Variable(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("test_capdpa.txt"))
+        self.check(result[1].Text(), self.load("test_enum_member.ads"))
+
