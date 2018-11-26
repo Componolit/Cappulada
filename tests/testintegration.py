@@ -152,3 +152,8 @@ class check_integration(Capdpa_Test):
         self.check_integration("test_class_with_array.h", [
             "test_capdpa.ads",
             "test_class_with_array.ads"])
+
+    def test_class_with_struct_type(self):
+        self.check_integration("test_class_with_struct_type.h", [
+            "test_capdpa.ads",
+            "test_class_with_struct_type.ads"])

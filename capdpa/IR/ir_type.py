@@ -80,10 +80,18 @@ class Type_Definition(ir.Base):
         self.reference = reference
 
     def AdaSpecification(self, indentation=0):
-        return "{0}subtype {1} is {2};".format(
-                " " * indentation,
-                self.ConvertName(self.name),
-                self.reference.AdaSpecification())
+        if self.reference:
+            return "{0}subtype {1} is {2};".format(
+                    " " * indentation,
+                    self.ConvertName(self.name),
+                    self.reference.AdaSpecification())
+        else:
+            return ("{0}package {1} is\n"
+                    "{0}{0}type Class is null record;\n"
+                    "{0}{0}type Class_Address is new System.Address;\n"
+                    "{0}end {1};").format(
+                            " " * indentation,
+                            self.ConvertName(self.name))
 
     def InstantiateTemplates(self):
         pass

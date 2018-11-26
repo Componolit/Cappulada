@@ -335,8 +335,11 @@ class Parser(Capdpa_Test):
     def test_class_with_struct_type(self):
         expected = Namespace("Capdpa", children = [
             Class(name = "With_Struct", children = [
-                Class(name = "Ws"),
-                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws", "Class"])))])])
+                Class(name = "Ws", children = [
+                    Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                Type_Definition(name = "Ws2", reference = None),
+                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws", "Class"]))),
+                Variable(name = "value2", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws2", "Class"]), pointer = 1))])])
         result = CXX("tests/data/test_class_with_struct_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
 

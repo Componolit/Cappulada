@@ -44,7 +44,7 @@ class Class(ir.Base):
                 types.append(f.return_type)
 
         map(lambda v: types.append(v.ctype), filter(ir_variable.Variable.isInst, self.children))
-        map(lambda t: types.append(t.reference), filter(ir_type.Type_Definition.isInst, self.children))
+        map(lambda t: types.append(t.reference), filter(lambda c: ir_type.Type_Definition.isInst(c) and c.reference, self.children))
         map(lambda c: types.append(c), filter(Class_Reference.isInst, self.children))
 
         return sorted(list(set(map(lambda t: t.name.PackagePathName(), filter(isLocalType, types)))))
