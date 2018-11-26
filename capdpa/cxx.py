@@ -25,6 +25,7 @@ TypeMap = {
         clang.cindex.TypeKind.USHORT    : "unsigned_short",
         clang.cindex.TypeKind.UINT      : "unsigned_int",
         clang.cindex.TypeKind.ULONG     : "unsigned_long",
+        clang.cindex.TypeKind.ULONGLONG : "unsigned_long_long",
         clang.cindex.TypeKind.CHAR_S    : "signed_char",
         clang.cindex.TypeKind.SCHAR     : "signed_char",
         clang.cindex.TypeKind.WCHAR     : "wide_char",
