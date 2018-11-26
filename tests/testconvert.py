@@ -324,4 +324,7 @@ class Parser(Capdpa_Test):
         self.check(result, expected)
 
     def test_class_with_array(self):
-        self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
+        CXX("tests/data/test_class_with_array.h").ToIR(project="Capdpa")
+
+    def test_array_template(self):
+        CXX("tests/data/test_array_template.h").ToIR(project="Capdpa")
