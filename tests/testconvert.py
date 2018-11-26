@@ -322,3 +322,6 @@ class Parser(Capdpa_Test):
                 Variable(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
         result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_class_with_array(self):
+        self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
