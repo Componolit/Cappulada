@@ -331,3 +331,11 @@ class Parser(Capdpa_Test):
 
     def test_template_typedef(self):
         CXX("tests/data/test_template_typedef.h").ToIR(project="Capdpa")
+
+    def test_class_with_struct_type(self):
+        expected = Namespace("Capdpa", children = [
+            Class(name = "With_Struct", children = [
+                Class(name = "Ws"),
+                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws", "Class"])))])])
+        result = CXX("tests/data/test_class_with_struct_type.h").ToIR(project="Capdpa")
+        self.check(result, expected)
