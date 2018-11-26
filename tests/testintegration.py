@@ -147,3 +147,8 @@ class check_integration(Capdpa_Test):
         self.check_integration("test_enum_member.h", [
             "test_capdpa.ads",
             "test_enum_member.ads"])
+
+    def test_class_with_array(self):
+        self.check_integration("test_class_with_array.h", [
+            "test_capdpa.ads",
+            "test_class_with_array.ads"])
