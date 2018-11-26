@@ -118,22 +118,28 @@ class CXX:
                 raise NotImplementedError("Unsupported declaration kind {} at {}".format(decl.kind, decl.location))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
             return IR.Type_Reference(
-                    name = IR.Identifier([self.project, "C_Address"]),
-                    constant = const,
-                    pointer = ptr - 1,
-                    reference = reference) if ptr else None
+                name = IR.Identifier([self.project, "C_Address"]),
+                constant = const,
+                pointer = ptr - 1,
+                reference = reference) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier(
-                    [type_cursor.spelling]),
-                    constant = const,
-                    pointer = ptr,
-                    reference = reference)
+                [type_cursor.spelling]),
+                constant = const,
+                pointer = ptr,
+                reference = reference)
+        elif type_cursor.kind == clang.cindex.TypeKind.ENUM:
+            return IR.Type_Reference(name = IR.Identifier(
+                self.__resolve_name(type_cursor.get_declaration())),
+                constant = const,
+                pointer = ptr,
+                reference=reference)
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(
-                    name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),
-                    constant = const,
-                    pointer = ptr,
-                    reference = reference)
+                name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),
+                constant = const,
+                pointer = ptr,
+                reference = reference)
         else:
             raise NotImplementedError("Unsupported type: {} (from {})".format(type_cursor.kind, type_cursor.spelling))
 

@@ -319,7 +319,7 @@ class Parser(Capdpa_Test):
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
                     Constant(name = "B", value = 1)]),
-                Variable(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
+                Variable(name = "e", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
         result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
