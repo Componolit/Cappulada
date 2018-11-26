@@ -352,3 +352,18 @@ class Parser(Capdpa_Test):
                     symbol = "")])])
         result = CXX("tests/data/test_class_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_namespace_with_typedef(self):
+        expected = Namespace(name="Capdpa", children=[
+            Namespace(name="With_typedef", children=[
+                Type_Definition(name="u8", reference=Type_Reference(name=Identifier(name=["Capdpa", "unsigned_char"]))),
+                Type_Definition(name="i32", reference=Type_Reference(name=Identifier(name=["Capdpa", "int"])))])])
+        result = CXX("tests/data/test_namespace_with_typedef.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
+    def test_class_with_typedef(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Typedef", children = [
+                Type_Definition(name = "i32", reference = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
+        result = CXX("tests/data/test_class_with_typedef.h").ToIR(project="Capdpa")
+        self.check(result, expected)
