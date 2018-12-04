@@ -61,7 +61,11 @@ class Mangling(unittest.TestCase):
 
     def test_compression_none (self):
         symbol = self.compression[0].children[1].children[1].Mangle("Capdpa")
-        self.assertTrue (symbol == "foo", "Invalid symbol: " + symbol)
+        self.assertTrue (symbol == "_ZN6Capdpa4Root3Cls14no_compressionEii", "Invalid symbol: " + symbol)
+
+    def test_compression1 (self):
+        symbol = self.compression[0].children[1].children[2].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN6Capdpa4Root3Cls12compression1EiNS_4DataE", "Invalid symbol: " + symbol)
 
     # FIXME: Missing
     #   * Templates
