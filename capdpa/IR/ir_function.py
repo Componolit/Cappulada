@@ -8,6 +8,7 @@ class Function(ir.Base):
         super(Function, self).__init__()
         self.name = name
         self.symbol = symbol
+        self.symname = str(len(name)) + name
         self.parameters = parameters or []
         self._parentize_list(self.parameters)
         self.return_type = return_type
@@ -42,16 +43,18 @@ class Function(ir.Base):
         # TODO
         pass
 
-    def Mangle(self, insert=""):
+    def Mangle(self):
 
         # Mangled-name prefix "_Z", nested name "N"
         result = "_ZN"
 
-        for i in self.FullyQualifiedName():
-            for n in i.name:
-                result += str(len(n)) + n
+        if not self.parent:
+            raise Exception ("Parent not set")
 
-        result += insert
+        for i in self.parent.FullyQualifiedName():
+            result += str(len(i)) + i
+
+        result += self.symname
 
         # E tag of <nested-name>
         result += "E"
@@ -68,9 +71,10 @@ class Function(ir.Base):
 class Constructor(Function):
 
     def __init__(self, symbol, parameters=None):
+        super(Constructor, self).__init__("__constructor__", symbol, parameters, None)
         self.symbol = symbol
         self.parameters = parameters or []
-        super(Constructor, self).__init__("__constructor__", symbol, parameters, None)
+        self.symname = "C1"
 
     def __repr__(self):
         return "Constructor(symbol={}, parameters={})".format(
@@ -82,27 +86,5 @@ class Constructor(Function):
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
 
-    def Mangle(self, insert=""):
-
-        # Mangled-name prefix "_Z", nested name "N"
-        result = "_ZN"
-
-        if not self.parent:
-            raise Exception("self.parent not set")
-
-        for i in self.parent.FullyQualifiedName():
-           result += str(len(i)) + i
-
-        result += insert
-
-        # E tag of <nested-name>
-        result += "E"
-
-        # parameters
-        if self.parameters:
-            for p in self.parameters:
-                result += p.Mangle()
-        else:
-            result += "v"
-
-        return result
+    def Mangle(self):
+        return super(Constructor, self).Mangle()
