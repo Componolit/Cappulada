@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import pprint
 from capdpa import *
 
 class Mangling(unittest.TestCase):
+
+    def setUp(self):
+        self.templates   = CXX("tests/data/test_template_mangling.h").ToIR(project="Capdpa").children
+        self.compression = CXX("tests/data/mangling_compression.h").ToIR(project="Capdpa").children
 
     def test_class_with_virtual(self):
         c = Class (name     = "With_Virtual",
@@ -40,20 +43,25 @@ class Mangling(unittest.TestCase):
         result = c.children[0].Mangle("Capdpa")
         self.assertTrue(result == "_ZN14With_functionsC1Ev", "Invalid symbol: " + result)
 
-    def test_template (self):
-        templates = CXX("tests/data/test_template_mangling.h").ToIR(project="Capdpa").children
-
-        functions = templates[2].children
-        symbol = functions[1].Mangle("Capdpa")
+    def test_template_template_argument (self):
+        symbol = self.templates[2].children[1].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN6Capdpa3Cls3barE6Capdpa5TemplIciEc", "Invalid symbol: " + symbol)
-        symbol = functions[2].Mangle("Capdpa")
+
+    def test_template_no_template_argument (self):
+        symbol = self.templates[2].children[2].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN6Capdpa3Cls3fooEic", "Invalid symbol: " + symbol)
-        symbol = functions[3].Mangle("Capdpa")
+
+    def test_template_multiple_template_arguments (self):
+        symbol = self.templates[2].children[3].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN6Capdpa3Cls3bazE6Capdpa5TemplIciES0_IccE", "Invalid symbol: " + symbol)
 
-        functions = templates[1].children
-        symbol = functions[1].Mangle("Capdpa")
+    def xtest_template_4 (self):
+        symbol = self.templates[0].children[1].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN6Capdpa3Cls3varE6Capdpa3VarIJEEc", "Invalid symbol: " + symbol)
+
+    def test_compression_none (self):
+        symbol = self.compression[0].children[1].children[1].Mangle("Capdpa")
+        self.assertTrue (symbol == "foo", "Invalid symbol: " + symbol)
 
     # FIXME: Missing
     #   * Templates
