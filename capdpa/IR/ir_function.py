@@ -1,6 +1,7 @@
 import ir
 import ir_type
 import ir_identifier
+import mangle
 
 class Function(ir.Base):
 
@@ -8,7 +9,6 @@ class Function(ir.Base):
         super(Function, self).__init__()
         self.name = name
         self.symbol = symbol
-        self.symname = str(len(name)) + name
         self.parameters = parameters or []
         self._parentize_list(self.parameters)
         self.return_type = return_type
@@ -43,18 +43,18 @@ class Function(ir.Base):
         # TODO
         pass
 
-    def Mangle(self,package):
+    def Mangle(self, package):
 
-        # Mangled-name prefix "_Z", nested name "N"
-        result = "_ZN"
+        namedb = mangle.Namedb()
+
+        # Mangled-name prefix "_Z"
+        result = "_Z"
 
         if not self.parent:
             raise Exception ("Parent not set")
 
-        for i in self.parent.FullyQualifiedName():
-            result += str(len(i)) + i
-
-        result += self.symname
+        result += "N"
+        result += namedb.Get (self.parent.FullyQualifiedName() + [self.name])
 
         # E tag of <nested-name>
         result += "E"
@@ -62,7 +62,7 @@ class Function(ir.Base):
         # parameters
         if self.parameters:
             for p in self.parameters:
-                result += p.Mangle(package)
+                result += p.Mangle(package, namedb)
         else:
             result += "v"
 
@@ -74,7 +74,6 @@ class Constructor(Function):
         super(Constructor, self).__init__("__constructor__", symbol, parameters, None)
         self.symbol = symbol
         self.parameters = parameters or []
-        self.symname = "C1"
 
     def __repr__(self):
         return "Constructor(symbol={}, parameters={})".format(
@@ -85,6 +84,3 @@ class Constructor(Function):
                 " " * indentation,
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
-
-    def Mangle(self, package):
-        return super(Constructor, self).Mangle(package)

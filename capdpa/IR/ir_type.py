@@ -1,5 +1,6 @@
 import ir
 import ir_template
+import mangle
 
 class Type_Reference(ir.Base):
 
@@ -24,7 +25,7 @@ class Type_Reference(ir.Base):
     def FullyQualifiedName(self):
         return self.name.name
 
-    def Mangle(self, package):
+    def Mangle(self, package, namedb):
         name = self.FullyQualifiedName()
         if name == [package, 'int']:
             return "i"
@@ -33,7 +34,7 @@ class Type_Reference(ir.Base):
         elif name == [package, 'signed_char']:
             return "c"
         else:
-            return "INVALID: got >>" + str(self.name) + "<<"
+            return namedb.Get (self.FullyQualifiedName())
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
@@ -45,15 +46,15 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
 
-    def Mangle(self, package):
+    def Mangle(self, package, namedb):
         result = ""
-        for n in self.FullyQualifiedName():
-            result += str(len(n)) + n
+
+        result += namedb.Get (self.FullyQualifiedName())
 
         # Template parameter
         result += "I";
         for a in self.arguments:
-            result += a.Mangle(package)
+            result += a.Mangle(package, namedb)
 
         # FIXME: Not sure whether this delimiter belongs here
         result += "E"
