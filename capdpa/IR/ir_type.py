@@ -24,11 +24,16 @@ class Type_Reference(ir.Base):
     def FullyQualifiedName(self):
         return self.name.name
 
-    def Mangle(self):
-        if self.name == ['int']:
+    def Mangle(self, package):
+        name = self.FullyQualifiedName()
+        if name == [package, 'int']:
             return "i"
+        elif name == [package, 'char']:
+            return "c"
+        elif name == [package, 'signed_char']:
+            return "c"
         else:
-            return "INVALID"
+            return "INVALID: got >>" + str(self.name) + "<<"
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
@@ -39,6 +44,21 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
     def AdaSpecification(self, indentation=0, private=""):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
+
+    def Mangle(self, package):
+        result = ""
+        for n in self.FullyQualifiedName():
+            result += str(len(n)) + n
+
+        # Template parameter
+        result += "I";
+        for a in self.arguments:
+            result += a.Mangle(package)
+
+        # FIXME: Not sure whether this delimiter belongs here
+        result += "E"
+
+        return result
 
 class Type_Definition(ir.Base):
 

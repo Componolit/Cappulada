@@ -43,7 +43,7 @@ class Function(ir.Base):
         # TODO
         pass
 
-    def Mangle(self):
+    def Mangle(self,package):
 
         # Mangled-name prefix "_Z", nested name "N"
         result = "_ZN"
@@ -62,7 +62,7 @@ class Function(ir.Base):
         # parameters
         if self.parameters:
             for p in self.parameters:
-                result += p.Mangle()
+                result += p.Mangle(package)
         else:
             result += "v"
 
@@ -86,5 +86,5 @@ class Constructor(Function):
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
 
-    def Mangle(self):
-        return super(Constructor, self).Mangle()
+    def Mangle(self, package):
+        return super(Constructor, self).Mangle(package)
