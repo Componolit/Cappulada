@@ -70,7 +70,7 @@ class CXX:
                 name = cursor.spelling,
                 symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()),
-                return_type = self.__convert_type(cursor.result_type),
+                return_type = self.__convert_type([], cursor.result_type),
                 virtual = cursor.is_virtual_method())
 
     def __convert_constructor(self, cursor):
@@ -85,7 +85,7 @@ class CXX:
             cursor = cursor.semantic_parent
         return [self.project] + list(reversed(identifier))
 
-    def __convert_type(self, type_cursor):
+    def __convert_type(self, children, type_cursor):
         ptr = 0;
         reference = False;
 
@@ -102,10 +102,19 @@ class CXX:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
+                if children and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
+                    literals = children[1:]
+                args = []
+                for i in range(targs):
+                    if type_cursor.get_template_argument_type(i).kind != clang.cindex.TypeKind.INVALID:
+                        args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
+                    else:
+                        args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
+                        literals = literals[1:]
                 return IR.Type_Reference_Template(
                         name = IR.Identifier(self.__resolve_name(decl)),
-                        arguments = [self.__convert_type(type_cursor.get_template_argument_type(i)) for i in range(targs)],
                         constant = const,
+                        arguments = args,
                         pointer = ptr, reference=reference)
             elif decl.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                 return IR.Type_Reference(
@@ -177,7 +186,7 @@ class CXX:
         argc = 1
         for cursor in cursors:
             if cursor.kind == clang.cindex.CursorKind.PARM_DECL:
-                ptype = self.__convert_type(cursor.type)
+                ptype = self.__convert_type(list(cursor.get_children()), cursor.type)
                 if cursor.displayname:
                     argv.append(IR.Variable(name = cursor.displayname, ctype = ptype))
                 else:
@@ -188,7 +197,7 @@ class CXX:
     def __convert_member(self, cursor):
         return IR.Variable(
                 name = cursor.displayname,
-                ctype = self.__convert_type(cursor.type),
+                ctype = self.__convert_type(list(cursor.get_children()), cursor.type),
                 access="public" if cursor.access_specifier == clang.cindex.AccessSpecifier.PUBLIC else "private")
 
     def __convert_constant(self, cursor):
@@ -214,15 +223,17 @@ class CXX:
     def __convert_typedef(self, cursor):
         children = list(cursor.get_children())
         if children:
-            resolved = self.__convert_type(children[0].type)
+            resolved = self.__convert_type([], children[0].type)
         else:
-            resolved = self.__convert_type(cursor.type.get_canonical())
+            resolved = self.__convert_type([], cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
 
     def __convert_template(self, cursor):
         targs = []
         for c in cursor.get_children():
-            if c.kind == clang.cindex.CursorKind.TEMPLATE_TYPE_PARAMETER:
+            if c.kind in [
+                    clang.cindex.CursorKind.TEMPLATE_TYPE_PARAMETER,
+                    clang.cindex.CursorKind.TEMPLATE_NON_TYPE_PARAMETER]:
                 targs.append(c)
         return IR.Template(
                 entity = IR.Class(
@@ -253,8 +264,6 @@ class CXX:
                         children.append(self.__convert_enum(cursor))
                     else:
                         [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
-                elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
-                    children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
                     children.append(self.__convert_function(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:

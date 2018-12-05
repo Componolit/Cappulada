@@ -429,5 +429,17 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_template_non_type(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=Class(name = "Tnt", children = [
+                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                typenames = [Template_Argument(name = "Size")]),
+            Class(name = "Tnt_T_5", children = [
+                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+            Class(name = "Tnt5", children = [
+                Variable(name = "t5", ctype = Type_Reference(name = Identifier(["Capdpa", "Tnt_T_5"])))])
+            ])
+        result = CXX("tests/data/test_template_non_type.h").ToIR(project="Capdpa")
+
     def test_variadic_template(self):
         print(CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa"))
