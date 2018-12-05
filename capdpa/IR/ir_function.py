@@ -40,7 +40,6 @@ class Function(ir.Base):
         return result
 
     def InstantiateTemplates(self):
-        # TODO
         pass
 
     def Mangle(self, package):

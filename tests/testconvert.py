@@ -160,6 +160,27 @@ class Parser(Capdpa_Test):
             Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
                 Template_Argument(name="A"),
                 Template_Argument(name="B")]))
+        ftypes = Type_Reference_Template(name = "Base", arguments = [
+            Type_Reference(name = Identifier(["Capdpa", "ClassA"]))])
+        ftemplate = Template(entity=Class(name = "F", children=[
+            Function(name = "Foo", symbol = "", parameters = [
+                Variable(name = "x", ctype = Template_Argument(name="T"))],
+                return_type=Template_Argument(name="T")),
+            Variable(name = "Bar", ctype=Function_Reference(parameters = [
+                Variable(name = "x", ctype = Template_Argument(name="T"))],
+                return_type=Template_Argument(name="T")))
+            ]),
+            typenames = [
+                Template_Argument(name = "T")])
+        fexpected = Class(name="F_T_ClassA", children = [
+            Function(name = "Foo", symbol="", parameters = [
+                Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
+                return_type = Type_Reference(name = Identifier(["Capdpa", "ClassA"]))),
+            Variable(name = "Bar", ctype = Function_Reference(parameters = [
+                Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
+                return_type = Type_Reference(name = Identifier(["Capdpa", "ClassA"]))))
+            ])
+        self.check(ftemplate.instantiate(ftypes), fexpected)
 
     def test_template(self):
         expected = Namespace(name = "Capdpa", children = [
@@ -387,13 +408,26 @@ class Parser(Capdpa_Test):
             Class(name = "With_Fptr", children = [
                 Variable(name = "func", ctype = Function_Reference()),
                 Function(name = "set_func", symbol="", parameters = [
-                    Variable(name = "func", ctype = Function_Reference())])
+                    Variable(name = "func", ctype = Function_Reference())]),
+                Variable(name = "member", ctype = Function_Reference(parameters = [
+                    Variable(name = "This", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Fptr"]), reference=True))]))
                 ])])
         result = CXX("tests/data/test_function_pointer.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_template_function_pointer(self):
-        print(CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa"))
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=Class(name="With_Fptr", children = [
+                Variable(name = "func", ctype = Function_Reference(parameters = [
+                    Variable(name = "This", ctype = Template_Argument(name="T"))])),
+                Function(name = "set_func", symbol="", parameters = [
+                    Variable(name = "func", ctype = Function_Reference(parameters = [
+                        Variable(name = "This", ctype = Template_Argument(name="T"))]))
+                    ])
+                ]), typenames = [Template_Argument(name = "T")])
+            ])
+        result = CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
     def test_variadic_template(self):
         print(CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa"))
