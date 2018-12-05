@@ -381,3 +381,6 @@ class Parser(Capdpa_Test):
 
     def test_template_function_pointer(self):
         print(CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa"))
+
+    def test_variadic_template(self):
+        print(CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa"))
