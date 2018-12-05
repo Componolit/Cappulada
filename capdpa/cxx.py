@@ -112,6 +112,11 @@ class CXX:
                         name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
                         constant = const,
                         pointer = ptr, reference=reference)
+            elif decl.kind in [clang.cindex.CursorKind.ENUM_DECL]:
+                return IR.Type_Reference(
+                        name = IR.Identifier(self.__resolve_name(decl)),
+                        pointer = ptr,
+                        reference = reference)
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
                 return IR.Template_Argument(type_cursor.spelling)
             else:
@@ -236,8 +241,15 @@ class CXX:
                     children.append(self.__convert_template(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
                     children.append(self.__convert_base(cursor))
-            if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
-                children.append(self.__convert_member(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
+                    children.append(self.__convert_member(cursor))
+                elif cursor.kind in [clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL]:
+                    pass
+                else:
+                    raise NotImplementedError("Unsupported cursor kind: {}".format(cursor.kind))
+            else:
+                if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
+                    children.append(self.__convert_member(cursor))
         return children
 
     def ToIR(self, project):

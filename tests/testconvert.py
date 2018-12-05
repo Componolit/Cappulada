@@ -378,6 +378,7 @@ class Parser(Capdpa_Test):
                 Variable(name = "e", ctype=Type_Reference(Identifier(["Capdpa", "With_Enum_Decl", "E_t"])))
             ])])
         result = CXX("tests/data/test_enum_declaration.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
     def test_template_function_pointer(self):
         print(CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa"))
