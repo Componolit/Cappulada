@@ -1,4 +1,5 @@
 import ir
+import ir_identifier
 import ir_template
 import mangle
 
@@ -43,6 +44,15 @@ class Type_Reference(ir.Base):
             result += namedb.Get (name[:-1], name[-1])
 
         return result
+
+class Type_Literal(Type_Reference):
+    """
+    Not really a type but a literal value that is used to instantiate a template
+    """
+
+    def __init__(self, value, **kwargs):
+        super(Type_Literal, self).__init__(name=ir_identifier.Identifier([str(value)]))
+        self.value = value
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
@@ -92,6 +102,12 @@ class Type_Definition(ir.Base):
                     "{0}end {1};").format(
                             " " * indentation,
                             self.ConvertName(self.name))
+
+    def isVirtual(self):
+        return False
+
+    def Members(self):
+        return []
 
     def InstantiateTemplates(self):
         pass
