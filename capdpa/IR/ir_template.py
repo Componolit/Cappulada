@@ -1,4 +1,5 @@
 import ir
+import ir_function
 from copy import deepcopy
 
 class UnspecifiedTemplate: pass
@@ -33,16 +34,17 @@ class Template(ir.Base):
         if hasattr(entity, "ctype"):
             if entity.ctype in resolves.keys():
                 entity.ctype = resolves[entity.ctype]
+            self.__replace(entity.ctype, resolves)
         if hasattr(entity, "return_type"):
             if entity.return_type in resolves.keys():
                 entity.return_type = resolves[entity.return_type]
+            self.__replace(entity.return_type, resolves)
 
     def InstantiateTemplates(self):
         pass
 
     def instantiate(self, ref):
         resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
-        #TODO: custom deepcopy
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
         entity.name += ref.postfix()

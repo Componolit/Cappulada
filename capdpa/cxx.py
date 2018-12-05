@@ -145,6 +145,24 @@ class CXX:
                 constant = const,
                 pointer = ptr,
                 reference=reference)
+        elif type_cursor.kind == clang.cindex.TypeKind.MEMBERPOINTER:
+            parent_type = type_cursor.get_class_type().kind
+            if parent_type == clang.cindex.TypeKind.RECORD:
+                return IR.Function_Reference(parameters = [
+                    IR.Variable(
+                        name="This",
+                        ctype=IR.Type_Reference(name=IR.Identifier(
+                            self.__resolve_name(type_cursor.get_class_type().get_declaration())),
+                            constant = False,
+                            reference=True))])
+                        #FIXME: all parameters
+            elif parent_type == clang.cindex.TypeKind.UNEXPOSED:
+                return IR.Function_Reference(parameters = [
+                    IR.Variable(
+                        name="This",
+                        ctype=IR.Template_Argument(type_cursor.get_class_type().spelling))])
+            else:
+                raise NotImplementedError("Unsupported type of memberpointer: {}".format(parent_type))
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(
                 name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),

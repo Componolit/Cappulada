@@ -30,7 +30,7 @@ class Base(object):
             ignorelist.extend(ignores)
         return "{}({})".format(
                 self.__class__.__name__,
-                ",".join("{}={}".format(k, v) for k,v in self.__dict__.items() if k not in ignorelist))
+                ",".join("{}={}".format(k, v) for k,v in sorted(self.__dict__.items()) if k not in ignorelist))
 
     def __hash__(self):
         return hash(self.__repr__())
