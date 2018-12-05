@@ -364,7 +364,9 @@ class Parser(Capdpa_Test):
     def test_class_with_typedef(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Typedef", children = [
-                Type_Definition(name = "i32", reference = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
+                Type_Definition(name = "i32", reference = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+            Class(name = "Use_Typedef", children = [
+                Variable(name = "value", ctype=Type_Reference(Identifier(["Capdpa", "With_Typedef", "i32"])))])])
         result = CXX("tests/data/test_class_with_typedef.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
