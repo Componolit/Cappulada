@@ -4,22 +4,41 @@ class Namedb:
 
         self.db = []
 
-    def Get (self, parent):
+    def Query (self, name):
+
+        index = self.db.index (name)
+        tag   = str(index - 1) if index > 0 else ""
+        return "S" + tag + "_"
+
+    def Get (self, name, entity):
 
         result = ""
-        for i in parent[0:-1]:
+
+        # Strip off package namespace, as this is only known internally
+        stripped = name[1:]
+
+        # Find longest match in database
+        last = len(stripped)
+        while not stripped[0:last] in self.db and last > 0:
+            last -= 1
+
+        if last > 0:
+            result += self.Query (stripped[0:last])
+
+        # Add new names to db
+        for i in range(1, len(stripped) + 1):
+            if not stripped[0:i] in self.db:
+                self.db.append (stripped[0:i])
+
+        # Handle all other parts as normal
+        for i in stripped[last:]:
             result += str(len(i)) + i
 
-        name = parent[-1]
-        if name == "__constructor__":
+        if entity == "__constructor__":
             result += "C1"
+        elif not entity:
+            pass
         else:
-            result += str(len(name)) + name
+            result += str(len(entity)) + entity
 
-        if result in self.db:
-            index = self.db.index (result)
-            tag   = str(index-1) if index > 0 else ""
-            return "S" + tag + "_"
-
-        self.db.append (result)
         return result

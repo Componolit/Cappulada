@@ -34,7 +34,7 @@ class Type_Reference(ir.Base):
         elif name == [package, 'signed_char']:
             return "c"
         else:
-            return namedb.Get (self.FullyQualifiedName())
+            return namedb.Get (name[:-1], name[-1])
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
@@ -49,7 +49,7 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
     def Mangle(self, package, namedb):
         result = ""
 
-        result += namedb.Get (self.FullyQualifiedName())
+        result += namedb.Get (self.FullyQualifiedName()[:-1], self.FullyQualifiedName()[-1])
 
         # Template parameter
         result += "I";
