@@ -118,7 +118,13 @@ class CXX:
                         pointer = ptr,
                         reference = reference)
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
-                return IR.Template_Argument(type_cursor.spelling)
+                canon = type_cursor.get_canonical().kind
+                if canon == clang.cindex.TypeKind.UNEXPOSED:
+                    return IR.Template_Argument(type_cursor.spelling)
+                elif canon == clang.cindex.TypeKind.FUNCTIONPROTO:
+                    return IR.Function_Reference()
+                else:
+                    raise NotImplementedError("Unknown undeclared canonical type: {}".format(canon))
             else:
                 raise NotImplementedError("Unsupported declaration kind {} at {}".format(decl.kind, decl.location))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:

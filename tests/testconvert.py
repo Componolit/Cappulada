@@ -382,6 +382,16 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_enum_declaration.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_function_pointer(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Fptr", children = [
+                Variable(name = "func", ctype = Function_Reference()),
+                Function(name = "set_func", symbol="", parameters = [
+                    Variable(name = "func", ctype = Function_Reference())])
+                ])])
+        result = CXX("tests/data/test_function_pointer.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
     def test_template_function_pointer(self):
         print(CXX("tests/data/test_template_function_pointer.h").ToIR(project="Capdpa"))
 
