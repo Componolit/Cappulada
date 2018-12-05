@@ -249,10 +249,10 @@ class CXX:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
-                elif cursor.kind in [clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL]:
+                elif cursor.kind in [clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL, clang.cindex.CursorKind.UNEXPOSED_DECL]:
                     pass
                 else:
-                    raise NotImplementedError("Unsupported cursor kind: {}".format(cursor.kind))
+                    raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))
             else:
                 if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
