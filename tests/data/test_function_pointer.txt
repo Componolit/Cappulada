@@ -1,0 +1,15 @@
+with System;
+
+package Capdpa.With_Fptr
+is
+   type Class is
+   limited record
+      Func : access procedure;
+   end record
+   with Import, Convention => CPP;
+   type Class_Address is new System.Address;
+   function Constructor return Class;
+   pragma Cpp_Constructor (Constructor, "");
+   procedure Set_Func (Func : access procedure)
+   with Import, Convention => CPP, External_Name => "";
+end Capdpa.With_Fptr;

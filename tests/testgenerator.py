@@ -324,5 +324,33 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_enum_member.ads"))
 
+    def test_function_pointer_base(self):
+        self.check(Function_Reference().AdaSpecification(), "access procedure")
+        self.check(Function_Reference(parameters=[
+            Variable(name = "a", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"]))),
+            Variable(name = "b", ctype=Type_Reference(name=Identifier(["A", "Class"])))]).AdaSpecification(),
+            "access procedure (A : Capdpa.Int; B : A.Class)")
+        self.check(Function_Reference(return_type=Type_Reference(name=Identifier(["Capdpa", "Int"]))).AdaSpecification(),
+                "access function return Capdpa.Int")
+        self.check(Function_Reference(
+            return_type=Type_Reference(name=Identifier(["Capdpa", "Int"])),
+            parameters=[Variable(name="X", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"])))]
+            ).AdaSpecification(), "access function (X : Capdpa.Int) return Capdpa.Int")
+        self.check(Function_Reference(
+            return_type=Function_Reference(
+                return_type=Function_Reference(
+                    return_type=Function_Reference()))).AdaSpecification(),
+            "access function return access function return access function return access procedure")
+
+    def test_function_pointer(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Fptr", children = [
+                Variable(name = "func", ctype = Function_Reference()),
+                Function(name = "set_func", symbol="", parameters = [
+                    Variable(name = "func", ctype = Function_Reference())])
+                ])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("test_capdpa.txt"))
+        self.check(result[1].Text(), self.load("test_function_pointer.txt"))
+
     def test_class_with_array(self):
         self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
