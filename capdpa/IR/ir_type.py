@@ -49,7 +49,7 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
     def Mangle(self, package, namedb):
         result = ""
 
-        result += namedb.Get (self.FullyQualifiedName()[:-1], self.FullyQualifiedName()[-1])
+        result += namedb.Get (self.FullyQualifiedName(), None)
 
         # Template parameter
         result += "I";

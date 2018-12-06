@@ -45,7 +45,7 @@ class Namedb:
         fully_compressed = last > 0 and last == len(stripped)
 
         # At least one component and not fully compressed name
-        nested = len(stripped) > 0 and not fully_compressed
+        nested = (len(stripped) > 1 or entity) and not fully_compressed
 
         return "{nesting}{result}{end}".format(nesting = "N" if nested else "",
                                                result  = result,
