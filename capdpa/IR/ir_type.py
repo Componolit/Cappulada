@@ -4,11 +4,12 @@ import mangle
 
 class Type_Reference(ir.Base):
 
-    def __init__(self, name, pointer = 0, reference = False, **kwargs):
+    def __init__(self, name, pointer = 0, constant = False, reference = False, **kwargs):
         super(Type_Reference, self).__init__()
         self.name = name
         self.pointer = pointer
         self.reference = reference
+        self.constant = constant
 
     def AdaSpecification(self, indentation=0, private=""):
         if private:
@@ -30,6 +31,7 @@ class Type_Reference(ir.Base):
 
         result = "P" if self.pointer > 0 else ""
         result += "R" if self.reference else ""
+        result += "K" if self.constant else ""
 
         if name == [package, 'int']:
             result += "i"
@@ -44,8 +46,11 @@ class Type_Reference(ir.Base):
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
-    def __init__(self, name, arguments, pointer = 0, reference = False):
-        super(Type_Reference_Template, self).__init__(name=name, pointer=pointer, reference=reference)
+    def __init__(self, name, arguments, pointer = 0, constant = False, reference = False):
+        super(Type_Reference_Template, self).__init__(name=name,
+              pointer = pointer,
+              constant = constant,
+              reference = reference)
         self.arguments = arguments
 
     def AdaSpecification(self, indentation=0, private=""):

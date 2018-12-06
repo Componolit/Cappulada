@@ -35,4 +35,11 @@ class Main
       Root::Test1& method_with_class_reference_return_and_arg (Root::Test1& ref) { };
       Root::Test1& method_with_class_reference_return_and_args (Root::Test1& ref1, Root::Test2& ref2) { };
       Root::Test1& method_with_class_reference_return_and_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { };
+
+      void method_with_const_data_pointer (char * const ptr) { };
+      void method_with_const_address_pointer (const char * ptr) { };
+      void method_with_const_data_const_address_pointer (const char * const ptr) { };
+      void method_with_const_data_class_pointer (Root::Test1 * const ptr) { };
+      void method_with_const_address_class_pointer (const Root::Test1 * ptr) { };
+      void method_with_const_data_const_address_class_pointer (const Root::Test1 * const ptr) { };
 };

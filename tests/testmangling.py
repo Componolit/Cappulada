@@ -168,5 +168,26 @@ class Mangling(unittest.TestCase):
         symbol = self.mangling[1].children[21].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main44method_with_class_reference_return_and_mixedERN4Root5Test1EiRNS0_5Test2E", "Invalid symbol: " + symbol)
 
-    # Missing
-    #  * const parameters
+    def test_method_with_const_data_pointer(self):
+        symbol = self.mangling[1].children[22].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main30method_with_const_data_pointerEPc", "Invalid symbol: " + symbol)
+
+    def test_method_with_const_address_pointer(self):
+        symbol = self.mangling[1].children[23].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main33method_with_const_address_pointerEPKc", "Invalid symbol: " + symbol)
+
+    def test_method_with_const_data_const_address_pointer(self):
+        symbol = self.mangling[1].children[24].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main44method_with_const_data_const_address_pointerEPKc", "Invalid symbol: " + symbol)
+
+    def test_method_with_const_data_class_pointer(self):
+        symbol = self.mangling[1].children[25].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main36method_with_const_data_class_pointerEPN4Root5Test1E", "Invalid symbol: " + symbol)
+
+    def test_method_with_const_address_class_pointer(self):
+        symbol = self.mangling[1].children[26].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main39method_with_const_address_class_pointerEPKN4Root5Test1E", "Invalid symbol: " + symbol)
+
+    def test_method_with_const_data_const_address_class_pointer(self):
+        symbol = self.mangling[1].children[27].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main50method_with_const_data_const_address_class_pointerEPKN4Root5Test1E", "Invalid symbol: " + symbol)
