@@ -36,7 +36,7 @@ class Namedb:
 
         if entity == "__constructor__":
             result += "C1"
-        elif not entity:
+        elif not entity or entity == "Class":
             pass
         else:
             result += str(len(entity)) + entity
