@@ -140,5 +140,33 @@ class Mangling(unittest.TestCase):
         symbol = self.mangling[1].children[14].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main42method_with_class_pointer_return_and_mixedEPN4Root5Test1EiPNS0_5Test2E", "Invalid symbol: " + symbol)
 
+    def test_method_with_class_reference(self):
+        symbol = self.mangling[1].children[15].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main27method_with_class_referenceERN4Root5Test1E", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_references(self):
+        symbol = self.mangling[1].children[16].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main28method_with_class_referencesERN4Root5Test1ERNS0_5Test2E", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_references_mixed(self):
+        symbol = self.mangling[1].children[17].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main34method_with_class_references_mixedERN4Root5Test1EiRNS0_5Test2E", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_reference_return(self):
+        symbol = self.mangling[1].children[18].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main34method_with_class_reference_returnEv", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_reference_return_and_arg(self):
+        symbol = self.mangling[1].children[19].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main42method_with_class_reference_return_and_argERN4Root5Test1E", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_reference_return_and_args(self):
+        symbol = self.mangling[1].children[20].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main43method_with_class_reference_return_and_argsERN4Root5Test1ERNS0_5Test2E", "Invalid symbol: " + symbol)
+
+    def test_method_with_class_reference_return_and_mixed(self):
+        symbol = self.mangling[1].children[21].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main44method_with_class_reference_return_and_mixedERN4Root5Test1EiRNS0_5Test2E", "Invalid symbol: " + symbol)
+
     # Missing
     #  * const parameters

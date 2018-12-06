@@ -29,6 +29,8 @@ class Type_Reference(ir.Base):
         name = self.FullyQualifiedName()
 
         result = "P" if self.pointer > 0 else ""
+        result += "R" if self.reference else ""
+
         if name == [package, 'int']:
             result += "i"
         elif name == [package, 'char']:

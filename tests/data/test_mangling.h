@@ -27,4 +27,12 @@ class Main
       Root::Test1 *method_with_class_pointer_return_and_arg (Root::Test1 *ptr) { };
       Root::Test1 *method_with_class_pointer_return_and_args (Root::Test1 *ptr1, Root::Test2 *ptr2) { };
       Root::Test1 *method_with_class_pointer_return_and_mixed (Root::Test1 *ptr1, int value, Root::Test2 *ptr2) { };
+
+      void method_with_class_reference (Root::Test1& ref) { };
+      void method_with_class_references (Root::Test1& ref1, Root::Test2& ref2) { };
+      void method_with_class_references_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { };
+      Root::Test1& method_with_class_reference_return () { };
+      Root::Test1& method_with_class_reference_return_and_arg (Root::Test1& ref) { };
+      Root::Test1& method_with_class_reference_return_and_args (Root::Test1& ref1, Root::Test2& ref2) { };
+      Root::Test1& method_with_class_reference_return_and_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { };
 };
