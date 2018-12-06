@@ -53,11 +53,7 @@ class Function(ir.Base):
         if not self.parent:
             raise Exception ("Parent not set")
 
-        result += "N"
         result += namedb.Get (self.parent.FullyQualifiedName(), self.name)
-
-        # E tag of <nested-name>
-        result += "E"
 
         # parameters
         if self.parameters:

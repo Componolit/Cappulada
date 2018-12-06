@@ -41,4 +41,12 @@ class Namedb:
         else:
             result += str(len(entity)) + entity
 
-        return result
+        # All elements of name have been replaced by reference
+        fully_compressed = last > 0 and last == len(stripped)
+
+        # At least one component and not fully compressed name
+        nested = len(stripped) > 0 and not fully_compressed
+
+        return "{nesting}{result}{end}".format(nesting = "N" if nested else "",
+                                               result  = result,
+                                               end     = "E" if nested else "")
