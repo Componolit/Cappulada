@@ -27,14 +27,18 @@ class Type_Reference(ir.Base):
 
     def Mangle(self, package, namedb):
         name = self.FullyQualifiedName()
+
+        result = "P" if self.pointer > 0 else ""
         if name == [package, 'int']:
-            return "i"
+            result += "i"
         elif name == [package, 'char']:
-            return "c"
+            result += "c"
         elif name == [package, 'signed_char']:
-            return "c"
+            result += "c"
         else:
-            return namedb.Get (name[:-1], name[-1])
+            result += namedb.Get (name[:-1], name[-1])
+
+        return result
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
