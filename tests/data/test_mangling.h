@@ -42,4 +42,7 @@ class Main
       void method_with_const_data_class_pointer (Root::Test1 * const ptr) { };
       void method_with_const_address_class_pointer (const Root::Test1 * ptr) { };
       void method_with_const_data_const_address_class_pointer (const Root::Test1 * const ptr) { };
+
+      void method_with_function_parameter (char *(*fn)(int)) { };
+      void method_with_function_parameters (char *(*fn1)(int), int (*fn2)(char)) { };
 };
