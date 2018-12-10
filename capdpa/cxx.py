@@ -114,7 +114,7 @@ class CXX:
                         try:
                             args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
                         except IndexError as e:
-                            #variadic template
+                            #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
                             pass
                         literals = literals[1:]
                 return IR.Type_Reference_Template(

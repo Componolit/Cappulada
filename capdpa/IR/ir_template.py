@@ -35,7 +35,7 @@ class Template(ir.Base):
                     if not c.variadic:
                         c = resolves[c]
                     else:
-                        entity.parameters.extend(c)
+                        entity.parameters.extend(resolves[c])
                 self.__replace(c, resolves)
         if hasattr(entity, "ctype"):
             if entity.ctype in resolves.keys():

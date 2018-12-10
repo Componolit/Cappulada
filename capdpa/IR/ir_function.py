@@ -40,7 +40,9 @@ class Function(ir.Base):
         return result
 
     def InstantiateTemplates(self):
-        pass
+        for p in self.parameters:
+            p.InstantiateTemplates()
+        #TODO: return_code templates
 
     def Mangle(self, package):
 

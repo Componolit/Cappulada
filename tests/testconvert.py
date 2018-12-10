@@ -437,7 +437,8 @@ class Parser(Capdpa_Test):
             Class(name = "Tnt_T_5", children = [
                 Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
             Class(name = "Tnt5", children = [
-                Variable(name = "t5", ctype = Type_Reference(name = Identifier(["Capdpa", "Tnt_T_5"])))])
+                Variable(name = "t5", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tnt"]), arguments = [
+                    Type_Literal(name = Identifier(["5"]), value = 5)]))])
             ])
         result = CXX("tests/data/test_template_non_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -445,35 +446,49 @@ class Parser(Capdpa_Test):
     def test_variadic_template(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name = "Templ", children = [
+                Constructor(symbol=""),
                 Variable(name = "element1", ctype = Template_Argument(name = "A")),
                 Variable(name = "element2", ctype = Template_Argument(name = "B"))
-                ])),
-            Class(name = "Templ_T_Char_Int", children = [
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))]),
-            Class(name = "Templ_T_Char_Char", children = [
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))]),
+                ]), typenames = [
+                    Template_Argument(name = "A"), Template_Argument(name = "B")]),
+            Class(name = "Templ_T_signed_char_int", children = [
+                Constructor(symbol=""),
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"]))),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
+            Class(name = "Templ_T_signed_char_signed_char", children = [
+                Constructor(symbol=""),
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"]))),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"])))]),
             Template(entity=Class(name = "Var", children = [
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))])),
+                Constructor(symbol=""),
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
+                typenames = [Template_Argument(name = "Ts", variadic=True)]),
             Class(name = "Var_T_", children = [
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))]),
+                Constructor(symbol=""),
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
             Class(name = "Cls", children = [
+                Constructor(symbol=""),
                 Function(name = "bar", symbol = "", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Templ_T_Char_Int"]))),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))],
-                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                    Variable(name = "p1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Templ"]), arguments = [
+                        Type_Reference(name = Identifier(["Capdpa", "signed_char"])),
+                        Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "foo", symbol = "", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Int"]))),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))],
-                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "int"]))),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "baz", symbol = "", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Templ_T_Char_Char"])))],
-                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                    Variable(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
+                        Type_Reference(name = Identifier(["Capdpa", "signed_char"])),
+                        Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+                    Variable(name = "p2", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
+                        Type_Reference(name = Identifier(["Capdpa", "signed_char"])),
+                        Type_Reference(name = Identifier(["Capdpa", "signed_char"]))]))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "var", symbol = "", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Var_T_"]))),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))]),
-                Function(name = "vir", symbol = "", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Var_T_Int"])))])])])
+                    Variable(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Var"]), arguments = [])),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "signed_char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
