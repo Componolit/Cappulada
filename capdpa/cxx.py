@@ -109,7 +109,11 @@ class CXX:
                     if type_cursor.get_template_argument_type(i).kind != clang.cindex.TypeKind.INVALID:
                         args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
                     else:
-                        args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
+                        try:
+                            args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
+                        except IndexError as e:
+                            #variadic template
+                            pass
                         literals = literals[1:]
                 return IR.Type_Reference_Template(
                         name = IR.Identifier(self.__resolve_name(decl)),
@@ -239,7 +243,7 @@ class CXX:
                 entity = IR.Class(
                     name = cursor.spelling,
                     children = self.__convert_children(list(cursor.get_children())[len(targs):])),
-                typenames = [IR.Template_Argument(c.spelling) for c in targs])
+                typenames = [IR.Template_Argument(c.spelling, list(c.get_tokens())[1].spelling == "...") for c in targs])
 
 
     def __convert_children(self, cursors):
@@ -276,7 +280,7 @@ class CXX:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
-                elif cursor.kind in [clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL, clang.cindex.CursorKind.UNEXPOSED_DECL]:
+                elif cursor.kind in [clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL, clang.cindex.CursorKind.UNEXPOSED_DECL, clang.cindex.CursorKind.NAMESPACE_REF, clang.cindex.CursorKind.DESTRUCTOR]:
                     pass
                 else:
                     raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))

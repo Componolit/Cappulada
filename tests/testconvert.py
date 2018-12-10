@@ -440,6 +440,40 @@ class Parser(Capdpa_Test):
                 Variable(name = "t5", ctype = Type_Reference(name = Identifier(["Capdpa", "Tnt_T_5"])))])
             ])
         result = CXX("tests/data/test_template_non_type.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
     def test_variadic_template(self):
-        print(CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa"))
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=Class(name = "Templ", children = [
+                Variable(name = "element1", ctype = Template_Argument(name = "A")),
+                Variable(name = "element2", ctype = Template_Argument(name = "B"))
+                ])),
+            Class(name = "Templ_T_Char_Int", children = [
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Char"]))),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))]),
+            Class(name = "Templ_T_Char_Char", children = [
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Char"]))),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))]),
+            Template(entity=Class(name = "Var", children = [
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))])),
+            Class(name = "Var_T_", children = [
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "Int"])))]),
+            Class(name = "Cls", children = [
+                Function(name = "bar", symbol = "", parameters = [
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Templ_T_Char_Int"]))),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                Function(name = "foo", symbol = "", parameters = [
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                Function(name = "baz", symbol = "", parameters = [
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Templ_T_Char_Char"])))],
+                    return_type = Type_Reference(Identifier(["Capdpa", "Int"]))),
+                Function(name = "var", symbol = "", parameters = [
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Var_T_"]))),
+                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "Char"])))]),
+                Function(name = "vir", symbol = "", parameters = [
+                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "Var_T_Int"])))])])])
+        result = CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa")
+        self.check(result, expected)
