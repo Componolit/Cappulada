@@ -24,12 +24,18 @@ class Template(ir.Base):
         if hasattr(entity, "children"):
             for c in entity.children:
                 if c in resolves.keys():
-                    c = resolves[c]
+                    if not c.variadic:
+                        c = resolves[c]
+                    else:
+                        entity.children.extend(c)
                 self.__replace(c, resolves)
         if hasattr(entity, "parameters"):
             for c in entity.parameters:
                 if c in resolves.keys():
-                    c = resolves[c]
+                    if not c.variadic:
+                        c = resolves[c]
+                    else:
+                        entity.parameters.extend(c)
                 self.__replace(c, resolves)
         if hasattr(entity, "ctype"):
             if entity.ctype in resolves.keys():
@@ -44,7 +50,11 @@ class Template(ir.Base):
         pass
 
     def instantiate(self, ref):
-        resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
+        if not self.typenames[-1].variadic:
+            resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
+        else:
+            resolves = {t[0]:t[1] for t in zip(self.typenames[:-1], ref.arguments[:len(self.typenames) - 1])}
+            resolves[self.typenames[-1]] = ref.arguments[len(self.typenames) - 1:]
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
         entity.name += ref.postfix()
@@ -52,9 +62,11 @@ class Template(ir.Base):
 
 class Template_Argument(ir.Base):
 
-    def __init__(self, name):
+    def __init__(self, name, variadic=False):
         self.name = name
+        self.variadic = variadic
         super(Template_Argument, self).__init__()
+
 
 class Template_Reference(ir.Base):
 

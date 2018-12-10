@@ -13,6 +13,7 @@ class Var
    public:
       Var() { };
       int element1;
+//      void foo(Ts...);
 };
 
 class Cls
@@ -23,4 +24,5 @@ class Cls
       int foo (int p1, char p2) { };
       int baz (Templ<char, int> p1, Templ<char,char> p2) { };
       int var (Var<> p1, char p2) { };
+      int vir (Var<int> p1) { };
 };
