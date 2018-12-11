@@ -96,7 +96,10 @@ class Function_Reference(Function):
         result += "F"
 
         # return type
-        result += self.return_type.Mangle(package, namedb)
+        if self.return_type:
+            result += self.return_type.Mangle(package, namedb)
+        else:
+            result += "v"
 
         # parameters
         if self.parameters:
