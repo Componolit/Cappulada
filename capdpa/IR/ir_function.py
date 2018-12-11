@@ -65,9 +65,14 @@ class Function(ir.Base):
 
 class Function_Reference(Function):
 
-    def __init__(self, parameters=None, return_type=None):
+    def __init__(self, parameters=None, return_type=None, pointer=1, reference=False):
         super(Function_Reference, self).__init__(name="", symbol="", parameters=parameters, return_type=return_type, virtual=False)
         self.name = ir_identifier.Identifier([])
+        self.pointer = pointer
+        self.reference = reference
+
+        if self.pointer == 0 and not self.reference:
+            raise Exception ("Invalid function reference (neither ref nor pointer)")
 
     def AdaSpecification(self, indentation=0, private=""):
         if private == "":
@@ -81,7 +86,14 @@ class Function_Reference(Function):
 
     def Mangle(self, package, namedb):
 
-        result = "PF"
+        result = ""
+
+        if self.reference:
+            result += "R"
+        else:
+            result += "P"
+
+        result += "F"
 
         # return type
         result += self.return_type.Mangle(package, namedb)
