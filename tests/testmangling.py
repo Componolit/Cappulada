@@ -212,6 +212,11 @@ class Mangling(unittest.TestCase):
         symbol = self.mangling[1].children[32].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main44method_with_parameterless_function_parameterEPFmvE", "Invalid symbol: " + symbol)
 
+    # ::std namespace tests -- NOT IMPLEMENTED
+    def EXCLUDE_test_std_namespace(self):
+        symbol = self.mangling[2].children[0].children[1].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZNSt3Foo13std_namespaceEc", "Invalid symbol: " + symbol)
+
     # Missing:
     #   * All basic types
     #   * Template parameters (T_, T0_, ...)
