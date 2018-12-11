@@ -137,7 +137,9 @@ class CXX:
                 elif canon == clang.cindex.TypeKind.FUNCTIONPROTO:
                     return IR.Function_Reference(
                         parameters=self.__convert_arguments(children),
-                        return_type=self.__convert_type([], type_cursor.get_result()))
+                        return_type=self.__convert_type([], type_cursor.get_result()),
+                        pointer = ptr,
+                        reference = reference)
                 else:
                     raise NotImplementedError("Unknown undeclared canonical type: {}".format(canon))
             else:
@@ -171,12 +173,16 @@ class CXX:
                         reference=True))
                 return IR.Function_Reference(
                     parameters=[this_parameter] + self.__convert_arguments(children),
-                    return_type=self.__convert_type([], type_cursor.get_result()))
+                    return_type=self.__convert_type([], type_cursor.get_result()),
+                    pointer = ptr,
+                    reference = reference)
             elif parent_type == clang.cindex.TypeKind.UNEXPOSED:
-                return IR.Function_Reference(parameters = [
-                    IR.Variable(
+                return IR.Function_Reference(
+                    # FIXME: Correctly handle qualifiers (pointer, reference)
+                    parameters = [IR.Variable(
                         name="This",
-                        ctype=IR.Template_Argument(type_cursor.get_class_type().spelling))])
+                        ctype=IR.Template_Argument(type_cursor.get_class_type().spelling))],
+                    pointer=1)
             else:
                 raise NotImplementedError("Unsupported type of memberpointer: {}".format(parent_type))
         elif type_cursor.kind in TypeMap.keys():

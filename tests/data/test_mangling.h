@@ -48,6 +48,8 @@ class Main
       void method_with_const_function_parameter (const char *(*fn)(int)) { };
       void method_with_function_parameter_returning_value (long (*fn)(char, int)) { };
       void method_with_parameterless_function_parameter (unsigned long (*fn)()) { };
+
+      void method_with_function_reference (char *(&fn)(int)) { };
 };
 
 namespace std {
