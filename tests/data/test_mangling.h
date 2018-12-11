@@ -45,4 +45,7 @@ class Main
 
       void method_with_function_parameter (char *(*fn)(int)) { };
       void method_with_function_parameters (char *(*fn1)(int), int (*fn2)(char)) { };
+      void method_with_const_function_parameter (const char *(*fn)(int)) { };
+      void method_with_function_parameter_returning_value (long (*fn)(char, int)) { };
+      void method_with_parameterless_function_parameter (unsigned long (*fn)()) { };
 };

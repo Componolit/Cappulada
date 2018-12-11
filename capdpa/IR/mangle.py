@@ -34,10 +34,10 @@ class Namedb:
         for i in stripped[last:]:
             result += str(len(i)) + i
 
-        if entity == "__constructor__":
-            result += "C1"
-        elif not entity or entity == "Class":
+        if not entity or entity == "Class":
             pass
+        elif entity == "__constructor__":
+            result += "C1"
         else:
             result += str(len(entity)) + entity
 
