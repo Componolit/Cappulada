@@ -51,7 +51,7 @@ class Main
 
       void method_with_function_reference (char *(&fn)(int)) { };
 
-      void comp(void* (*)(void*), void* (*)(const void*), const void* (*)(void*)) { };
+      void method_complex(void* (*)(void*), void* (*)(const void*), const void* (*)(void*)) { };
 };
 
 namespace std {
