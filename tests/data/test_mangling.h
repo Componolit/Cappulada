@@ -49,3 +49,11 @@ class Main
       void method_with_function_parameter_returning_value (long (*fn)(char, int)) { };
       void method_with_parameterless_function_parameter (unsigned long (*fn)()) { };
 };
+
+namespace std {
+   class Foo
+   {
+      public:
+         void std_namespace (char foo) { };
+   };
+}
