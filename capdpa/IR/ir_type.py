@@ -57,6 +57,7 @@ class Type_Reference(ir.Base):
             'double':                'd',
             'long_double':           'e',
             '__float128':            'g',
+            'C_Address':             'P',
         }
 
         if len(name) == 2 and name[0] == package and name[1] in builtins:
