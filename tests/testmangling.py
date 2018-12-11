@@ -216,11 +216,7 @@ class Mangling(unittest.TestCase):
         symbol = self.mangling[1].children[33].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main30method_with_function_referenceERFPciE", "Invalid symbol: " + symbol)
 
-    def test_method_with_function_reference(self):
-        symbol = self.mangling[1].children[33].Mangle("Capdpa")
-        self.assertTrue (symbol == "_ZN4Main30method_with_function_referenceERFPciE", "Invalid symbol: " + symbol)
-
-    def test_complex(self):
+    def test_method_complex(self):
         symbol = self.mangling[1].children[34].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main4compEPFPvS0_EPFS0_PKvEPFS4_S0_E", "Invalid symbol: " + symbol)
 
