@@ -50,6 +50,8 @@ class Main
       void method_with_parameterless_function_parameter (unsigned long (*fn)()) { };
 
       void method_with_function_reference (char *(&fn)(int)) { };
+
+      void comp(void* (*)(void*), void* (*)(const void*), const void* (*)(void*)) { };
 };
 
 namespace std {
