@@ -135,7 +135,9 @@ class CXX:
                 if canon == clang.cindex.TypeKind.UNEXPOSED:
                     return IR.Template_Argument(type_cursor.spelling)
                 elif canon == clang.cindex.TypeKind.FUNCTIONPROTO:
-                    return IR.Function_Reference()
+                    return IR.Function_Reference(
+                        parameters=self.__convert_arguments(children),
+                        return_type=self.__convert_type([], type_cursor.get_result()))
                 else:
                     raise NotImplementedError("Unknown undeclared canonical type: {}".format(canon))
             else:
@@ -161,14 +163,15 @@ class CXX:
         elif type_cursor.kind == clang.cindex.TypeKind.MEMBERPOINTER:
             parent_type = type_cursor.get_class_type().kind
             if parent_type == clang.cindex.TypeKind.RECORD:
-                return IR.Function_Reference(parameters = [
-                    IR.Variable(
-                        name="This",
-                        ctype=IR.Type_Reference(name=IR.Identifier(
-                            self.__resolve_name(type_cursor.get_class_type().get_declaration())),
-                            constant = False,
-                            reference=True))])
-                        #FIXME: all parameters
+                this_parameter = IR.Variable(
+                    name="This",
+                    ctype=IR.Type_Reference(name=IR.Identifier(
+                        self.__resolve_name(type_cursor.get_class_type().get_declaration())),
+                        constant = False,
+                        reference=True))
+                return IR.Function_Reference(
+                    parameters=[this_parameter] + self.__convert_arguments(children),
+                    return_type=self.__convert_type([], type_cursor.get_result()))
             elif parent_type == clang.cindex.TypeKind.UNEXPOSED:
                 return IR.Function_Reference(parameters = [
                     IR.Variable(

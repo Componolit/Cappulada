@@ -193,7 +193,6 @@ class Mangling(unittest.TestCase):
         self.assertTrue (symbol == "_ZN4Main50method_with_const_data_const_address_class_pointerEPKN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_parameter(self):
-        print (str(self.mangling[1].children[28]))
         symbol = self.mangling[1].children[28].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main30method_with_function_parameterEPFPciE", "Invalid symbol: " + symbol)
 
@@ -201,8 +200,19 @@ class Mangling(unittest.TestCase):
         symbol = self.mangling[1].children[29].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main31method_with_function_parametersEPFPciEPFicE", "Invalid symbol: " + symbol)
 
+    def test_method_with_const_function_parameters(self):
+        symbol = self.mangling[1].children[30].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main36method_with_const_function_parameterEPFPKciE", "Invalid symbol: " + symbol)
+
+    def test_method_with_function_parameters_returning_value(self):
+        symbol = self.mangling[1].children[31].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main46method_with_function_parameter_returning_valueEPFlciE", "Invalid symbol: " + symbol)
+
+    def test_method_with_parameterless_function_parameter(self):
+        symbol = self.mangling[1].children[32].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main44method_with_parameterless_function_parameterEPFmvE", "Invalid symbol: " + symbol)
+
     # Missing:
-    #   * Function types
+    #   * All basic types
     #   * Template parameters (T_, T0_, ...)
-    #   * Encoding for standard namespace
-    #   * All basic type
+    #   * Encoding for standard namespaces

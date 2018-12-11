@@ -79,6 +79,24 @@ class Function_Reference(Function):
             name = "Private_Procedure"
         return " " * indentation + name
 
+    def Mangle(self, package, namedb):
+
+        result = "PF"
+
+        # return type
+        result += self.return_type.Mangle(package, namedb)
+
+        # parameters
+        if self.parameters:
+            for p in self.parameters:
+                result += p.Mangle(package, namedb)
+        else:
+            result += "v"
+
+        result += "E"
+
+        return result
+
 class Constructor(Function):
 
     def __init__(self, symbol, parameters=None):

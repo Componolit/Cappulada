@@ -34,12 +34,33 @@ class Type_Reference(ir.Base):
         result += "R" if self.reference else ""
         result += "K" if self.constant else ""
 
-        if name == [package, 'int']:
-            result += "i"
-        elif name == [package, 'char']:
-            result += "c"
-        elif name == [package, 'signed_char']:
-            result += "c"
+        # Defined here:
+        # https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling-builtin
+        builtins = {
+            'void':                  'v',
+            'wchar_t':               'w',
+            'bool':                  'b',
+            'char':                  'c',
+            'signed_char':           'c',  # GCC disagrees with spec (which says 'a')
+            'unsigned_char':         'h',
+            'short':                 's',
+            'unsigned_short':        't',
+            'int':                   'i',
+            'unsigned_int':          'j',
+            'long':                  'l',
+            'unsigned_long':         'm',
+            'long_long':             'x',
+            'unsigned_long_long':    'y',
+            '__int128':              'n',
+            'unsigned___int128':     'o',
+            'float':                 'f',
+            'double':                'd',
+            'long_double':           'e',
+            '__float128':            'g',
+        }
+
+        if len(name) == 2 and name[0] == package and name[1] in builtins:
+            result += builtins[name[1]]
         else:
             result += namedb.Get (name[:-1], name[-1])
 
