@@ -146,9 +146,9 @@ class CXX:
                 raise NotImplementedError("Unsupported declaration kind {} at {}".format(decl.kind, decl.location))
         elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
             return IR.Type_Reference(
-                name = IR.Identifier([self.project, "C_Address"]),
+                name = IR.Identifier([self.project, "void"]),
                 constant = const,
-                pointer = ptr - 1,
+                pointer = 1,
                 reference = reference) if ptr else None
         elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier(
