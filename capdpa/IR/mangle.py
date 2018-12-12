@@ -40,6 +40,19 @@ class Name:
 
         return len(self.name) == 0 and self.entity in self.builtins
 
+    def prefix (self):
+
+        result = ""
+
+        # C_Address actually means void* which we mangle as a pointer 'P' and
+        # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
+        # self.pointer and a 'void' type in capdpa/cxx.py?
+        result += "P" if self.pointer > 0 or self.entity == "C_Address" else ""
+        result += "K" if self.constant else ""
+        result += "R" if self.reference else ""
+
+        return result
+
     def substitution (self):
         return self.builtins[self.entity]
 
@@ -53,11 +66,15 @@ class Namedb:
 
         result = ""
 
+        if name.is_builtin():
+            return (name.substitution(), [])
+
         # Find longest match in database
         last = len(name.name)
         while not name.name[0:last] in self.db and last > 0:
             last -= 1
 
+        # Found a match
         if last > 0:
             index = self.db.index (name.name[0:last])
             tag   = str(index - 1) if index > 0 else ""
@@ -73,41 +90,31 @@ class Namedb:
     def Get (self, name, entity, pointer=0, constant=False, reference=False):
 
         result = ""
-        prefix = ""
 
-        name = Name (name, entity, pointer, constant, reference)
+        n = Name (name, entity, pointer, constant, reference)
 
-        # C_Address actually means void* which we mangle as a pointer 'P' and
-        # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
-        # self.pointer and a 'void' type in capdpa/cxx.py?
-        prefix += "P" if pointer > 0 or entity == "C_Address" else ""
-        prefix += "K" if constant else ""
-        prefix += "R" if reference else ""
+        # Query name in database
+        (symbol, remainder) = self.Query (n)
+        result += symbol
 
-        if name.is_builtin():
-            result += name.substitution()
+        # Handle all other parts as normal
+        for i in remainder:
+            result += str(len(i)) + i
+
+        if not entity or entity == "Class" or n.is_builtin():
+            pass
+        elif entity == "__constructor__":
+            result += "C1"
         else:
-            (symbol, remainder) = self.Query (name)
-            result += symbol
+            result += str(len(entity)) + entity
 
-            # Handle all other parts as normal
-            for i in remainder:
-                result += str(len(i)) + i
+        # All elements of name have been replaced by reference
+        fully_compressed = not remainder
 
-            if not entity or entity == "Class":
-                pass
-            elif entity == "__constructor__":
-                result += "C1"
-            else:
-                result += str(len(entity)) + entity
+        # At least one component and not fully compressed name
+        nested = (symbol or entity) and not fully_compressed
 
-            # All elements of name have been replaced by reference
-            fully_compressed = not remainder
+        if nested:
+            result = "N" + result + "E"
 
-            # At least one component and not fully compressed name
-            nested = (symbol or entity) and not fully_compressed
-
-            if nested:
-                result = "N" + result + "E"
-
-        return "{prefix}{result}".format(prefix = prefix, result  = result)
+        return "{prefix}{result}".format(prefix = n.prefix(), result  = result)
