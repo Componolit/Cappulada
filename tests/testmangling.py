@@ -229,7 +229,6 @@ class Mangling(unittest.TestCase):
         self.assertTrue (symbol == "_ZN4Main41method_with_function_paramter_void_resultEPFviE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramter_const(self):
-        print(str(self.mangling[1].children[37]))
         symbol = self.mangling[1].children[37].Mangle("Capdpa")
         self.assertTrue (symbol == "_ZN4Main35method_with_function_paramter_constEPFvPKvE", "Invalid symbol: " + symbol)
 

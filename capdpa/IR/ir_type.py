@@ -29,49 +29,7 @@ class Type_Reference(ir.Base):
 
     def Mangle(self, package, namedb):
         name = self.FullyQualifiedName()
-
-        result = ""
-
-        # C_Address actually means void* which we mangle as a pointer 'P' and
-        # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
-        # self.pointer and a 'void' type in capdpa/cxx.py?
-        result += "P" if self.pointer > 0 or name == [package, "C_Address"] else ""
-
-        result += "K" if self.constant else ""
-        result += "R" if self.reference else ""
-
-        # Defined here:
-        # https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling-builtin
-        builtins = {
-            'void':                  "v",
-            'wchar_t':               'w',
-            'bool':                  'b',
-            'char':                  'c',
-            'signed_char':           'c',  # GCC disagrees with spec (which says 'a')
-            'unsigned_char':         'h',
-            'short':                 's',
-            'unsigned_short':        't',
-            'int':                   'i',
-            'unsigned_int':          'j',
-            'long':                  'l',
-            'unsigned_long':         'm',
-            'long_long':             'x',
-            'unsigned_long_long':    'y',
-            '__int128':              'n',
-            'unsigned___int128':     'o',
-            'float':                 'f',
-            'double':                'd',
-            'long_double':           'e',
-            '__float128':            'g',
-            'C_Address':             'v',
-        }
-
-        if len(name) == 2 and name[0] == package and name[1] in builtins:
-            result += builtins[name[1]]
-        else:
-            result += namedb.Get (name[:-1], name[-1])
-
-        return result
+        return namedb.Get (name[:-1], name[-1], self.pointer, self.constant, self.reference)
 
 class Type_Literal(Type_Reference):
     """
@@ -98,7 +56,7 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
     def Mangle(self, package, namedb):
         result = ""
 
-        result += namedb.Get (self.FullyQualifiedName(), None)
+        result += namedb.Get (self.FullyQualifiedName(), None, self.pointer, self.constant, self.reference)
 
         # Template parameter
         result += "I";
