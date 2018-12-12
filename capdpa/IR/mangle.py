@@ -1,8 +1,14 @@
-class Namedb:
+class Name:
 
-    def __init__ (self):
+    def __init__ (self, name, entity, pointer, constant, reference):
 
-        self.db = []
+        # Strip off package namespace, as this is only known internally
+        self.name = name[1:]
+
+        self.entity = entity
+        self.pointer = pointer
+        self.constant = constant
+        self.reference = reference
 
         # Defined here:
         # https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling-builtin
@@ -30,20 +36,46 @@ class Namedb:
             'C_Address':             'v',
         }
 
+    def is_builtin (self):
+
+        return len(self.name) == 0 and self.entity in self.builtins
+
+    def substitution (self):
+        return self.builtins[self.entity]
+
+class Namedb:
+
+    def __init__ (self):
+
+        self.db = []
+
     def Query (self, name):
 
-        index = self.db.index (name)
-        tag   = str(index - 1) if index > 0 else ""
-        return "S" + tag + "_"
+        result = ""
+
+        # Find longest match in database
+        last = len(name.name)
+        while not name.name[0:last] in self.db and last > 0:
+            last -= 1
+
+        if last > 0:
+            index = self.db.index (name.name[0:last])
+            tag   = str(index - 1) if index > 0 else ""
+            result += "S" + tag + "_"
+
+        # Add new names to db
+        for i in range(1, len(name.name) + 1):
+            if not name.name[0:i] in self.db:
+                self.db.append (name.name[0:i])
+
+        return (result, name.name[last:])
 
     def Get (self, name, entity, pointer=0, constant=False, reference=False):
 
-        last = 0
         result = ""
         prefix = ""
 
-        # Strip off package namespace, as this is only known internally
-        stripped = name[1:]
+        name = Name (name, entity, pointer, constant, reference)
 
         # C_Address actually means void* which we mangle as a pointer 'P' and
         # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
@@ -52,24 +84,14 @@ class Namedb:
         prefix += "K" if constant else ""
         prefix += "R" if reference else ""
 
-        if len(stripped) == 0 and entity in self.builtins:
-            result += self.builtins[entity]
+        if name.is_builtin():
+            result += name.substitution()
         else:
-            # Find longest match in database
-            last = len(stripped)
-            while not stripped[0:last] in self.db and last > 0:
-                last -= 1
-
-            if last > 0:
-                result += self.Query (stripped[0:last])
-
-            # Add new names to db
-            for i in range(1, len(stripped) + 1):
-                if not stripped[0:i] in self.db:
-                    self.db.append (stripped[0:i])
+            (symbol, remainder) = self.Query (name)
+            result += symbol
 
             # Handle all other parts as normal
-            for i in stripped[last:]:
+            for i in remainder:
                 result += str(len(i)) + i
 
             if not entity or entity == "Class":
@@ -80,10 +102,10 @@ class Namedb:
                 result += str(len(entity)) + entity
 
             # All elements of name have been replaced by reference
-            fully_compressed = last > 0 and last == len(stripped)
+            fully_compressed = not remainder
 
             # At least one component and not fully compressed name
-            nested = (len(stripped) > 1 or entity) and not fully_compressed
+            nested = (symbol or entity) and not fully_compressed
 
             if nested:
                 result = "N" + result + "E"
