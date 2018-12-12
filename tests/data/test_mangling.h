@@ -52,6 +52,9 @@ class Main
       void method_with_function_reference (char *(&fn)(int)) { };
 
       void method_complex(void* (*)(void*), void* (*)(const void*), const void* (*)(void*)) { };
+      void method_with_function_paramters_substitution(const void* (*)(void), void (*)(const void *)) { };
+      void method_with_function_paramter_void_result(void (*)(int)) { };
+      void method_with_function_paramter_const(void (*)(const void *)) { };
 };
 
 namespace std {
