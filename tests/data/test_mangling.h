@@ -55,6 +55,10 @@ class Main
       void method_with_function_paramters_substitution(const void* (*)(void), void (*)(const void *)) { };
       void method_with_function_paramter_void_result(void (*)(int)) { };
       void method_with_function_paramter_const(void (*)(const void *)) { };
+      void method_with_function_paramters_const_userdefined(void (*)(const Root::Test1 *, const Root::Test2 *, const Root::Test1 *)) { };
+
+      void method_with_function_paramters_const_ptr_subst(void (*)(const Root::Test1 *, const Root::Test1 *, Root::Test1 *)) { };
+      void method_with_function_paramters_const_ref_subst(void (*)(const Root::Test2&, const Root::Test2&, Root::Test2&)) { };
 };
 
 namespace std {
