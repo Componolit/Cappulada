@@ -30,14 +30,20 @@ class Type_Reference(ir.Base):
     def Mangle(self, package, namedb):
         name = self.FullyQualifiedName()
 
-        result = "P" if self.pointer > 0 else ""
-        result += "R" if self.reference else ""
+        result = ""
+
+        # C_Address actually means void* which we mangle as a pointer 'P' and
+        # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
+        # self.pointer and a 'void' type in capdpa/cxx.py?
+        result += "P" if self.pointer > 0 or name == [package, "C_Address"] else ""
+
         result += "K" if self.constant else ""
+        result += "R" if self.reference else ""
 
         # Defined here:
         # https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling-builtin
         builtins = {
-            'void':                  'v',
+            'void':                  "v",
             'wchar_t':               'w',
             'bool':                  'b',
             'char':                  'c',
@@ -57,7 +63,7 @@ class Type_Reference(ir.Base):
             'double':                'd',
             'long_double':           'e',
             '__float128':            'g',
-            'C_Address':             'P',
+            'C_Address':             'v',
         }
 
         if len(name) == 2 and name[0] == package and name[1] in builtins:

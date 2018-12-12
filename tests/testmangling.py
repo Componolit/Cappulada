@@ -218,7 +218,20 @@ class Mangling(unittest.TestCase):
 
     def test_method_complex(self):
         symbol = self.mangling[1].children[34].Mangle("Capdpa")
-        self.assertTrue (symbol == "_ZN4Main4compEPFPvS0_EPFS0_PKvEPFS4_S0_E", "Invalid symbol: " + symbol)
+        self.assertTrue (symbol == "_ZN4Main14method_complexEPFPvS0_EPFS0_PKvEPFS4_S0_E", "Invalid symbol: " + symbol)
+
+    def test_method_with_function_paramters_substitution(self):
+        symbol = self.mangling[1].children[35].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main43method_with_function_paramters_substitutionEPFPKvvEPFvS1_E", "Invalid symbol: " + symbol)
+
+    def test_method_with_function_paramter_void_result(self):
+        symbol = self.mangling[1].children[36].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main41method_with_function_paramter_void_resultEPFviE", "Invalid symbol: " + symbol)
+
+    def test_method_with_function_paramter_const(self):
+        print(str(self.mangling[1].children[37]))
+        symbol = self.mangling[1].children[37].Mangle("Capdpa")
+        self.assertTrue (symbol == "_ZN4Main35method_with_function_paramter_constEPFvPKvE", "Invalid symbol: " + symbol)
 
     # ::std namespace tests -- NOT IMPLEMENTED
     def EXCLUDE_test_std_namespace(self):
