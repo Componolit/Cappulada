@@ -68,10 +68,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_members",
                 children = [
                     Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
                     Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
                     Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
                     Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
                     ])])
         result = CXX("tests/data/test_class_with_members.h").ToIR(project="Capdpa")
@@ -214,10 +214,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
                 Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
                 Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
                 Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
                 Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [
@@ -231,10 +231,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
                 Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
                 Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
                 Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
                 Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [
@@ -274,10 +274,10 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
                 Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"]), pointer = 0)),
+                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
                 Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
                 Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "C_Address"])), access="private"),
+                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
                 Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [

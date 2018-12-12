@@ -33,7 +33,6 @@ class Name:
             'double':                'd',
             'long_double':           'e',
             '__float128':            'g',
-            'C_Address':             'v',
         }
 
     def __repr__ (self):
@@ -46,11 +45,7 @@ class Name:
     def prefix (self):
 
         result = ""
-
-        # C_Address actually means void* which we mangle as a pointer 'P' and
-        # a builtin type 'v'. FIXME: Wouldn't it be better to actually set
-        # self.pointer and a 'void' type in capdpa/cxx.py?
-        result += "P" if self.pointer or self.entity == "C_Address" else ""
+        result += "P" if self.pointer else ""
         result += "K" if self.constant else ""
         result += "R" if self.reference else ""
 
