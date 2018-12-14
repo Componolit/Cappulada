@@ -27,9 +27,25 @@ class Type_Reference(ir.Base):
     def FullyQualifiedName(self):
         return self.name.name
 
-    def Mangle(self, package, namedb):
-        name = self.FullyQualifiedName()
-        return namedb.Get (name[:-1], name[-1], self.pointer, self.constant, self.reference)
+    def Mangle(self, package):
+
+        fqn = self.FullyQualifiedName()
+
+        if fqn[-1] == "Class":
+            fqn = fqn[:-1]
+
+        result = mangle.Type (fqn[1:])
+
+        if self.constant:
+            result = mangle.Constant (result)
+
+        if self.reference:
+            result = mangle.Reference (result)
+
+        if self.pointer:
+            result = mangle.Pointer (result)
+
+        return result
 
 class Type_Literal(Type_Reference):
     """
@@ -53,20 +69,16 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
 
-    def Mangle(self, package, namedb):
-        result = ""
+    def Mangle(self, package):
 
-        result += namedb.Get (self.FullyQualifiedName(), None, self.pointer, self.constant, self.reference)
+        name = mangle.Name (self.FullyQualifiedName()[1:])
 
         # Template parameter
-        result += "I";
+        result = [];
         for a in self.arguments:
-            result += a.Mangle(package, namedb)
+            result.append (a.Mangle(package))
 
-        # FIXME: Not sure whether this delimiter belongs here
-        result += "E"
-
-        return result
+        return mangle.Template (mangle.Nested (name), result)
 
 class Type_Definition(ir.Base):
 

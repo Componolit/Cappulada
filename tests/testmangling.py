@@ -15,7 +15,7 @@ class Mangling(unittest.TestCase):
                    children = [Function(name = "foo",
                                         symbol     = "",
                                         parameters = None)])
-        result = Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa")
+        result = str(Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa"))
         self.assertTrue(result == "_ZN12With_Virtual3fooEv", "Invalid symbol: " + result)
 
     def test_class_with_functions_void (self):
@@ -24,7 +24,7 @@ class Mangling(unittest.TestCase):
                                         symbol     = "",
                                         parameters = [Variable (None, Type_Reference(name=Identifier(["Capdpa", "int"])))])])
 
-        result = Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa")
+        result = str(Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa"))
         self.assertTrue(result == "_ZN14With_functions15public_functionEi", "Invalid symbol: " + result)
 
     def test_class_with_functions_int (self):
@@ -34,214 +34,214 @@ class Mangling(unittest.TestCase):
                                         parameters  = [Variable (Identifier(name=["Capdpa", "param"]), Type_Reference(name=Identifier(["Capdpa", "int"])))],
                                         return_type = Type_Reference(["int"]))])
 
-        result = Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa")
+        result = str(Namespace (name = "Capdpa", children = [c]).children[0].children[1].Mangle("Capdpa"))
         self.assertTrue(result == "_ZN14With_functions11named_paramEi", "Invalid symbol: " + result)
 
     def test_class_with_functions_ctor (self):
         c = Class (name     = "With_functions",
                    children = [Constructor(symbol     = "",
                                            parameters = None)])
-        result = Namespace (name = "Capdpa", children = [c]).children[0].children[0].Mangle("Capdpa")
+        result = str(Namespace (name = "Capdpa", children = [c]).children[0].children[0].Mangle("Capdpa"))
         self.assertTrue(result == "_ZN14With_functionsC1Ev", "Invalid symbol: " + result)
 
     def test_template_template_argument (self):
-        symbol = self.templates[2].children[1].Mangle("Capdpa")
+        symbol = str(self.templates[2].children[1].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN3Cls3barE5TemplIciEc", "Invalid symbol: " + symbol)
 
     def test_template_no_template_argument (self):
-        symbol = self.templates[2].children[2].Mangle("Capdpa")
+        symbol = str(self.templates[2].children[2].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN3Cls3fooEic", "Invalid symbol: " + symbol)
 
     def test_template_multiple_template_arguments (self):
-        symbol = self.templates[2].children[3].Mangle("Capdpa")
+        symbol = str(self.templates[2].children[3].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN3Cls3bazE5TemplIciES0_IccE", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_4 (self):
-        symbol = self.templates[0].children[1].Mangle("Capdpa")
+        symbol = str(self.templates[0].children[1].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN3Cls3varE3VarIJEEc", "Invalid symbol: " + symbol)
 
     def test_compression_none (self):
-        symbol = self.compression[0].children[1].children[1].Mangle("Capdpa")
+        symbol = str(self.compression[0].children[1].children[1].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Root3Cls14no_compressionEii", "Invalid symbol: " + symbol)
 
     def test_compression1 (self):
-        symbol = self.compression[0].children[1].children[2].Mangle("Capdpa")
+        symbol = str(self.compression[0].children[1].children[2].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Root3Cls12compression1EiNS_4DataE", "Invalid symbol: " + symbol)
 
     def test_compression2 (self):
-        symbol = self.compression[0].children[1].children[3].Mangle("Capdpa")
+        symbol = str(self.compression[0].children[1].children[3].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Root3Cls12compression2ENS_4DataEiS1_", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_global_var (self):
-        symbol = self.mangling[0].children[0].Mangle("Capdpa")
+        symbol = str(self.mangling[0].children[0].Mangle("Capdpa"))
         self.assertTrue (symbol == "global_var", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_simple_var (self):
-        symbol = self.mangling[0].children[0].Mangle("Capdpa")
+        symbol = str(self.mangling[0].children[0].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Root10simple_varE", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_global_fn(self):
-        symbol = self.mangling[0].children[0].Mangle("Capdpa")
+        symbol = str(self.mangling[0].children[0].Mangle("Capdpa"))
         self.assertTrue (symbol == "global_fn", "Invalid symbol: " + symbol)
 
     def test_method_with_pointer(self):
-        symbol = self.mangling[1].children[1].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[1].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main19method_with_pointerEPc", "Invalid symbol: " + symbol)
 
     def test_method_with_pointers(self):
-        symbol = self.mangling[1].children[2].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[2].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main20method_with_pointersEPcPi", "Invalid symbol: " + symbol)
 
     def test_method_with_pointers_mixed(self):
-        symbol = self.mangling[1].children[3].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[3].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main26method_with_pointers_mixedEPciPi", "Invalid symbol: " + symbol)
 
     def test_method_with_pointer_return(self):
-        symbol = self.mangling[1].children[4].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[4].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main26method_with_pointer_returnEv", "Invalid symbol: " + symbol)
 
     def test_method_with_pointer_return_and_arg(self):
-        symbol = self.mangling[1].children[5].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[5].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main34method_with_pointer_return_and_argEPc", "Invalid symbol: " + symbol)
 
     def test_method_with_pointer_return_and_args(self):
-        symbol = self.mangling[1].children[6].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[6].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main35method_with_pointer_return_and_argsEPcPi", "Invalid symbol: " + symbol)
 
     def test_method_with_pointer_return_and_mixed(self):
-        symbol = self.mangling[1].children[7].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[7].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main36method_with_pointer_return_and_mixedEPciPi", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointer(self):
-        symbol = self.mangling[1].children[8].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[8].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main25method_with_class_pointerEPN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointers(self):
-        symbol = self.mangling[1].children[9].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[9].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main26method_with_class_pointersEPN4Root5Test1EPNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointers_mixed(self):
-        symbol = self.mangling[1].children[10].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[10].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main32method_with_class_pointers_mixedEPN4Root5Test1EiPNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointer_return(self):
-        symbol = self.mangling[1].children[11].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[11].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main32method_with_class_pointer_returnEv", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointer_return_and_arg(self):
-        symbol = self.mangling[1].children[12].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[12].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main40method_with_class_pointer_return_and_argEPN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointer_return_and_args(self):
-        symbol = self.mangling[1].children[13].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[13].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main41method_with_class_pointer_return_and_argsEPN4Root5Test1EPNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_pointer_return_and_mixed(self):
-        symbol = self.mangling[1].children[14].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[14].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main42method_with_class_pointer_return_and_mixedEPN4Root5Test1EiPNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_reference(self):
-        symbol = self.mangling[1].children[15].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[15].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main27method_with_class_referenceERN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_references(self):
-        symbol = self.mangling[1].children[16].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[16].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main28method_with_class_referencesERN4Root5Test1ERNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_references_mixed(self):
-        symbol = self.mangling[1].children[17].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[17].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main34method_with_class_references_mixedERN4Root5Test1EiRNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_reference_return(self):
-        symbol = self.mangling[1].children[18].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[18].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main34method_with_class_reference_returnEv", "Invalid symbol: " + symbol)
 
     def test_method_with_class_reference_return_and_arg(self):
-        symbol = self.mangling[1].children[19].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[19].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main42method_with_class_reference_return_and_argERN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_reference_return_and_args(self):
-        symbol = self.mangling[1].children[20].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[20].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main43method_with_class_reference_return_and_argsERN4Root5Test1ERNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_class_reference_return_and_mixed(self):
-        symbol = self.mangling[1].children[21].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[21].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main44method_with_class_reference_return_and_mixedERN4Root5Test1EiRNS0_5Test2E", "Invalid symbol: " + symbol)
 
     def test_method_with_const_data_pointer(self):
-        symbol = self.mangling[1].children[22].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[22].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main30method_with_const_data_pointerEPc", "Invalid symbol: " + symbol)
 
     def test_method_with_const_address_pointer(self):
-        symbol = self.mangling[1].children[23].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[23].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main33method_with_const_address_pointerEPKc", "Invalid symbol: " + symbol)
 
     def test_method_with_const_data_const_address_pointer(self):
-        symbol = self.mangling[1].children[24].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[24].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main44method_with_const_data_const_address_pointerEPKc", "Invalid symbol: " + symbol)
 
     def test_method_with_const_data_class_pointer(self):
-        symbol = self.mangling[1].children[25].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[25].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main36method_with_const_data_class_pointerEPN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_const_address_class_pointer(self):
-        symbol = self.mangling[1].children[26].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[26].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main39method_with_const_address_class_pointerEPKN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_const_data_const_address_class_pointer(self):
-        symbol = self.mangling[1].children[27].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[27].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main50method_with_const_data_const_address_class_pointerEPKN4Root5Test1E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_parameter(self):
-        symbol = self.mangling[1].children[28].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[28].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main30method_with_function_parameterEPFPciE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_parameters(self):
-        symbol = self.mangling[1].children[29].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[29].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main31method_with_function_parametersEPFPciEPFicE", "Invalid symbol: " + symbol)
 
     def test_method_with_const_function_parameters(self):
-        symbol = self.mangling[1].children[30].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[30].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main36method_with_const_function_parameterEPFPKciE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_parameters_returning_value(self):
-        symbol = self.mangling[1].children[31].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[31].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main46method_with_function_parameter_returning_valueEPFlciE", "Invalid symbol: " + symbol)
 
     def test_method_with_parameterless_function_parameter(self):
-        symbol = self.mangling[1].children[32].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[32].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main44method_with_parameterless_function_parameterEPFmvE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_reference(self):
-        symbol = self.mangling[1].children[33].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[33].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main30method_with_function_referenceERFPciE", "Invalid symbol: " + symbol)
 
     def test_method_complex(self):
-        symbol = self.mangling[1].children[34].Mangle("Capdpa")
+        symbol = str(str(self.mangling[1].children[34].Mangle("Capdpa")))
         self.assertTrue (symbol == "_ZN4Main14method_complexEPFPvS0_EPFS0_PKvEPFS4_S0_E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramters_substitution(self):
-        symbol = self.mangling[1].children[35].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[35].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main43method_with_function_paramters_substitutionEPFPKvvEPFvS1_E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramter_void_result(self):
-        symbol = self.mangling[1].children[36].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[36].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main41method_with_function_paramter_void_resultEPFviE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramter_const(self):
-        symbol = self.mangling[1].children[37].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[37].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main35method_with_function_paramter_constEPFvPKvE", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramters_const_userdefined(self):
-        symbol = self.mangling[1].children[38].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[38].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main48method_with_function_paramters_const_userdefinedEPFvPKN4Root5Test1EPKNS0_5Test2ES3_E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramters_const_ptr_subst(self):
-        symbol = self.mangling[1].children[39].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[39].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main46method_with_function_paramters_const_ptr_substEPFvPKN4Root5Test1ES3_PS1_E", "Invalid symbol: " + symbol)
 
     def test_method_with_function_paramters_const_ref_subst(self):
-        symbol = self.mangling[1].children[40].Mangle("Capdpa")
+        symbol = str(self.mangling[1].children[40].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main46method_with_function_paramters_const_ref_substEPFvRKN4Root5Test2ES3_RS1_E", "Invalid symbol: " + symbol)
 
     # ::std namespace tests -- NOT IMPLEMENTED
@@ -253,3 +253,6 @@ class Mangling(unittest.TestCase):
     #   * All basic types
     #   * Template parameters (T_, T0_, ...)
     #   * Encoding for standard namespaces
+
+if __name__ == '__main__':
+    unittest.main()
