@@ -124,7 +124,8 @@ class CXX:
                 return IR.Type_Reference(
                         name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
                         constant = const,
-                        pointer = ptr, reference=reference)
+                        pointer = ptr,
+                        reference = reference)
             elif decl.kind in [clang.cindex.CursorKind.ENUM_DECL, clang.cindex.CursorKind.TYPEDEF_DECL]:
                 return IR.Type_Reference(
                         name = IR.Identifier(self.__resolve_name(decl)),

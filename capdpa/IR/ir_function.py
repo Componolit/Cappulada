@@ -44,24 +44,20 @@ class Function(ir.Base):
 
     def Mangle(self, package):
 
-        namedb = mangle.Namedb()
-
-        # Mangled-name prefix "_Z"
-        result = "_Z"
-
         if not self.parent:
             raise Exception ("Parent not set")
 
-        result += namedb.Get (self.parent.FullyQualifiedName(), self.name)
+        name = mangle.Name (self.parent.FullyQualifiedName()[1:], self.name)
 
         # parameters
+        parameters = []
         if self.parameters:
             for p in self.parameters:
-                result += p.Mangle(package, namedb)
+                parameters.append (p.Mangle(package))
         else:
-            result += "v"
+            parameters.append (mangle.Type (["void"]))
 
-        return result
+        return mangle.Symbol ([mangle.Nested (name)] + parameters)
 
 class Function_Reference(Function):
 
@@ -84,31 +80,29 @@ class Function_Reference(Function):
             name = "Private_Procedure"
         return " " * indentation + name
 
-    def Mangle(self, package, namedb):
-
-        result = ""
-
-        if self.reference:
-            result += "R"
-        else:
-            result += "P"
-
-        result += "F"
+    def Mangle(self, package):
 
         # return type
         if self.return_type:
-            result += self.return_type.Mangle(package, namedb)
+            return_type = self.return_type.Mangle (package)
         else:
-            result += "v"
+            return_type = mangle.Type (["void"])
 
         # parameters
+        parameters = []
         if self.parameters:
             for p in self.parameters:
-                result += p.Mangle(package, namedb)
+                parameters.append (p.Mangle (package))
         else:
-            result += "v"
+            parameters.append (mangle.Type (["void"]))
 
-        result += "E"
+        result = mangle.Function (return_type, parameters)
+
+        if self.reference:
+            result = mangle.Reference (result)
+
+        if self.pointer:
+            result = mangle.Pointer (result)
 
         return result
 
@@ -128,3 +122,17 @@ class Constructor(Function):
                 " " * indentation,
                 " ({})".format("; ".join(
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
+
+    def Mangle(self, package):
+
+        name = mangle.Name (self.parent.FullyQualifiedName()[1:])
+
+        # parameters
+        parameters = []
+        if self.parameters:
+            for p in self.parameters:
+                parameters.append (p.Mangle(package))
+        else:
+            parameters.append (mangle.Type (["void"]))
+
+        return mangle.Symbol ([mangle.Nested (mangle.Constructor (name))] + parameters)
