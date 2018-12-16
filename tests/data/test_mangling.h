@@ -59,6 +59,8 @@ class Main
 
       void method_with_function_paramters_const_ptr_subst(void (*)(const Root::Test1 *, const Root::Test1 *, Root::Test1 *)) { };
       void method_with_function_paramters_const_ref_subst(void (*)(const Root::Test2&, const Root::Test2&, Root::Test2&)) { };
+      void method_with_function_paramters_const_ref(void (*)(const int&)) { };
+      void method_with_function_paramters_const_ptr(void (*)(const int *)) { };
 };
 
 namespace std {
