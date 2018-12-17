@@ -10,5 +10,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "_ZN19Container_T_int_intC1Ev");
+   pragma Cpp_Constructor (Constructor, "");
 end Capdpa.Container_T_Int_Int;

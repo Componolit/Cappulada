@@ -100,3 +100,13 @@ namespace Bar {
          Foo (char arg) { };
    };
 }
+
+namespace Templ {
+
+   template<typename T>
+   struct A {
+      void foo(A);
+   };
+
+   template<> void A<int>::foo(A<int>) {};
+}

@@ -339,6 +339,11 @@ class Mangling(unittest.TestCase):
         symbol = str(self.tests['Bar', 'Foo'].children[1].Mangle())
         self.assertTrue (symbol == "_ZN3Bar3FooC1Ec", "Invalid symbol: " + symbol)
 
+    # Template instances
+    def test_template_instance (self):
+        symbol = str(self.tests['Templ', 'A_T_int'].children[1].Mangle())
+        self.assertTrue (symbol == "_ZN5Templ7AIiE3fooENS_1AE", "Invalid symbol: " + symbol)
+
     # ::std namespace tests -- NOT IMPLEMENTED
     def EXCLUDE_test_std_namespace(self):
         symbol = self.mangling[2].children[0].children[1].Mangle()
