@@ -53,7 +53,7 @@ class Mangling(unittest.TestCase):
         self.assertTrue (symbol == "_ZN3Cls3fooEic", "Invalid symbol: " + symbol)
 
     def test_template_multiple_template_arguments (self):
-        symbol = str(self.templates[2].children[3].Mangle("Capdpa"))
+        symbol = str(self.templates[0].parent["Cls", "baz"].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN3Cls3bazE5TemplIciES0_IccE", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_4 (self):
