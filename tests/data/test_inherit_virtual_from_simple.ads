@@ -22,7 +22,7 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "");
+   pragma Cpp_Constructor (Constructor, "_ZN6SimpleC1Ev");
    procedure Foo
-   with Import, Convention => CPP, External_Name => "";
+   with Import, Convention => CPP, External_Name => "_ZN6Simple3fooEv";
 end Capdpa.Simple;

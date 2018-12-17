@@ -50,11 +50,11 @@ class GenerateConstant(Capdpa_Test):
         expected_class = self.load("test_class_simple.txt")
         expected_package = self.load("test_package_foo.txt")
 
-        result = Namespace(name = "foo", children = [
-            Class(name = "brabbel", children = [
-                Constructor(symbol = "SYM_FIXME")]
-                      )]).AdaSpecification()
+        data = Namespace (name = "Capdpa", children = [
+            Namespace(name = "foo", children = [
+                Class(name = "brabbel", children = [Constructor()])])])
 
+        result = data.children[0].AdaSpecification()
         self.check(result[0].Text(), expected_package)
         self.check(result[1].Text(), expected_class)
 
@@ -63,13 +63,16 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children=[
+        data = Namespace(name = "bar", children=[
             Namespace(name = "foo", children=[
                 Class(name = "brabbel",children = [
-                    Constructor(symbol = "SYM_FIXME"),
+                    Constructor(),
                     Variable("field1", Type_Reference(Identifier(["int"]))),
                     Variable("field2", Type_Reference(Identifier(["long"])))]
-                    )])]).AdaSpecification()
+                    )])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -80,14 +83,17 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children = [
+        data = Namespace(name = "bar", children = [
             Namespace(name = "foo", children=[
                 Class(name = "brabbel", children = [
-                    Constructor(symbol="SYM_FIXME"),
-                    Variable("field1", Type_Reference(Identifier(["bar", "baz", "my_type"]))),
+                    Constructor(),
+                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
                     Variable("field2", Type_Reference(Identifier(["local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["bar", "foo", "blub", "some_type"])))]
-                    )])]).AdaSpecification()
+                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"])))]
+                    )])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -98,15 +104,18 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children = [
+        data = Namespace(name = "bar", children = [
             Namespace(name = "foo", children = [
                 Class(name = "brabbel", children = [
-                    Constructor(symbol="SYM_FIXME"),
-                    Variable("field1", Type_Reference(Identifier(["bar", "baz", "my_type"]))),
+                    Constructor(),
+                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
                     Variable("field2", Type_Reference(Identifier(["local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["bar", "foo", "blub", "some_type"]))),
-                    Variable("field4", Type_Reference(Identifier(["bar", "foo", "brabbel", "some_type"]))),
-                    ])])]).AdaSpecification()
+                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
+                    Variable("field4", Type_Reference(Identifier(["Capdpa", "bar", "foo", "brabbel", "some_type"]))),
+                    ])])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -117,18 +126,21 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children = [
+        data = Namespace(name = "bar", children = [
             Namespace(name = "foo", children = [
                 Class(name = "brabbel", children = [
-                    Constructor(symbol="SYM_FIXME"),
-                    Variable("field1", Type_Reference(Identifier(["bar", "baz", "my_type"]))),
-                    Variable("field2", Type_Reference(Identifier(["local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["bar", "foo", "blub", "some_type"]))),
-                    Function(name = "do_something", symbol = "this_function_has_a_funny_symbol", parameters = [
-                        Variable("param1", Type_Reference(Identifier(["foo", "bar"]))),
-                        Variable("param2", Type_Reference(Identifier(["foo", "baz"])))],
-                        return_type = Type_Reference(Identifier(["Blah", "Some_Type"])))]
-                        )])]).AdaSpecification()
+                    Constructor(),
+                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
+                    Variable("field2", Type_Reference(Identifier(["Capdpa", "local_type"]))),
+                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
+                    Function(name = "do_something", parameters = [
+                        Variable("param1", Type_Reference(Identifier(["Capdpa", "foo", "bar"]))),
+                        Variable("param2", Type_Reference(Identifier(["Capdpa", "foo", "baz"])))],
+                        return_type = Type_Reference(Identifier(["Capdpa", "Blah", "Some_Type"])))]
+                        )])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -142,12 +154,15 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children = [
+        data = Namespace(name = "bar", children = [
             Namespace(name = "foo", children = [
                 Namespace(name = "namespace", children = [
                     Constant(name = "constant1", value = 5),
                     Constant(name = "constant2", value = 42)]
-                    )])]).AdaSpecification()
+                    )])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -158,13 +173,16 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children = [
+        data = Namespace(name = "bar", children = [
             Namespace(name = "foo", children = [
                 Class(name = "class", children = [
-                    Constructor(symbol="symbol_404"),
+                    Constructor(),
                     Constant(name = "constant1", value = 5),
                     Constant(name = "constant2", value = 42)]
-                    )])]).AdaSpecification()
+                    )])])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -190,10 +208,10 @@ class GenerateConstant(Capdpa_Test):
         bar = self.load("test_package_bar.txt")
         foo = self.load("test_package_bar_foo.txt")
 
-        result = Namespace(name = "bar", children=[
+        data = Namespace(name = "bar", children=[
             Namespace(name = "foo", children=[
                 Class(name = "class", children = [
-                    Constructor(symbol="symbol_404"),
+                    Constructor(),
                     Enum(name = "enum1", children = [
                         Constant("Elem11", 5),
                         Constant("Elem12", 6)]),
@@ -201,7 +219,10 @@ class GenerateConstant(Capdpa_Test):
                         Constant("Elem21", 0),
                         Constant("Elem22", 1),
                         Constant("Elem23", 2)])]
-                    )])]).AdaSpecification()
+                    )])])
+
+        data = Namespace(name = "Capdpa", children=[data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[2].Text(), expected)
         self.check(result[1].Text(), foo)
@@ -217,12 +238,15 @@ class GenerateConstant(Capdpa_Test):
         expected = self.load("test_class_multiple_constructors.txt")
         foo = self.load("test_package_foo.txt")
 
-        result = Namespace(name = "foo", children = [
+        data = Namespace(name = "foo", children = [
             Class(name = "brabbel", children = [
-                Constructor(symbol = "SYM_FIXME"),
-                Constructor(symbol = "SYM_FIXME", parameters = [
-                    Variable(name = "arg", ctype = Type_Reference(name=Identifier(["integer"])))])]
-                )]).AdaSpecification()
+                Constructor(),
+                Constructor(parameters = [
+                    Variable(name = "arg", ctype = Type_Reference(name=Identifier(["Capdpa", "integer"])))])]
+                )])
+
+        data = Namespace(name = "Capdpa", children = [data])
+        result = data.children[0].AdaSpecification()
 
         self.check(result[1].Text(), expected)
         self.check(result[0].Text(), foo)
@@ -262,14 +286,14 @@ class GenerateConstant(Capdpa_Test):
     def test_class_with_virtual(self):
         result = Namespace(name="Capdpa", children=[
             Class(name = "With_Virtual", children = [
-                Function(name = "Foo", symbol = "", virtual = True)])]).AdaSpecification()
+                Function(name = "Foo", virtual = True)])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_base_with_virtual.txt"))
 
     def test_inherit_from_virtual(self):
         result = Namespace(name="Capdpa", children=[
             Class(name = "With_Virtual", children = [
-                Function(name = "Foo", symbol = "", virtual = True)]),
+                Function(name = "Foo", virtual = True)]),
             Class(name = "From_Virtual",
                 children = [
                     Class_Reference(name=Identifier(["Capdpa", "With_Virtual"])),
@@ -353,7 +377,7 @@ class GenerateConstant(Capdpa_Test):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "With_Fptr", children = [
                 Variable(name = "func", ctype = Function_Reference(pointer=1)),
-                Function(name = "set_func", symbol="", parameters = [
+                Function(name = "set_func", parameters = [
                     Variable(name = "func", ctype = Function_Reference(pointer=1))])
                 ])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
@@ -361,3 +385,6 @@ class GenerateConstant(Capdpa_Test):
 
     def test_class_with_array(self):
         self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
+
+if __name__ == '__main__':
+    unittest.main()

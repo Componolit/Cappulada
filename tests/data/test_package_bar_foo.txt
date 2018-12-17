@@ -1,3 +1,3 @@
-package Bar.Foo
+package Capdpa.Bar.Foo
 is
-end Bar.Foo;
+end Capdpa.Bar.Foo;

@@ -9,5 +9,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "");
+   pragma Cpp_Constructor (Constructor, "_ZN12With_PointerC1Ev");
 end Capdpa.With_Pointer;

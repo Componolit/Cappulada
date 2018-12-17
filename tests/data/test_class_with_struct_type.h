@@ -5,7 +5,7 @@ class With_Struct
         struct Ws;
         struct Ws2;
 
-        Ws value;
+        Ws *value;
         Ws2 *value2;
 
         struct Ws {
