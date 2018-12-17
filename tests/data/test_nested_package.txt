@@ -11,7 +11,7 @@ is
       with Import, Convention => CPP;
       type Class_Address is new System.Address;
       function Constructor return Class;
-      pragma Cpp_Constructor (Constructor, "");
+      pragma Cpp_Constructor (Constructor, "_ZN5Outer5InnerC1Ev");
    end Inner;
    type Class is
    limited record
@@ -20,5 +20,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "");
+   pragma Cpp_Constructor (Constructor, "_ZN5OuterC1Ev");
 end Capdpa.Outer;

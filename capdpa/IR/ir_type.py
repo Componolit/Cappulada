@@ -27,7 +27,7 @@ class Type_Reference(ir.Base):
     def FullyQualifiedName(self):
         return self.name.name
 
-    def Mangle(self, package):
+    def Mangle(self):
 
         fqn = self.FullyQualifiedName()
 
@@ -69,14 +69,14 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
 
-    def Mangle(self, package):
+    def Mangle(self):
 
         name = mangle.Name (self.FullyQualifiedName()[1:])
 
         # Template parameter
         result = [];
         for a in self.arguments:
-            result.append (a.Mangle(package))
+            result.append (a.Mangle())
 
         return mangle.Template (mangle.Nested (name), result)
 

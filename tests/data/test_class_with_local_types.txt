@@ -1,18 +1,18 @@
-with Bar.Baz;
-with Bar.Foo.Blub;
+with Capdpa.Bar.Baz;
+with Capdpa.Bar.Foo.Blub;
 with System;
 
-package Bar.Foo.Brabbel
+package Capdpa.Bar.Foo.Brabbel
 is
    type Class is
    limited record
-      Field1 : Bar.Baz.My_Type;
+      Field1 : Capdpa.Bar.Baz.My_Type;
       Field2 : Local_Type;
-      Field3 : Bar.Foo.Blub.Some_Type;
-      Field4 : Bar.Foo.Brabbel.Some_Type;
+      Field3 : Capdpa.Bar.Foo.Blub.Some_Type;
+      Field4 : Capdpa.Bar.Foo.Brabbel.Some_Type;
    end record
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "SYM_FIXME");
-end Bar.Foo.Brabbel;
+   pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
+end Capdpa.Bar.Foo.Brabbel;

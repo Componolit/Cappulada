@@ -1,6 +1,6 @@
 with System;
 
-package Bar.Foo.Brabbel
+package Capdpa.Bar.Foo.Brabbel
 is
    type Class is
    limited record
@@ -10,5 +10,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "SYM_FIXME");
-end Bar.Foo.Brabbel;
+   pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
+end Capdpa.Bar.Foo.Brabbel;

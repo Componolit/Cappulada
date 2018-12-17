@@ -70,14 +70,12 @@ class CXX:
     def __convert_function(self, cursor):
         return IR.Function(
                 name = cursor.spelling,
-                symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()),
                 return_type = self.__convert_type([], cursor.result_type),
                 virtual = cursor.is_virtual_method())
 
     def __convert_constructor(self, cursor):
         return IR.Constructor(
-                symbol = "",
                 parameters = self.__convert_arguments(cursor.get_children()))
 
     def __resolve_name(self, cursor):

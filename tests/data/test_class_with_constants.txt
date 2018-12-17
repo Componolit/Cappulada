@@ -1,6 +1,6 @@
 with System;
 
-package Bar.Foo.Class
+package Capdpa.Bar.Foo.Class
 is
    Constant1 : constant := 5;
    Constant2 : constant := 42;
@@ -11,5 +11,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "symbol_404");
-end Bar.Foo.Class;
+   pragma Cpp_Constructor (Constructor, "_ZN3bar3foo5classC1Ev");
+end Capdpa.Bar.Foo.Class;

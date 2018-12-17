@@ -1,6 +1,6 @@
 with System;
 
-package Bar.Foo.Class
+package Capdpa.Bar.Foo.Class
 is
    type Enum1 is (Elem11, Elem12);
    for Enum1 use (Elem11 => 5, Elem12 => 6);
@@ -13,5 +13,5 @@ is
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
    function Constructor return Class;
-   pragma Cpp_Constructor (Constructor, "symbol_404");
-end Bar.Foo.Class;
+   pragma Cpp_Constructor (Constructor, "_ZN3bar3foo5classC1Ev");
+end Capdpa.Bar.Foo.Class;

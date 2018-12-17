@@ -29,5 +29,5 @@ class Variable(ir.Base):
     def IsPrivate(self):
         return self.access != "public"
 
-    def Mangle(self, package):
-        return self.ctype.Mangle(package)
+    def Mangle(self):
+        return self.ctype.Mangle()

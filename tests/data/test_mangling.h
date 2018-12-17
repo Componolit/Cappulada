@@ -91,3 +91,12 @@ namespace std {
          void std_namespace (char foo) { };
    };
 }
+
+namespace Bar {
+   class Foo
+   {
+      public:
+         Foo (int arg) { };
+         Foo (char arg) { };
+   };
+}

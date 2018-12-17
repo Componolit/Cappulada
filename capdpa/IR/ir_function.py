@@ -5,10 +5,9 @@ import mangle
 
 class Function(ir.Base):
 
-    def __init__(self, name, symbol, parameters=None, return_type=None, virtual=False):
+    def __init__(self, name, parameters=None, return_type=None, virtual=False):
         super(Function, self).__init__()
         self.name = name
-        self.symbol = symbol
         self.parameters = parameters or []
         self._parentize_list(self.parameters)
         self.return_type = return_type
@@ -35,7 +34,7 @@ class Function(ir.Base):
             result += ")"
 
         result += (" return " + self.return_type.AdaSpecification() + "\n") if self.return_type else "\n"
-        result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + self.symbol + '";\n'
+        result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle ()) + '";\n'
 
         return result
 
@@ -44,7 +43,7 @@ class Function(ir.Base):
             p.InstantiateTemplates()
         #TODO: return_code templates
 
-    def Mangle(self, package):
+    def Mangle(self):
 
         if not self.parent:
             raise Exception ("Parent not set")
@@ -55,7 +54,7 @@ class Function(ir.Base):
         parameters = []
         if self.parameters:
             for p in self.parameters:
-                parameters.append (p.Mangle(package))
+                parameters.append (p.Mangle())
         else:
             parameters.append (mangle.Type (["void"]))
 
@@ -64,7 +63,7 @@ class Function(ir.Base):
 class Function_Reference(Function):
 
     def __init__(self, parameters=None, return_type=None, pointer=1, reference=False):
-        super(Function_Reference, self).__init__(name="", symbol="", parameters=parameters, return_type=return_type, virtual=False)
+        super(Function_Reference, self).__init__(name="", parameters=parameters, return_type=return_type, virtual=False)
         self.name = ir_identifier.Identifier([])
         self.pointer = pointer
         self.reference = reference
@@ -82,11 +81,11 @@ class Function_Reference(Function):
             name = "Private_Procedure"
         return " " * indentation + name
 
-    def Mangle(self, package):
+    def Mangle(self):
 
         # return type
         if self.return_type:
-            return_type = self.return_type.Mangle (package)
+            return_type = self.return_type.Mangle ()
         else:
             return_type = mangle.Type (["void"])
 
@@ -94,7 +93,7 @@ class Function_Reference(Function):
         parameters = []
         if self.parameters:
             for p in self.parameters:
-                parameters.append (p.Mangle (package))
+                parameters.append (p.Mangle ())
         else:
             parameters.append (mangle.Type (["void"]))
 
@@ -110,22 +109,20 @@ class Function_Reference(Function):
 
 class Constructor(Function):
 
-    def __init__(self, symbol, parameters=None):
-        super(Constructor, self).__init__("__constructor__", symbol, parameters, None)
-        self.symbol = symbol
+    def __init__(self, parameters=None):
+        super(Constructor, self).__init__("__constructor__", parameters, None)
         self.parameters = parameters or []
 
     def __repr__(self):
-        return "Constructor(symbol={}, parameters={})".format(
-                self.symbol, self.parameters)
+        return "Constructor(parameters={})".format(self.parameters)
 
     def AdaSpecification(self, indentation=0):
         return "{0}function Constructor{1} return Class;\n{0}pragma Cpp_Constructor (Constructor, \"{2}\");\n".format(
                 " " * indentation,
                 " ({})".format("; ".join(
-                    map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", self.symbol)
+                    map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", str(self.Mangle ()))
 
-    def Mangle(self, package):
+    def Mangle(self):
 
         name = mangle.Name (self.parent.FullyQualifiedName()[1:])
 
@@ -133,7 +130,7 @@ class Constructor(Function):
         parameters = []
         if self.parameters:
             for p in self.parameters:
-                parameters.append (p.Mangle(package))
+                parameters.append (p.Mangle())
         else:
             parameters.append (mangle.Type (["void"]))
 
