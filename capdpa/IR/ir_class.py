@@ -73,7 +73,11 @@ class Class(ir.Base):
                 "{classmembers}"
                 "{indent}end record\n"
                 "{indent}with Import, Convention => CPP;\n"
+                "{indent}type Class_Access is access Class;\n"
                 "{indent}type Class_Address is new System.Address;\n"
+                "{indent}type Class_Array is array (Long_Integer range <>) of Class;\n"
+                "{indent}type Class_Access_Array is array (Long_Integer range <>) of Class_Access;\n"
+                "{indent}type Class_Address_Array is array (Long_Integer range <>) of Class_Address;\n"
                 ).format(
                         indent = (indentation + 3) * " ",
                         private_types = "\n".join(['{indent}type {private} is null record\n{indent}   with Size => {public}\'Size;'.format(

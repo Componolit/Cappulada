@@ -360,4 +360,8 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[1].Text(), self.load("test_function_pointer.txt"))
 
     def test_class_with_array(self):
-        self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Array", children = [
+                Variable(name = "Car", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]), array=True, length=5))])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("test_capdpa.txt"))
+        self.check(result[1].Text(), self.load("test_class_with_array.ads"))

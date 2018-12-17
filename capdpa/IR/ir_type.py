@@ -16,15 +16,19 @@ class Type_Reference(ir.Base):
 
     def AdaSpecification(self, indentation=0, private=""):
         if private:
-            name = self.ConvertName(private + "_Private_" + self.name.PackageBaseNameRaw())
-        elif self.pointer > 0:
-            if self.pointer == 1:
-                name = self.name.PackageFullName() + "_Address"
-            else:
-                raise ValueError("Pointer nesting to deep: {}".format(self.pointer))
+            return self.ConvertName(private + "_Private_" + self.name.PackageBaseNameRaw())
         else:
             name = self.name.PackageFullName()
-        return " " * indentation + ("access " if self.reference else "") + name
+        if self.pointer > 0:
+            if self.pointer == 1:
+                name += "_Address"
+            else:
+                raise ValueError("Pointer nesting to deep: {}".format(self.pointer))
+        if self.reference:
+            name += "_Access"
+        if self.array:
+            name += "_Array (1 .. {})".format(self.length)
+        return " " * indentation + name
 
     def FullyQualifiedName(self):
         return self.name.name
