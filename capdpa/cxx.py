@@ -95,10 +95,10 @@ class CXX:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
 
-
         if type_cursor.kind == clang.cindex.TypeKind.LVALUEREFERENCE:
             reference = True
             type_cursor = type_cursor.get_pointee()
+
         const = type_cursor.is_const_qualified()
         if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
             targs = type_cursor.get_num_template_arguments()
@@ -176,12 +176,13 @@ class CXX:
                         reference=True))
                 return IR.Function_Reference(
                     parameters=[this_parameter] + self.__convert_arguments(children),
-                    return_type=self.__convert_type([], type_cursor.get_result()),
-                    pointer = ptr,
+                    return_type=self.__convert_type([], type_cursor.get_pointee().get_result()),
+                    pointer = 1,
                     reference = reference)
             elif parent_type == clang.cindex.TypeKind.UNEXPOSED:
                 return IR.Function_Reference(
                     # FIXME: Correctly handle qualifiers (pointer, reference)
+                    # FIXME: Correctly handle arguments
                     parameters = [IR.Variable(
                         name="This",
                         ctype=IR.Template_Argument(type_cursor.get_class_type().spelling))],
@@ -239,7 +240,7 @@ class CXX:
     def __convert_typedef(self, cursor):
         children = list(cursor.get_children())
         if children:
-            resolved = self.__convert_type([], children[0].type)
+            resolved = self.__convert_type(children, cursor.underlying_typedef_type)
         else:
             resolved = self.__convert_type([], cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
