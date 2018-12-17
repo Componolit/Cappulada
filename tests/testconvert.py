@@ -492,3 +492,15 @@ class Parser(Capdpa_Test):
                     return_type = Type_Reference(Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
+
+    def test_const_ref_function(self):
+        expected = Namespace("Capdpa", children = [
+            Class(name = "Cr", children = [
+                Function(name = "method_with_function_parameter_const_ref", symbol="", parameters = [
+                    Variable(name = "arg1", ctype = Function_Reference(parameters = [
+                        Variable(name = "arg1", ctype = Type_Reference(Identifier(["Capdpa", "int"]), reference=True, constant=True))]))])])])
+        result = CXX("tests/data/test_const_ref.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
+if __name__ == '__main__':
+    unittest.main()

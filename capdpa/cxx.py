@@ -95,11 +95,11 @@ class CXX:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
 
-        const = type_cursor.is_const_qualified()
 
         if type_cursor.kind == clang.cindex.TypeKind.LVALUEREFERENCE:
             reference = True
             type_cursor = type_cursor.get_pointee()
+        const = type_cursor.is_const_qualified()
         if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
