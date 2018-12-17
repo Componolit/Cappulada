@@ -5,12 +5,14 @@ import mangle
 
 class Type_Reference(ir.Base):
 
-    def __init__(self, name, pointer = 0, constant = False, reference = False, **kwargs):
+    def __init__(self, name, pointer = 0, constant = False, reference = False, array=False, length=0, **kwargs):
         super(Type_Reference, self).__init__()
         self.name = name
         self.pointer = pointer
         self.reference = reference
         self.constant = constant
+        self.array = array
+        self.length = length
 
     def AdaSpecification(self, indentation=0, private=""):
         if private:
@@ -58,11 +60,13 @@ class Type_Literal(Type_Reference):
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference_Base):
 
-    def __init__(self, name, arguments, pointer = 0, constant = False, reference = False):
+    def __init__(self, name, arguments, pointer = 0, constant = False, reference = False, array = False, length = 0):
         super(Type_Reference_Template, self).__init__(name=name,
               pointer = pointer,
               constant = constant,
-              reference = reference)
+              reference = reference,
+              array = array,
+              length = length)
         self.arguments = arguments
 
     def AdaSpecification(self, indentation=0, private=""):

@@ -199,6 +199,11 @@ class CXX:
                     pointer=1)
             else:
                 raise NotImplementedError("Unsupported type of memberpointer: {}".format(parent_type))
+        elif type_cursor.kind == clang.cindex.TypeKind.CONSTANTARRAY:
+            atype = self.__convert_type(children, type_cursor.element_type)
+            atype.array = True
+            atype.length = type_cursor.element_count
+            return atype
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(
                 name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),

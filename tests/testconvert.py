@@ -345,7 +345,11 @@ class Parser(Capdpa_Test):
         self.check(result, expected)
 
     def test_class_with_array(self):
-        CXX("tests/data/test_class_with_array.h").ToIR(project="Capdpa")
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Array", children = [
+                Variable(name = "car", ctype=Type_Reference(name = Identifier(["Capdpa", "int"]), array=True, length=5))])])
+        result = CXX("tests/data/test_class_with_array.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
     def test_array_template(self):
         CXX("tests/data/test_array_template.h").ToIR(project="Capdpa")
