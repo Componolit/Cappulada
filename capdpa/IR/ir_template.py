@@ -21,30 +21,22 @@ class Template(ir.Base):
         self.entity.parent = parent
 
     def __replace(self, entity, resolves):
-        if hasattr(entity, "children"):
-            for c in entity.children:
+        listattr = ["children", "parameters"]
+        singleattr = ["ctype", "return_type"]
+        listattr = [attr for attr in listattr if hasattr(entity, attr)]
+        singleattr = [attr for attr in singleattr if hasattr(entity, attr)]
+        for attr in listattr:
+            for c in getattr(entity, attr):
                 if c in resolves.keys():
                     if not c.variadic:
                         c = resolves[c]
                     else:
-                        entity.children.extend(c)
+                        getattr(entity, attr).extend(c)
                 self.__replace(c, resolves)
-        if hasattr(entity, "parameters"):
-            for c in entity.parameters:
-                if c in resolves.keys():
-                    if not c.variadic:
-                        c = resolves[c]
-                    else:
-                        entity.parameters.extend(resolves[c])
-                self.__replace(c, resolves)
-        if hasattr(entity, "ctype"):
-            if entity.ctype in resolves.keys():
-                entity.ctype = resolves[entity.ctype]
-            self.__replace(entity.ctype, resolves)
-        if hasattr(entity, "return_type"):
-            if entity.return_type in resolves.keys():
-                entity.return_type = resolves[entity.return_type]
-            self.__replace(entity.return_type, resolves)
+        for attr in singleattr:
+            if getattr(entity, attr) in resolves.keys():
+                setattr(entity, attr, resolves[getattr(entity, attr)])
+            self.__replace(getattr(entity, attr), resolves)
 
     def InstantiateTemplates(self):
         pass
