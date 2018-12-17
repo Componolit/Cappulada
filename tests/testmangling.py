@@ -252,6 +252,89 @@ class Mangling(unittest.TestCase):
         symbol = str(self.mangling[1].children[42].Mangle("Capdpa"))
         self.assertTrue (symbol == "_ZN4Main40method_with_function_paramters_const_ptrEPFvPKiE", "Invalid symbol: " + symbol)
 
+    # builtin tests
+
+    def test_method_builtin_void (self):
+        symbol = str(self.mangling[1].children[43].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main19method_builtin_voidEv", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_wchar_t (self):
+        symbol = str(self.mangling[1].children[44].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main22method_builtin_wchar_tEw", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_bool (self):
+        symbol = str(self.mangling[1].children[45].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main19method_builtin_boolEb", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_char (self):
+        symbol = str(self.mangling[1].children[46].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main19method_builtin_charEc", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_signed_char (self):
+        symbol = str(self.mangling[1].children[47].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main26method_builtin_signed_charEa", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned_char (self):
+        symbol = str(self.mangling[1].children[48].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main28method_builtin_unsigned_charEh", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_short (self):
+        symbol = str(self.mangling[1].children[49].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main20method_builtin_shortEs", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned_short (self):
+        symbol = str(self.mangling[1].children[50].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main29method_builtin_unsigned_shortEt", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_int (self):
+        symbol = str(self.mangling[1].children[51].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main18method_builtin_intEi", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned_int (self):
+        symbol = str(self.mangling[1].children[52].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main27method_builtin_unsigned_intEj", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_long (self):
+        symbol = str(self.mangling[1].children[53].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main19method_builtin_longEl", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned_long (self):
+        symbol = str(self.mangling[1].children[54].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main28method_builtin_unsigned_longEm", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_long_long (self):
+        symbol = str(self.mangling[1].children[55].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main24method_builtin_long_longEx", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned_long_long (self):
+        symbol = str(self.mangling[1].children[56].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main33method_builtin_unsigned_long_longEy", "Invalid symbol: " + symbol)
+
+    def test_method_builtin___int128 (self):
+        symbol = str(self.mangling[1].children[57].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main23method_builtin___int128En", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_unsigned__int128 (self):
+        symbol = str(self.mangling[1].children[58].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main31method_builtin_unsigned__int128Eo", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_float (self):
+        symbol = str(self.mangling[1].children[59].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main20method_builtin_floatEf", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_double (self):
+        symbol = str(self.mangling[1].children[60].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main21method_builtin_doubleEd", "Invalid symbol: " + symbol)
+
+    def test_method_builtin_long_double (self):
+        symbol = str(self.mangling[1].children[61].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main26method_builtin_long_doubleEe", "Invalid symbol: " + symbol)
+
+    # FIXME: __float128 is not supported in the Clang version we are using (returns INT)
+    def EXCLUDE_test_method_builtin___float128 (self):
+        symbol = str(self.mangling[1].children[62].Mangle("Capdpa"))
+        self.assertTrue (symbol == "_ZN4Main25method_builtin___float128Eg", "Invalid symbol: " + symbol)
+
     # ::std namespace tests -- NOT IMPLEMENTED
     def EXCLUDE_test_std_namespace(self):
         symbol = self.mangling[2].children[0].children[1].Mangle("Capdpa")

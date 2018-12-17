@@ -19,18 +19,20 @@ cymbal.monkeypatch_type(
 class InvalidNodeError: pass
 
 TypeMap = {
-        clang.cindex.TypeKind.BOOL      : "boolean",
+        clang.cindex.TypeKind.BOOL      : "bool",
         clang.cindex.TypeKind.CHAR_U    : "unsigned_char",
         clang.cindex.TypeKind.UCHAR     : "unsigned_char",
         clang.cindex.TypeKind.USHORT    : "unsigned_short",
         clang.cindex.TypeKind.UINT      : "unsigned_int",
         clang.cindex.TypeKind.ULONG     : "unsigned_long",
         clang.cindex.TypeKind.ULONGLONG : "unsigned_long_long",
-        clang.cindex.TypeKind.CHAR_S    : "signed_char",
+        clang.cindex.TypeKind.CHAR_S    : "char",
         clang.cindex.TypeKind.SCHAR     : "signed_char",
-        clang.cindex.TypeKind.WCHAR     : "wide_char",
+        clang.cindex.TypeKind.WCHAR     : "wchar_t",
         clang.cindex.TypeKind.SHORT     : "short",
         clang.cindex.TypeKind.INT       : "int",
+        clang.cindex.TypeKind.INT128    : "C__int128",
+        clang.cindex.TypeKind.UINT128   : "unsigned___int128",
         clang.cindex.TypeKind.LONG      : "long",
         clang.cindex.TypeKind.LONGLONG  : "long_long",
         clang.cindex.TypeKind.FLOAT     : "C_float",
