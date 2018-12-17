@@ -108,4 +108,10 @@ class Type_Definition(ir.Base):
         return []
 
     def InstantiateTemplates(self):
-        pass
+        if isinstance(self.reference, Type_Reference_Template):
+            template = self.GetRoot()[self.reference.FullyQualifiedName()[1:]]
+            instance = template.instantiate(self.reference)
+            if instance not in template.parent.children:
+                index = template.parent.children.index(template) + template.parent_index
+                template.parent.children.insert(index, instance)
+                template.parent_index += 1

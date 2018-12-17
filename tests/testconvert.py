@@ -351,7 +351,17 @@ class Parser(Capdpa_Test):
         CXX("tests/data/test_array_template.h").ToIR(project="Capdpa")
 
     def test_template_typedef(self):
-        CXX("tests/data/test_template_typedef.h").ToIR(project="Capdpa")
+        expected = Namespace("Capdpa", children = [
+            Template(entity=Class(name = "Container", children = [
+                Variable(name = "value", ctype = Template_Argument(name = "T"))]),
+                typenames = [Template_Argument(name = "T")]),
+            Class(name = "Container_T_int", children = [
+                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+            Type_Definition(name = "Int_Container",
+                reference = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))
+                    ]))])
+        self.check(CXX("tests/data/test_template_typedef.h").ToIR(project="Capdpa"), expected)
 
     def test_class_with_struct_type(self):
         expected = Namespace("Capdpa", children = [

@@ -42,7 +42,13 @@ class Function(ir.Base):
     def InstantiateTemplates(self):
         for p in self.parameters:
             p.InstantiateTemplates()
-        #TODO: return_code templates
+        if isinstance(self.return_type, ir_type.Type_Reference_Template):
+            template = self.GetRoot()[self.return_type.FullyQualifiedName()[1:]]
+            instance = template.instantiate(self.return_type)
+            if instance not in template.parent.children:
+                index = template.parent.children.index(template) + template.parent_index
+                template.parent.children.insert(index, instance)
+                template.parent_index += 1
 
     def Mangle(self, package):
 
