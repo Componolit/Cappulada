@@ -1,5 +1,6 @@
 import ir
 import ir_function
+import ir_type
 from copy import deepcopy
 
 class UnspecifiedTemplate: pass
@@ -21,22 +22,29 @@ class Template(ir.Base):
         self.entity.parent = parent
 
     def __replace(self, entity, resolves):
-        listattr = ["children", "parameters"]
+        listattr = ["children", "parameters", "arguments"]
         singleattr = ["ctype", "return_type"]
         listattr = [attr for attr in listattr if hasattr(entity, attr)]
         singleattr = [attr for attr in singleattr if hasattr(entity, attr)]
         for attr in listattr:
             for c in getattr(entity, attr):
+                self.meta_instantiate(c, resolves)
                 if c in resolves.keys():
                     if not c.variadic:
-                        c = resolves[c]
+                        getattr(entity, attr)[getattr(entity, attr).index(c)] = resolves[c]
                     else:
                         getattr(entity, attr).extend(c)
                 self.__replace(c, resolves)
         for attr in singleattr:
+            self.meta_instantiate(getattr(entity, attr), resolves)
             if getattr(entity, attr) in resolves.keys():
                 setattr(entity, attr, resolves[getattr(entity, attr)])
             self.__replace(getattr(entity, attr), resolves)
+
+    def meta_instantiate(self, attr, resolves):
+        if isinstance(attr, ir_type.Type_Reference_Template):
+            self.__replace(attr, resolves)
+            ir_type.Type_Reference_Template.instantiate_type(self, attr)
 
     def InstantiateTemplates(self):
         pass

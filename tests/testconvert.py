@@ -375,12 +375,24 @@ class Parser(Capdpa_Test):
         self.check(result, expected)
 
     def test_class_template(self):
-        expected = Namespace("Capdpa", children = [
-            Class(name = "Template", children = [
-                Constructor(parameters = [
-                    Variable(name = "other", ctype =
-                        Type_Reference(name = Identifier(["Capdpa", "Template"]), reference=True))],
-                    symbol = "")])])
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=Class(name = "Template1", children = [
+                Variable(name = "value", ctype = Template_Argument(name = "T1"))]),
+                typenames = [Template_Argument(name = "T1")]),
+            Class(name = "Template1_T_int", children = [
+                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+            Template(entity=Class(name = "Template2", children = [
+                Function(name = "func", symbol = "", parameters = [
+                    Variable(name = "t", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Template1"]), arguments = [
+                        Template_Argument(name = "T2")]))])]),
+                    typenames = [Template_Argument(name = "T2")]),
+            Class(name = "Template2_T_int", children = [
+                Function(name = "func", symbol = "", parameters = [
+                    Variable(name = "t", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Template1"]), arguments = [
+                        Type_Reference(name = Identifier(["Capdpa", "int"]))]))])]),
+            Class(name = "Tint", children = [
+                Variable(name = "value", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Template2"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))])])
         result = CXX("tests/data/test_class_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
 

@@ -103,20 +103,30 @@ class CXX:
         if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
-            if targs > 0:
-                if children and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
-                    literals = children[1:]
+            if children and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
                 args = []
-                for i in range(targs):
-                    if type_cursor.get_template_argument_type(i).kind != clang.cindex.TypeKind.INVALID:
-                        args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
-                    else:
-                        try:
-                            args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
-                        except IndexError as e:
-                            #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
-                            pass
-                        literals = literals[1:]
+                if targs > 0:
+                    literals = children[1:]
+                    for i in range(targs):
+                        if type_cursor.get_template_argument_type(i).kind != clang.cindex.TypeKind.INVALID:
+                            args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
+                        else:
+                            try:
+                                args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
+                            except IndexError as e:
+                                #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
+                                pass
+                            literals = literals[1:]
+                elif decl.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
+                    for t in children[1:]:
+                        if t.kind == clang.cindex.CursorKind.TYPE_REF:
+                            args.append(IR.Template_Argument(name = t.spelling))
+                else:
+                    raise ValueError("Template without arguments? {} ({}) from {} ({})".format(
+                        type_cursor.spelling,
+                        type_cursor.kind,
+                        decl.spelling,
+                        decl.kind))
                 return IR.Type_Reference_Template(
                         name = IR.Identifier(self.__resolve_name(decl)),
                         constant = const,
