@@ -68,7 +68,7 @@ class Template_Argument(ir.Base):
         super(Template_Argument, self).__init__()
 
 
-class Template_Reference(ir.Base):
+class Template_Reference_Base(ir.Base):
 
     # don't use this class alone, inherit from it and provide arguments
 
@@ -76,7 +76,7 @@ class Template_Reference(ir.Base):
         idlist = []
         for arg in self.arguments:
             name = arg.name.PackageBaseNameRaw()
-            if Template_Reference.isInst(arg):
+            if Template_Reference_Base.isInst(arg):
                 name += arg.postfix()
             idlist.append(name)
         return "_T_{}".format(

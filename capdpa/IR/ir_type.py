@@ -56,7 +56,7 @@ class Type_Literal(Type_Reference):
         super(Type_Literal, self).__init__(name=ir_identifier.Identifier([str(value)]))
         self.value = value
 
-class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
+class Type_Reference_Template(Type_Reference, ir_template.Template_Reference_Base):
 
     def __init__(self, name, arguments, pointer = 0, constant = False, reference = False):
         super(Type_Reference_Template, self).__init__(name=name,
@@ -68,6 +68,16 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
     def AdaSpecification(self, indentation=0, private=""):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
+
+    @staticmethod
+    def instantiate_type(self, t):
+        if isinstance(t, Type_Reference_Template):
+            template = self.GetRoot()[t.FullyQualifiedName()[1:]]
+            instance = template.instantiate(t)
+            if instance not in template.parent.children:
+                index = template.parent.children.index(template) + template.parent_index
+                template.parent.children.insert(index, instance)
+                template.parent_index += 1
 
     def Mangle(self, package):
 
@@ -108,10 +118,4 @@ class Type_Definition(ir.Base):
         return []
 
     def InstantiateTemplates(self):
-        if isinstance(self.reference, Type_Reference_Template):
-            template = self.GetRoot()[self.reference.FullyQualifiedName()[1:]]
-            instance = template.instantiate(self.reference)
-            if instance not in template.parent.children:
-                index = template.parent.children.index(template) + template.parent_index
-                template.parent.children.insert(index, instance)
-                template.parent_index += 1
+        Type_Reference_Template.instantiate_type(self, self.reference)

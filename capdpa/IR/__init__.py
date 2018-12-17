@@ -7,4 +7,4 @@ from .ir_variable import Variable
 from .ir_constant import Constant
 from .ir_enum import Enum
 from .ir_identifier import Identifier
-from .ir_template import Template, Template_Argument, Template_Reference
+from .ir_template import Template, Template_Argument, Template_Reference_Base

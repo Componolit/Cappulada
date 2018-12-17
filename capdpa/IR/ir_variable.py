@@ -17,14 +17,7 @@ class Variable(ir.Base):
                   'type': self.ctype.AdaSpecification(private=("" if self.access == "public" else private_name)) }
 
     def InstantiateTemplates(self):
-        if isinstance(self.ctype, ir_type.Type_Reference_Template):
-            template = self.GetRoot()[self.ctype.FullyQualifiedName()[1:]]
-            instance = template.instantiate(self.ctype)
-            if instance not in template.parent.children:
-                index = template.parent.children.index(template) + template.parent_index
-                template.parent.children.insert(index, instance)
-                #FIXME: set instance parent correctly
-                template.parent_index += 1
+        ir_type.Type_Reference_Template.instantiate_type(self, self.ctype)
 
     def IsPrivate(self):
         return self.access != "public"
