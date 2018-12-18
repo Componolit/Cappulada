@@ -16,6 +16,6 @@ is
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
-   function Do_Something (Param1 : Capdpa.Foo.Bar; Param2 : Capdpa.Foo.Baz) return Capdpa.Blah.Some_Type
+   function Do_Something (This : access Class; Param1 : Capdpa.Foo.Bar; Param2 : Capdpa.Foo.Baz) return Capdpa.Blah.Some_Type
    with Import, Convention => CPP, External_Name => "_ZN3bar3foo7brabbel12do_somethingEN3foo3barENS2_3bazE";
 end Capdpa.Bar.Foo.Brabbel;

@@ -24,12 +24,9 @@ class Function(ir.Base):
         result += self.ConvertName(self.name)
 
         if self.parameters:
-            result += " ("
-            first = True
+            result += " (This : access Class"
             for p in self.parameters:
-                if not first:
-                    result += "; "
-                first = False
+                result += "; "
                 result += p.AdaSpecification()
             result += ")"
 
