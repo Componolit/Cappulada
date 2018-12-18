@@ -10,6 +10,6 @@ is
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN9With_FptrC1Ev");
-   procedure Set_Func (Func : access procedure)
+   procedure Set_Func (This : access Class; Func : access procedure)
    with Import, Convention => CPP, External_Name => "_ZN9With_Fptr8set_funcEPFvvE";
 end Capdpa.With_Fptr;
