@@ -5,7 +5,7 @@ import mangle
 
 class Function(ir.Base):
 
-    def __init__(self, name, parameters=None, return_type=None, virtual=False):
+    def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False):
         super(Function, self).__init__()
         self.name = name
         self.parameters = parameters or []
@@ -14,6 +14,7 @@ class Function(ir.Base):
         if self.return_type:
             self.return_type.parent = self
         self.virtual = virtual
+        self.static = static
 
     def isVirtual(self):
         return self.virtual
@@ -24,9 +25,16 @@ class Function(ir.Base):
         result += self.ConvertName(self.name)
 
         if self.parameters:
-            result += " (This : access Class"
+            result += " ("
+
+            first = self.static
+            if not self.static:
+                result += "This : access Class"
+
             for p in self.parameters:
-                result += "; "
+                if not first:
+                    result += "; "
+                first = False
                 result += p.AdaSpecification()
             result += ")"
 

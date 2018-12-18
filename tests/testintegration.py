@@ -158,5 +158,11 @@ class check_integration(Capdpa_Test):
             "test_capdpa.ads",
             "test_class_with_struct_type.ads"])
 
+    def test_class_with_static_functions(self):
+        self.check_integration(
+                "test_class_with_static_functions.h", [
+                    "test_capdpa.ads",
+                    "test_class_with_static_functions.ads"])
+
 if __name__ == '__main__':
     unittest.main()
