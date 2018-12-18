@@ -166,14 +166,8 @@ class CXX:
         elif type_cursor.kind == clang.cindex.TypeKind.MEMBERPOINTER:
             parent_type = type_cursor.get_class_type().kind
             if parent_type == clang.cindex.TypeKind.RECORD:
-                this_parameter = IR.Variable(
-                    name="This",
-                    ctype=IR.Type_Reference(name=IR.Identifier(
-                        self.__resolve_name(type_cursor.get_class_type().get_declaration())),
-                        constant = False,
-                        reference=True))
                 return IR.Function_Reference(
-                    parameters=[this_parameter] + self.__convert_arguments(children),
+                    parameters=self.__convert_arguments(children),
                     return_type=self.__convert_type([], type_cursor.get_result()),
                     pointer = ptr,
                     reference = reference)
