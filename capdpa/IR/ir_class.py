@@ -13,7 +13,7 @@ class NotImplemented(Exception):
 
 class Class(ir.Base):
 
-    def __init__(self, name, children=None):
+    def __init__(self, name, children=None, instanceof=None):
 
         super(Class, self).__init__()
         self.name       = name
@@ -27,7 +27,7 @@ class Class(ir.Base):
             else:
                 self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
-        self.instanceof = None
+        self.instanceof = instanceof
 
     def isVirtual(self):
         return True in [c.isVirtual() for c in self.children]

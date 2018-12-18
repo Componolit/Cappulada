@@ -147,7 +147,9 @@ class Parser(Capdpa_Test):
             Type_Reference(name=Identifier(["typeB"]))])
         expected = Class(name="Container_T_typeA_typeB", children=[
             Variable(name="a", ctype=Type_Reference(name=Identifier(["typeA"]))),
-            Variable(name="b", ctype=Type_Reference(name=Identifier(["typeB"])))])
+            Variable(name="b", ctype=Type_Reference(name=Identifier(["typeB"])))],
+            instanceof = (['Container'], [Type_Reference(constant=False,name=Identifier(name=['typeA']),pointer=0,reference=False),
+                                          Type_Reference(constant=False,name=Identifier(name=['typeB']),pointer=0,reference=False)]))
         template = Template(entity=Class(name="Container", children=[
             Variable(name="a", ctype=Template_Argument(name="A")),
             Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
@@ -179,7 +181,8 @@ class Parser(Capdpa_Test):
             Variable(name = "Bar", ctype = Function_Reference(parameters = [
                 Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
                 return_type = Type_Reference(name = Identifier(["Capdpa", "ClassA"]))))
-            ])
+            ],
+            instanceof = (['F'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'ClassA']),pointer=0,reference=False)]))
         self.check(ftemplate.instantiate(ftypes), fexpected)
 
     def test_template(self):
@@ -192,10 +195,14 @@ class Parser(Capdpa_Test):
                     Template_Argument(name="B")]),
             Class(name = "Container_T_int_char", children = [
                 Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "char"])))]),
+                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "char"])))],
+                instanceof=(['Capdpa', 'Container'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False),
+                                                      Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False)])),
             Class(name = "Container_T_int_int", children = [
                 Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                instanceof=(['Capdpa', 'Container'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False),
+                                                      Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False)])),
             Class(name = "User", children = [
                 Variable(name = "cic", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
@@ -435,10 +442,12 @@ class Parser(Capdpa_Test):
                 Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                 typenames = [Template_Argument(name = "Size")]),
             Class(name = "Tnt_T_5", children = [
-                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                instanceof = (['Capdpa', 'Tnt'], [Type_Literal(constant=False,name=Identifier(name=['5']),pointer=0,reference=False,value=5)])),
             Class(name = "Tnt5", children = [
                 Variable(name = "t5", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tnt"]), arguments = [
-                    Type_Literal(name = Identifier(["5"]), value = 5)]))])
+                    Type_Literal(name = Identifier(["5"]), value = 5)]))],
+                    instanceof = None)
             ])
         result = CXX("tests/data/test_template_non_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -454,18 +463,23 @@ class Parser(Capdpa_Test):
             Class(name = "Templ_T_char_int", children = [
                 Constructor(),
                 Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
+                instanceof=(['Capdpa', 'Templ'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False),
+                                                  Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False)])),
             Class(name = "Templ_T_char_char", children = [
                 Constructor(),
                 Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))]),
+                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
+                instanceof=(['Capdpa', 'Templ'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False),
+                                                  Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False)])),
             Template(entity=Class(name = "Var", children = [
                 Constructor(),
                 Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
                 typenames = [Template_Argument(name = "Ts", variadic=True)]),
             Class(name = "Var_T_", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
+                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
+                instanceof=(['Capdpa', 'Var'], [])),
             Class(name = "Cls", children = [
                 Constructor(),
                 Function(name = "bar", parameters = [
