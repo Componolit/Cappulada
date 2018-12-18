@@ -58,6 +58,7 @@ class Template(ir.Base):
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
         entity.name += ref.postfix()
+        entity.instanceof = (self.FullyQualifiedName(), ref.arguments)
         return entity
 
 class Template_Argument(ir.Base):

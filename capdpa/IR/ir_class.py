@@ -27,6 +27,7 @@ class Class(ir.Base):
             else:
                 self.children.append(ir_function.Constructor(""))
         self._parentize_list(self.children)
+        self.instanceof = None
 
     def isVirtual(self):
         return True in [c.isVirtual() for c in self.children]
