@@ -2,26 +2,26 @@ from numpy import base_repr
 
 # Defined here: # https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling-builtin
 builtins = {
-    'void':                  'v',
-    'wchar_t':               'w',
-    'bool':                  'b',
-    'char':                  'c',
-    'signed_char':           'a',
-    'unsigned_char':         'h',
-    'short':                 's',
-    'unsigned_short':        't',
-    'int':                   'i',
-    'unsigned_int':          'j',
-    'long':                  'l',
-    'unsigned_long':         'm',
-    'long_long':             'x',
-    'unsigned_long_long':    'y',
-    'C__int128':             'n',
-    'unsigned___int128':     'o',
-    'C_float':               'f',
-    'double':                'd',
-    'long_double':           'e',
-    '__float128':            'g',
+    '4void':                'v',
+    '7wchar_t':             'w',
+    '4bool':                'b',
+    '4char':                'c',
+    '11signed_char':        'a',
+    '13unsigned_char':      'h',
+    '5short':               's',
+    '14unsigned_short':     't',
+    '3int':                 'i',
+    '12unsigned_int':       'j',
+    '4long':                'l',
+    '13unsigned_long':      'm',
+    '9long_long':           'x',
+    '18unsigned_long_long': 'y',
+    '9C__int128':           'n',
+    '17unsigned___int128':  'o',
+    '7C_float':             'f',
+    '6double':              'd',
+    '11long_double':        'e',
+    '10__float128':         'g',
 }
 
 class Base(object):
@@ -38,6 +38,29 @@ class Base(object):
 
     def serialize (self, namedb, subst):
         raise Exception ("Not implemented")
+
+class String(Base):
+
+    def __init__ (self, obj):
+        if type(obj) != str:
+            raise Exception ("Obj must be string")
+        if not obj:
+            raise Exception ("String not initialized")
+        self.obj = obj
+
+    def __len__ (self):
+        return 1
+
+    def serialize (self, namedb, subst):
+        return str(len(self.obj)) + self.obj
+
+class Literal(Base):
+
+    def __len__ (self):
+        return 1
+
+    def serialize (self, namedb, subst):
+        return self.obj
 
 class Type (Base):
 
@@ -100,13 +123,26 @@ class Constructor (Base):
     def serialize (self, namedb, subst):
         return self.obj.serialize(namedb, subst) + "C1"
 
+class Sequence (Base):
+
+    def __len__ (self):
+        l = 0
+        for o in self.obj:
+            l += len(o)
+        return l
+
+    def serialize (self, namedb, subst):
+        return "".join([o.serialize (namedb, subst) for o in self.obj])
+
 class Name (Base):
 
     def __init__ (self, name, entity = None):
-        obj = None
+        self.obj = None
         for n in name:
-            obj = Names(n, obj)
-        self.obj = Entity (obj, entity)
+            self.obj = Names(n, self.obj)
+
+        if entity:
+            self.obj = Entity (self.obj, entity)
 
     def __len__ (self):
         return len(self.obj)
@@ -125,18 +161,17 @@ class Names (Base):
 
     def serialize (self, namedb, subst):
 
-        if self.name in builtins:
-            return builtins[self.name]
+        if str(self.name) in builtins:
+            return builtins[str(self.name)]
 
-        result = str(len(self.name)) + self.name
-
-        unsubst = result
+        unsubst = self.name.serialize(namedb, False)
         if self.obj:
             unsubst = self.obj.serialize(namedb, False) + unsubst
 
         if not subst:
             return unsubst
 
+        result = self.name.serialize(namedb, True)
         if self.obj:
             result = self.obj.serialize(namedb, True) + result
 
@@ -159,23 +194,20 @@ class Entity (Base):
 
         result = self.obj.serialize(namedb, subst)
         if self.name:
-            result += str(len(self.name)) + self.name
+            result += str(self.name)
         return result
 
 class Symbol (Base):
 
     def serialize (self, namedb, subst):
-
-        result = ""
-        for o in self.obj:
-            result += o.serialize(namedb, subst)
-        return "_Z" + result
+        return "_Z" + "".join ([o.serialize(namedb, subst) for o in self.obj])
 
 class Nested (Base):
 
     def serialize (self, namedb, subst):
 
         name = self.obj.serialize(namedb, subst)
+
         if len(self.obj) > 1 and not namedb.index (name[1:-1]):
             return "N" + name + "E"
         else:
@@ -210,17 +242,20 @@ class Function (Base):
 
 class Template (Base):
 
-    def __init__ (self, name, obj):
-        self.name = name
-        self.obj = obj
-
     def serialize (self, namedb, subst):
 
-        result = ""
-        for o in self.obj:
-            result += o.serialize(namedb, subst)
+        result = "I" + "".join ([o.serialize(namedb, False) for o in self.obj]) + "E"
 
-        return self.name.serialize(namedb, subst) + "I" + result + "E"
+        if not subst:
+            return result
+
+        if namedb.contains (result):
+            result = namedb.substitute (result)
+        else:
+            result = "I" + "".join ([o.serialize(namedb, True) for o in self.obj]) + "E"
+            namedb.insert (result)
+
+        return result
 
 class DB:
     def __init__ (self, name):

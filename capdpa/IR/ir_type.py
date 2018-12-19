@@ -34,7 +34,7 @@ class Type_Reference(ir.Base):
         if fqn[-1] == "Class":
             fqn = fqn[:-1]
 
-        result = mangle.Type (fqn[1:])
+        result = mangle.Type ([mangle.String(n) for n in fqn[1:]])
 
         if self.constant:
             result = mangle.Constant (result)
@@ -71,14 +71,12 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 
     def Mangle(self):
 
-        name = mangle.Name (self.FullyQualifiedName()[1:])
+        name = mangle.Name ([mangle.String(n) for n in self.FullyQualifiedName()[1:]])
 
         # Template parameter
-        result = [];
-        for a in self.arguments:
-            result.append (a.Mangle())
+        args = [a.Mangle() for a in self.arguments]
 
-        return mangle.Template (mangle.Nested (name), result)
+        return mangle.Sequence ([mangle.Nested (name), mangle.Template (args)])
 
 class Type_Definition(ir.Base):
 
