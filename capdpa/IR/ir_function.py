@@ -49,20 +49,26 @@ class Function(ir.Base):
         #TODO: return_code templates
 
     def Mangle(self):
+        return self.Mangle_Function(False)
+
+    def Mangle_Function(self, constructor):
 
         if not self.parent:
             raise Exception ("Parent not set")
 
-        name = mangle.Name (self.parent.FullyQualifiedName()[1:], self.name)
+        entity = mangle.Literal("C1") if constructor else mangle.String(self.name)
 
-        # parameters
-        parameters = []
-        if self.parameters:
-            for p in self.parameters:
-                parameters.append (p.Mangle())
+        if not self.parent.instanceof:
+            # Regular class
+            name = mangle.Name ([mangle.String(n) for n in self.parent.FullyQualifiedName()[1:]], entity)
         else:
-            parameters.append (mangle.Type (["void"]))
+            # Template
+            (template_name, template_args) = self.parent.instanceof
+            basename = [mangle.String(n) for n in template_name[1:]]
+            args = mangle.Template ([mangle.Type ([mangle.String(x) for x in t.name.name[1:]]) for t in template_args])
+            name = mangle.Name (basename + [args], entity)
 
+        parameters = [p.Mangle() for p in self.parameters] if self.parameters else [mangle.Type ([mangle.String("void")])]
         return mangle.Symbol ([mangle.Nested (name)] + parameters)
 
 class Function_Reference(Function):
@@ -92,7 +98,7 @@ class Function_Reference(Function):
         if self.return_type:
             return_type = self.return_type.Mangle ()
         else:
-            return_type = mangle.Type (["void"])
+            return_type = mangle.Type ([mangle.String("void")])
 
         # parameters
         parameters = []
@@ -100,7 +106,7 @@ class Function_Reference(Function):
             for p in self.parameters:
                 parameters.append (p.Mangle ())
         else:
-            parameters.append (mangle.Type (["void"]))
+            parameters.append (mangle.Type ([mangle.String("void")]))
 
         result = mangle.Function (return_type, parameters)
 
@@ -128,15 +134,4 @@ class Constructor(Function):
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", str(self.Mangle ()))
 
     def Mangle(self):
-
-        name = mangle.Name (self.parent.FullyQualifiedName()[1:])
-
-        # parameters
-        parameters = []
-        if self.parameters:
-            for p in self.parameters:
-                parameters.append (p.Mangle())
-        else:
-            parameters.append (mangle.Type (["void"]))
-
-        return mangle.Symbol ([mangle.Nested (mangle.Constructor (name))] + parameters)
+        return super(Constructor, self).Mangle_Function(True)

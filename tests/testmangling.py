@@ -5,7 +5,8 @@ from capdpa import *
 
 class Mangling(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.mangling    = CXX("tests/data/test_mangling.h").ToIR(project="Capdpa").children
         self.templates   = CXX("tests/data/test_template_mangling.h").ToIR(project="Capdpa").children
         self.compression = CXX("tests/data/mangling_compression.h").ToIR(project="Capdpa").children
@@ -341,8 +342,12 @@ class Mangling(unittest.TestCase):
 
     # Template instances
     def test_template_instance (self):
-        symbol = str(self.tests['Templ', 'A_T_int'].children[1].Mangle())
-        self.assertTrue (symbol == "_ZN5Templ7AIiE3fooENS_1AE", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Templ', 'Blubber_T_int'].children[0].Mangle())
+        self.assertTrue (symbol == "_ZN5Templ7BlubberIiE3fooES1_", "Invalid symbol: " + symbol)
+
+    def test_template_instance_multi (self):
+        symbol = str(self.tests['Templ', 'B_T_char_int'].children[1].Mangle())
+        self.assertTrue (symbol == "_ZN5Templ1BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
 
     # ::std namespace tests -- NOT IMPLEMENTED
     def EXCLUDE_test_std_namespace(self):

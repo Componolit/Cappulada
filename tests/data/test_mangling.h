@@ -104,9 +104,16 @@ namespace Bar {
 namespace Templ {
 
    template<typename T>
-   struct A {
-      void foo(A);
+   struct Blubber {
+      void foo(Blubber);
+      Blubber() { };
    };
 
-   template<> void A<int>::foo(A<int>) {};
+   template<typename T, typename J>
+   struct B {
+      void foo(char, B, int);
+   };
+
+   template<> void Blubber<int>::foo(Blubber<int>) {};
+   template<> void B<char, int>::foo(char, B<char, int>, int) {};
 }
