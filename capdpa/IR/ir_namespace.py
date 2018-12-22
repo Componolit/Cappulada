@@ -8,9 +8,11 @@ from ..ada import Specification
 
 class Namespace(ir.Base):
 
-    def __init__(self, name, children=None):
+    def __init__(self, name, children=None, with_include="", spec_include=""):
         self.name = name
         self.children = children or []
+        self.with_include = with_include
+        self.spec_include = spec_include
         self._parentize_list(self.children)
         super(Namespace, self).__init__()
 
@@ -20,12 +22,14 @@ class Namespace(ir.Base):
         compilation_units = [
                 Specification(
                     name = [self.ConvertName(name) for name in self.FullyQualifiedName()],
-                    text = "package {0}\nis{1}\nend {0};\n".format(
-                        fqn_ada,
-                        "\n".join([""] + map(
+                    text = "{with_include}package {name}\nis{spec_include}{body}\nend {name};\n".format(
+                        name = fqn_ada,
+                        body = "\n".join([""] + map(
                             lambda c: c.AdaSpecification(indentation=3),
                             filter(lambda c: ir_constant.Constant.isInst(c) or ir_enum.Enum.isInst(c) or ir_type.Type_Definition.isInst(c),
-                                self.children)))
+                                self.children))),
+                        with_include = self.with_include,
+                        spec_include = self.spec_include,
                         ))]
 
         for p in self.children:

@@ -298,14 +298,16 @@ class CXX:
                     children.append(self.__convert_member(cursor))
         return children
 
-    def ToIR(self, project):
+    def ToIR(self, project, with_include="", spec_include=""):
 #        self.__print_tree(self.translation_unit.cursor, 0)
         self.project = project
         if self.translation_unit.cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
             raise InvalidNodeError
         namespace = IR.Namespace(
                 name=project,
-                children = self.__convert_children(self.translation_unit.cursor.get_children())
+                children = self.__convert_children(self.translation_unit.cursor.get_children()),
+                with_include = with_include,
+                spec_include = spec_include
                 )
         namespace.InstantiateTemplates()
         return namespace
