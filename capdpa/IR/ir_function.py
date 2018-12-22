@@ -73,8 +73,8 @@ class Function(ir.Base):
 
 class Function_Reference(Function):
 
-    def __init__(self, parameters=None, return_type=None, pointer=1, reference=False):
-        super(Function_Reference, self).__init__(name="", parameters=parameters, return_type=return_type, virtual=False)
+    def __init__(self, parameters=None, return_type=None, pointer=1, reference=False, static=False):
+        super(Function_Reference, self).__init__(name="", parameters=parameters, return_type=return_type, virtual=False, static=static)
         self.name = ir_identifier.Identifier([])
         self.pointer = pointer
         self.reference = reference
@@ -84,10 +84,22 @@ class Function_Reference(Function):
 
     def AdaSpecification(self, indentation=0, private=""):
         if private == "":
-            args = " ({})".format("; ".join(a.AdaSpecification() for a in self.parameters)) if self.parameters else ""
-            kind = "function" if self.return_type else "procedure"
-            ret = " return {}".format(self.return_type.AdaSpecification()) if self.return_type else ""
-            name = "access " + kind + args + ret
+            first = self.static
+
+            args = " ("
+            if not self.static:
+                args += "This : access Class"
+
+            for p in self.parameters:
+                if not first:
+                    args += "; "
+                first = False
+                args += p.AdaSpecification()
+            args += ")"
+
+            kind   = "function" if self.return_type else "procedure"
+            ret    = " return {}".format(self.return_type.AdaSpecification()) if self.return_type else ""
+            name   = "access " + kind + args + ret
         else:
             name = "Private_Procedure"
         return " " * indentation + name
