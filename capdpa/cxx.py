@@ -174,11 +174,10 @@ class CXX:
                     reference = reference)
             elif parent_type == clang.cindex.TypeKind.UNEXPOSED:
                 return IR.Function_Reference(
-                    # FIXME: Correctly handle qualifiers (pointer, reference)
-                    parameters = [IR.Variable(
-                        name="This",
-                        ctype=IR.Template_Argument(type_cursor.get_class_type().spelling))],
-                    pointer=1)
+                    parameters=self.__convert_arguments(children),
+                    return_type=self.__convert_type([], type_cursor.get_result()),
+                    pointer=1,
+                    static=True)
             else:
                 raise NotImplementedError("Unsupported type of memberpointer: {}".format(parent_type))
         elif type_cursor.kind in TypeMap.keys():
