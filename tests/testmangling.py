@@ -349,13 +349,16 @@ class Mangling(unittest.TestCase):
         symbol = str(self.tests['Templ', 'B_T_char_int'].children[1].Mangle())
         self.assertTrue (symbol == "_ZN5Templ1BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
 
+    def EXCLUDE_test_template_instance_complex (self):
+        symbol = str(self.tests['Templ2', ['Cde_T_char_int', 'foo']].Mangle())
+        self.assertTrue (symbol == "_ZN6Templ23CdeIcN3Bar3FooEE3fooEcS3_i", "Invalid symbol: " + symbol)
+
     # ::std namespace tests -- NOT IMPLEMENTED
     def EXCLUDE_test_std_namespace(self):
         symbol = self.mangling[2].children[0].children[1].Mangle()
         self.assertTrue (symbol == "_ZNSt3Foo13std_namespaceEc", "Invalid symbol: " + symbol)
 
     # Missing:
-    #   * All basic types
     #   * Template parameters (T_, T0_, ...)
     #   * Encoding for standard namespaces
 

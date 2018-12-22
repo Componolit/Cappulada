@@ -117,3 +117,14 @@ namespace Templ {
    template<> void Blubber<int>::foo(Blubber<int>) {};
    template<> void B<char, int>::foo(char, B<char, int>, int) {};
 }
+
+namespace Templ2 {
+
+   template<typename T, typename J>
+   struct Cde {
+      void foo(char, Cde, int);
+   };
+
+
+   // template<> void Cde<char, Bar::Foo>::foo(char, Cde<char, Bar::Foo>, int) {};
+}
