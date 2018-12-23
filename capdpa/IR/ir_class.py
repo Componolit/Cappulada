@@ -44,7 +44,7 @@ class Class(ir.Base):
             if f.return_type:
                 types.append(f.return_type)
 
-        map(lambda v: types.append(v.ctype), filter(ir_variable.Variable.isInst, self.children))
+        map(lambda v: types.append(v.ctype), filter(ir_variable.Member.isInst, self.children))
         map(lambda t: types.append(t.reference), filter(lambda c: ir_type.Type_Definition.isInst(c) and c.reference, self.children))
         map(lambda c: types.append(c), filter(Class_Reference.isInst, self.children))
 
@@ -55,7 +55,7 @@ class Class(ir.Base):
         for c in self.children:
             if Class_Reference.isInst(c) and not c.isVirtual():
                 members.extend(c.getClass().Members())
-            if ir_variable.Variable.isInst(c):
+            if ir_variable.Member.isInst(c):
                 members.append(c)
         return members
 

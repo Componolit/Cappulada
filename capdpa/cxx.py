@@ -221,17 +221,22 @@ class CXX:
             if cursor.kind == clang.cindex.CursorKind.PARM_DECL:
                 ptype = self.__convert_type(list(cursor.get_children()), cursor.type)
                 if cursor.displayname:
-                    argv.append(IR.Variable(name = cursor.displayname, ctype = ptype))
+                    argv.append(IR.Argument(name = cursor.displayname, ctype = ptype))
                 else:
-                    argv.append(IR.Variable(name = "arg" + str(argc), ctype = ptype))
+                    argv.append(IR.Argument(name = "arg" + str(argc), ctype = ptype))
                 argc += 1
         return argv
 
     def __convert_member(self, cursor):
-        return IR.Variable(
+        return IR.Member(
                 name = cursor.displayname,
                 ctype = self.__convert_type(list(cursor.get_children()), cursor.type),
                 access="public" if cursor.access_specifier == clang.cindex.AccessSpecifier.PUBLIC else "private")
+
+    def __convert_variable(self, cursor):
+        return IR.Variable(
+                name = cursor.displayname,
+                ctype = self.__convert_type(list(cursor.get_children()), cursor.type))
 
     def __convert_constant(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.ENUM_CONSTANT_DECL:
@@ -318,12 +323,13 @@ class CXX:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
+                    children.append(self.__convert_variable(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.UNEXPOSED_DECL,
                         clang.cindex.CursorKind.NAMESPACE_REF,
-                        clang.cindex.CursorKind.DESTRUCTOR,
-                        clang.cindex.CursorKind.VAR_DECL]:
+                        clang.cindex.CursorKind.DESTRUCTOR]:
                     pass
                 else:
                     raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))

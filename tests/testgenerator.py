@@ -67,8 +67,8 @@ class GenerateConstant(Capdpa_Test):
             Namespace(name = "foo", children=[
                 Class(name = "brabbel",children = [
                     Constructor(),
-                    Variable("field1", Type_Reference(Identifier(["int"]))),
-                    Variable("field2", Type_Reference(Identifier(["long"])))]
+                    Member("field1", Type_Reference(Identifier(["int"]))),
+                    Member("field2", Type_Reference(Identifier(["long"])))]
                     )])])
 
         data = Namespace(name = "Capdpa", children = [data])
@@ -87,9 +87,9 @@ class GenerateConstant(Capdpa_Test):
             Namespace(name = "foo", children=[
                 Class(name = "brabbel", children = [
                     Constructor(),
-                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
-                    Variable("field2", Type_Reference(Identifier(["local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"])))]
+                    Member("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
+                    Member("field2", Type_Reference(Identifier(["local_type"]))),
+                    Member("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"])))]
                     )])])
 
         data = Namespace(name = "Capdpa", children = [data])
@@ -108,10 +108,10 @@ class GenerateConstant(Capdpa_Test):
             Namespace(name = "foo", children = [
                 Class(name = "brabbel", children = [
                     Constructor(),
-                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
-                    Variable("field2", Type_Reference(Identifier(["local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
-                    Variable("field4", Type_Reference(Identifier(["Capdpa", "bar", "foo", "brabbel", "some_type"]))),
+                    Member("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
+                    Member("field2", Type_Reference(Identifier(["local_type"]))),
+                    Member("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
+                    Member("field4", Type_Reference(Identifier(["Capdpa", "bar", "foo", "brabbel", "some_type"]))),
                     ])])])
 
         data = Namespace(name = "Capdpa", children = [data])
@@ -130,12 +130,12 @@ class GenerateConstant(Capdpa_Test):
             Namespace(name = "foo", children = [
                 Class(name = "brabbel", children = [
                     Constructor(),
-                    Variable("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
-                    Variable("field2", Type_Reference(Identifier(["Capdpa", "local_type"]))),
-                    Variable("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
+                    Member("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
+                    Member("field2", Type_Reference(Identifier(["Capdpa", "local_type"]))),
+                    Member("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
                     Function(name = "do_something", parameters = [
-                        Variable("param1", Type_Reference(Identifier(["Capdpa", "foo", "bar"]))),
-                        Variable("param2", Type_Reference(Identifier(["Capdpa", "foo", "baz"])))],
+                        Argument("param1", Type_Reference(Identifier(["Capdpa", "foo", "bar"]))),
+                        Argument("param2", Type_Reference(Identifier(["Capdpa", "foo", "baz"])))],
                         return_type = Type_Reference(Identifier(["Capdpa", "Blah", "Some_Type"])))]
                         )])])
 
@@ -242,7 +242,7 @@ class GenerateConstant(Capdpa_Test):
             Class(name = "brabbel", children = [
                 Constructor(),
                 Constructor(parameters = [
-                    Variable(name = "arg", ctype = Type_Reference(name=Identifier(["Capdpa", "integer"])))])]
+                    Argument(name = "arg", ctype = Type_Reference(name=Identifier(["Capdpa", "integer"])))])]
                 )])
 
         data = Namespace(name = "Capdpa", children = [data])
@@ -274,11 +274,11 @@ class GenerateConstant(Capdpa_Test):
     def test_inheritance_simple(self):
         result = Namespace(name="Capdpa", children=[
             Class(name="Simple", children=[
-                Variable(name="A", ctype=Type_Reference(name=Identifier(["Int"])))
+                Member(name="A", ctype=Type_Reference(name=Identifier(["Int"])))
                 ]),
             Class(name="Inherit_Simple", children=[
                 Class_Reference(name=Identifier(["Capdpa", "Simple"])),
-                Variable(name="B", ctype=Type_Reference(name=Identifier(["Int"])))])]).AdaSpecification()
+                Member(name="B", ctype=Type_Reference(name=Identifier(["Int"])))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_base_simple.txt"))
         self.check(result[2].Text(), self.load("test_inherit_simple.txt"))
@@ -297,7 +297,7 @@ class GenerateConstant(Capdpa_Test):
             Class(name = "From_Virtual",
                 children = [
                     Class_Reference(name=Identifier(["Capdpa", "With_Virtual"])),
-                    Variable(name = "V", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))])]).AdaSpecification()
+                    Member(name = "V", ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_base_with_virtual.txt"))
         self.check(result[2].Text(), self.load("test_inherit_from_virtual.txt"))
@@ -306,14 +306,14 @@ class GenerateConstant(Capdpa_Test):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "Outer", children = [
                 Class(name = "Inner", children = []),
-                Variable(name = "field", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])]).AdaSpecification()
+                Member(name = "field", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_nested_package.txt"))
 
     def test_pointer_member(self):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "With_Pointer", children = [
-                Variable(name = "P", ctype = Type_Reference(name = Identifier(["Int"]), pointer = 1))])]).AdaSpecification()
+                Member(name = "P", ctype = Type_Reference(name = Identifier(["Int"]), pointer = 1))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_pointer_member.txt"))
 
@@ -324,7 +324,7 @@ class GenerateConstant(Capdpa_Test):
     def test_reference_member(self):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "With_Reference", children = [
-                Variable(name = "R", ctype = Type_Reference(name = Identifier(["Int"]), reference = True))])]).AdaSpecification()
+                Member(name = "R", ctype = Type_Reference(name = Identifier(["Int"]), reference = True))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_reference_member.txt"))
 
@@ -344,15 +344,15 @@ class GenerateConstant(Capdpa_Test):
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
                     Constant(name = "B", value = 1)]),
-                Variable(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])]).AdaSpecification()
+                Member(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_enum_member.ads"))
 
     def test_function_pointer_base(self):
         self.check(Function_Reference(pointer=1).AdaSpecification(), "access procedure (This : access Class)")
         self.check(Function_Reference(
-            parameters=[Variable(name = "a", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"]))),
-                        Variable(name = "b", ctype=Type_Reference(name=Identifier(["A", "Class"])))],
+            parameters=[Argument(name = "a", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"]))),
+                        Argument(name = "b", ctype=Type_Reference(name=Identifier(["A", "Class"])))],
             pointer=1).AdaSpecification(),
             "access procedure (This : access Class; A : Capdpa.Int; B : A.Class)")
         self.check(Function_Reference(
@@ -362,7 +362,7 @@ class GenerateConstant(Capdpa_Test):
         self.check(Function_Reference(
             pointer=1,
             return_type=Type_Reference(name=Identifier(["Capdpa", "Int"])),
-            parameters=[Variable(name="X", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"])))]
+            parameters=[Argument(name="X", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"])))]
             ).AdaSpecification(), "access function (This : access Class; X : Capdpa.Int) return Capdpa.Int")
         self.check(Function_Reference(
             pointer=1,
@@ -376,9 +376,9 @@ class GenerateConstant(Capdpa_Test):
     def test_function_pointer(self):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "With_Fptr", children = [
-                Variable(name = "func", ctype = Function_Reference(pointer=1)),
+                Member(name = "func", ctype = Function_Reference(pointer=1)),
                 Function(name = "set_func", parameters = [
-                    Variable(name = "func", ctype = Function_Reference(pointer=1))])
+                    Argument(name = "func", ctype = Function_Reference(pointer=1))])
                 ])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_function_pointer.txt"))
