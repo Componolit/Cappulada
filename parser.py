@@ -9,24 +9,26 @@ from capdpa import *
 # Default with mix-in
 with_defaults='''
 with Interfaces.C;
+with Interfaces.C.Extensions;
 '''
 
 # Default spec mix-in
 spec_defaults='''
-   subtype Bool is Interfaces.C.int;
+   subtype Bool is Interfaces.C.Extensions.bool;
    subtype Unsigned_Char is Interfaces.C.unsigned_char;
    subtype Unsigned_Short is Interfaces.C.unsigned_short;
    subtype Unsigned_Int is Interfaces.C.unsigned;
    subtype Unsigned_Long is Interfaces.C.unsigned_long;
-   --  unsigned long long is not defined in Interfaces.C
+   subtype Unsigned_Long_Long is Interfaces.C.Extensions.unsigned_long_long;
    subtype Char is Interfaces.C.char;
    subtype Signed_Char is Interfaces.C.signed_char;
    subtype Wchar_t is Interfaces.C.wchar_t;
    subtype Short is Interfaces.C.short;
    subtype Int is Interfaces.C.int;
-   --  __int128/unsigned __int128 is not defined in Interfaces.C
+   subtype C_int128 is Interfaces.C.Extensions.Signed_128;
+   --  unsigned __int128 is not defined in Interfaces.C.Extensions
    subtype Long is Interfaces.C.long;
-   --  long long is not defined in Interfaces.C
+   subtype Long_Long is Interfaces.C.Extensions.long_long;
    subtype C_float is Interfaces.C.C_float;
    subtype Double is Interfaces.C.double;
    subtype Long_Double is Interfaces.C.long_double;
