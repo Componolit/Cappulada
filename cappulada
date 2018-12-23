@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+from capdpa import Generator
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o', '--outdir', help="target directory", default=os.path.abspath(os.curdir))
+    parser.add_argument('-p', '--project', help="project name", default="Capdpa")
+    parser.add_argument('-s', '--spec_include', help="specification include")
+    parser.add_argument('-w', '--with_include', help="with include")
+    parser.add_argument('headers', help="header files", nargs='+')
+
+    args = parser.parse_args(sys.argv[1:sys.argv.index('--')] if '--' in sys.argv else sys.argv[1:])
+
+    generator = Generator(project      = args.project,
+                          outdir       = args.outdir,
+                          headers      = args.headers,
+                          clang_args   = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [],
+                          with_include = args.with_include,
+                          spec_include = args.spec_include)
+    generator.run()
