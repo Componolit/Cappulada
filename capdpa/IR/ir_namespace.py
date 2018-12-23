@@ -3,6 +3,7 @@ import ir_class
 import ir_constant
 import ir_enum
 import ir_type
+import ir_variable
 
 from ..ada import Specification
 
@@ -26,7 +27,10 @@ class Namespace(ir.Base):
                         name = fqn_ada,
                         body = "\n".join([""] + map(
                             lambda c: c.AdaSpecification(indentation=3),
-                            filter(lambda c: ir_constant.Constant.isInst(c) or ir_enum.Enum.isInst(c) or ir_type.Type_Definition.isInst(c),
+                            filter(lambda c: ir_constant.Constant.isInst(c) or
+                                             ir_enum.Enum.isInst(c) or
+                                             ir_variable.Variable.isInst(c) or
+                                             ir_type.Type_Definition.isInst(c),
                                 self.children))),
                         with_include = self.with_include,
                         spec_include = self.spec_include,

@@ -67,12 +67,12 @@ class Parser(Capdpa_Test):
     def test_class_with_members(self):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_members",
                 children = [
-                    Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                    Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
-                    Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                    Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                    Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
-                    Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+                    Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                    Member(name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
+                    Member(name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                    Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                    Member(name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
+                    Member(name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
                     ])])
         result = CXX("tests/data/test_class_with_members.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -81,9 +81,9 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [Class(name = "With_functions",
                 children = [
                     Function(name = "public_function", parameters = [
-                        Variable (name = "arg1", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                        Argument(name = "arg1", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                     Function(name = "named_param", parameters = [
-                        Variable (name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                        Argument(name = "param", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
                         return_type = Type_Reference(name = Identifier(["Capdpa", "int"]))
                         ),
                     Constructor()])])
@@ -99,9 +99,9 @@ class Parser(Capdpa_Test):
                     Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_TWO", value = -2),
                         Constant(name = "MINUS_ONE", value = -1)]),
-                    Variable(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                    Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
                     Function(name = "public_function"),
-                    Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                    Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                     Constructor()])])])
         result = CXX("tests/data/test_namespace_with_class_with_everything.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -112,8 +112,8 @@ class Parser(Capdpa_Test):
                     children = [Class(name = "In_namespace")]),
                 Class(name = "Full",
                     children = [
-                        Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]))),
-                        Variable(name = "value_ptr", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]), pointer = 1))
+                        Member(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]))),
+                        Member(name = "value_ptr", ctype = Type_Reference(name = Identifier(["Capdpa", "With_class", "In_namespace", "Class"]), pointer = 1))
                     ])])
         result = CXX("tests/data/test_class_with_class_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -136,8 +136,8 @@ class Parser(Capdpa_Test):
         cursor = list(cxx.translation_unit.cursor.get_children())[0]
         template = getattr(CXX, "_CXX__convert_template")(cxx, cursor)
         expected = Template(entity=Class(name="Container", children=[
-            Variable(name="a", ctype=Template_Argument(name="A")),
-            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+            Member(name="a", ctype=Template_Argument(name="A")),
+            Member(name="b", ctype=Template_Argument(name="B"))]), typenames=[
                 Template_Argument(name="A"),
                 Template_Argument(name="B")])
 
@@ -146,40 +146,40 @@ class Parser(Capdpa_Test):
             Type_Reference(name=Identifier(["typeA"])),
             Type_Reference(name=Identifier(["typeB"]))])
         expected = Class(name="Container_T_typeA_typeB", children=[
-            Variable(name="a", ctype=Type_Reference(name=Identifier(["typeA"]))),
-            Variable(name="b", ctype=Type_Reference(name=Identifier(["typeB"])))],
+            Member(name="a", ctype=Type_Reference(name=Identifier(["typeA"]))),
+            Member(name="b", ctype=Type_Reference(name=Identifier(["typeB"])))],
             instanceof = (['Container'], [Type_Reference(constant=False,name=Identifier(name=['typeA']),pointer=0,reference=False),
                                           Type_Reference(constant=False,name=Identifier(name=['typeB']),pointer=0,reference=False)]))
         template = Template(entity=Class(name="Container", children=[
-            Variable(name="a", ctype=Template_Argument(name="A")),
-            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+            Member(name="a", ctype=Template_Argument(name="A")),
+            Member(name="b", ctype=Template_Argument(name="B"))]), typenames=[
                 Template_Argument(name="A"),
                 Template_Argument(name="B")])
         result = template.instantiate(types)
         self.check(result, expected)
         self.check(template, Template(entity=Class(name="Container", children=[
-            Variable(name="a", ctype=Template_Argument(name="A")),
-            Variable(name="b", ctype=Template_Argument(name="B"))]), typenames=[
+            Member(name="a", ctype=Template_Argument(name="A")),
+            Member(name="b", ctype=Template_Argument(name="B"))]), typenames=[
                 Template_Argument(name="A"),
                 Template_Argument(name="B")]))
         ftypes = Type_Reference_Template(name = "Base", arguments = [
             Type_Reference(name = Identifier(["Capdpa", "ClassA"]))])
         ftemplate = Template(entity=Class(name = "F", children=[
             Function(name = "Foo", parameters = [
-                Variable(name = "x", ctype = Template_Argument(name="T"))],
+                Argument(name = "x", ctype = Template_Argument(name="T"))],
                 return_type=Template_Argument(name="T")),
-            Variable(name = "Bar", ctype=Function_Reference(parameters = [
-                Variable(name = "x", ctype = Template_Argument(name="T"))],
+            Member(name = "Bar", ctype=Function_Reference(parameters = [
+                Argument(name = "x", ctype = Template_Argument(name="T"))],
                 return_type=Template_Argument(name="T")))
             ]),
             typenames = [
                 Template_Argument(name = "T")])
         fexpected = Class(name="F_T_ClassA", children = [
             Function(name = "Foo", parameters = [
-                Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
+                Argument(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
                 return_type = Type_Reference(name = Identifier(["Capdpa", "ClassA"]))),
-            Variable(name = "Bar", ctype = Function_Reference(parameters = [
-                Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
+            Member(name = "Bar", ctype = Function_Reference(parameters = [
+                Argument(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "ClassA"])))],
                 return_type = Type_Reference(name = Identifier(["Capdpa", "ClassA"]))))
             ],
             instanceof = (['F'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'ClassA']),pointer=0,reference=False)]))
@@ -188,29 +188,29 @@ class Parser(Capdpa_Test):
     def test_template(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name="Container", children=[
-                Variable(name="a", ctype=Template_Argument(name="A")),
-                Variable(name="b", ctype=Template_Argument(name="B")),
+                Member(name="a", ctype=Template_Argument(name="A")),
+                Member(name="b", ctype=Template_Argument(name="B")),
                 Constructor(parameters=[])]), typenames=[
                     Template_Argument(name="A"),
                     Template_Argument(name="B")]),
             Class(name = "Container_T_int_char", children = [
-                Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "char"])))],
+                Member(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "char"])))],
                 instanceof=(['Capdpa', 'Container'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False),
                                                       Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False)])),
             Class(name = "Container_T_int_int", children = [
-                Variable(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                Member(name = "a", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "b", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
                 instanceof=(['Capdpa', 'Container'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False),
                                                       Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False)])),
             Class(name = "User", children = [
-                Variable(name = "cic", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
+                Member(name = "cic", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "char"]))])),
-                Variable(name = "cii", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
+                Member(name = "cii", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "int"]))])),
-                Variable(name = "cic2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
+                Member(name = "cic2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "char"]))]))
                 ])])
@@ -220,16 +220,16 @@ class Parser(Capdpa_Test):
     def test_inheritance_simple(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
-                Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
-                Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
-                Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+                Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
+                Member(name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                Member(name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
+                Member(name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [
                 Class_Reference(name = Identifier(["Capdpa", "With_members"])),
-                Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
+                Member(name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
             ])])
         result = CXX("tests/data/test_class_inheritance.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -237,20 +237,20 @@ class Parser(Capdpa_Test):
     def test_inheritance_chain(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
-                Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
-                Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
-                Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+                Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
+                Member(name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                Member(name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
+                Member(name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [
                 Class_Reference(name = Identifier(["Capdpa", "With_members"])),
-                Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
+                Member(name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
             ]),
             Class(name = "Child", children = [
                 Class_Reference(name = Identifier(["Capdpa", "Inheritance"])),
-                Variable (name = "c", ctype = Type_Reference(name = Identifier(["Capdpa", "long"])))
+                Member(name = "c", ctype = Type_Reference(name = Identifier(["Capdpa", "long"])))
             ])])
         result = CXX("tests/data/test_class_inheritance_child.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -272,7 +272,7 @@ class Parser(Capdpa_Test):
             Class(name = "From_Virtual",
                 children = [
                     Class_Reference(name = Identifier(["Capdpa", "With_Virtual"])),
-                    Variable(name = "v", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
+                    Member(name = "v", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/test_inherit_from_virtual.h").ToIR(project="Capdpa")
         self.check(result, expected)
         self.check(result["From_Virtual"].isVirtual(), True)
@@ -280,20 +280,20 @@ class Parser(Capdpa_Test):
     def test_inherit_virtual_from_simple(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_members", children = [
-                Variable (name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
-                Variable (name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
-                Variable (name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
-                Variable (name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
-                Variable (name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
-                Variable (name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
+                Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "public_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1)),
+                Member(name = "public_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"]))),
+                Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
+                Member(name = "private_pointer", ctype = Type_Reference(name = Identifier(["Capdpa", "void"]), pointer = 1), access="private"),
+                Member(name = "private_float", ctype = Type_Reference(name = Identifier(["Capdpa", "C_float"])), access="private")
             ]),
             Class(name = "Inheritance", children = [
                 Class_Reference(name = Identifier(["Capdpa", "With_members"])),
-                Variable (name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
+                Member(name = "Additional", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))
             ]),
             Class(name = "Simple", children = [
                 Class_Reference(name = Identifier(["Capdpa", "Inheritance"])),
-                Variable(name = "s", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
+                Member(name = "s", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                 Function(name = "foo", virtual=True)])])
         result = CXX("tests/data/test_inherit_virtual_from_simple.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -307,14 +307,14 @@ class Parser(Capdpa_Test):
     def test_class_without_access_spec(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "No_access", children = [
-                Variable(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private")])])
+                Member(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private")])])
         result = CXX("tests/data/test_class_without_access_spec.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_struct_without_access_spec(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "No_access", children = [
-                Variable(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="public")])])
+                Member(name="x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="public")])])
         result = CXX("tests/data/test_struct_without_access_spec.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -322,14 +322,14 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "Outer", children = [
                 Class(name = "Inner"),
-                Variable(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])])
+                Member(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "Outer", "Inner", "Class"])))])])
         result = CXX("tests/data/test_nested_class.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_pointer_member(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Pointer", children = [
-                Variable(name="p", ctype=Type_Reference(name = Identifier(["Capdpa", "int"]), pointer = 1))])
+                Member(name="p", ctype=Type_Reference(name = Identifier(["Capdpa", "int"]), pointer = 1))])
             ])
         result = CXX("tests/data/test_pointer_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -337,7 +337,7 @@ class Parser(Capdpa_Test):
     def test_reference_member(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Reference", children = [
-                Variable(name="r", ctype=Type_Reference(name=Identifier(["Capdpa", "int"]), reference=True))])])
+                Member(name="r", ctype=Type_Reference(name=Identifier(["Capdpa", "int"]), reference=True))])])
         result = CXX("tests/data/test_reference_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -347,7 +347,7 @@ class Parser(Capdpa_Test):
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
                     Constant(name = "B", value = 1)]),
-                Variable(name = "e", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
+                Member(name = "e", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
         result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -364,18 +364,19 @@ class Parser(Capdpa_Test):
         expected = Namespace("Capdpa", children = [
             Class(name = "With_Struct", children = [
                 Class(name = "Ws", children = [
-                    Variable(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                    Member(name = "x", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                 Type_Definition(name = "Ws2", reference = None),
-                Variable(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws", "Class"]), pointer = 1)),
-                Variable(name = "value2", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws2", "Class"]), pointer = 1))])])
+                Member(name = "value", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws", "Class"]), pointer = 1)),
+                Member(name = "value2", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Struct", "Ws2", "Class"]), pointer = 1))])])
         result = CXX("tests/data/test_class_with_struct_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
     def test_class_template(self):
         expected = Namespace("Capdpa", children = [
+            Class(name = "Base"),
             Class(name = "Template", children = [
                 Constructor(parameters = [
-                    Variable(name = "other", ctype =
+                    Argument(name = "other", ctype =
                         Type_Reference(name = Identifier(["Capdpa", "Template"]), reference=True))],
                 )])])
         result = CXX("tests/data/test_class_template.h").ToIR(project="Capdpa")
@@ -394,7 +395,7 @@ class Parser(Capdpa_Test):
             Class(name = "With_Typedef", children = [
                 Type_Definition(name = "i32", reference = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
             Class(name = "Use_Typedef", children = [
-                Variable(name = "value", ctype=Type_Reference(Identifier(["Capdpa", "With_Typedef", "i32"])))])])
+                Member(name = "value", ctype=Type_Reference(Identifier(["Capdpa", "With_Typedef", "i32"])))])])
         result = CXX("tests/data/test_class_with_typedef.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -405,7 +406,7 @@ class Parser(Capdpa_Test):
                     Constant(name = "A", value = 0),
                     Constant(name = "B", value = 1)
                     ]),
-                Variable(name = "e", ctype=Type_Reference(Identifier(["Capdpa", "With_Enum_Decl", "E_t"])))
+                Member(name = "e", ctype=Type_Reference(Identifier(["Capdpa", "With_Enum_Decl", "E_t"])))
             ])])
         result = CXX("tests/data/test_enum_declaration.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -413,11 +414,11 @@ class Parser(Capdpa_Test):
     def test_function_pointer(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Fptr", children = [
-                Variable(name = "func", ctype = Function_Reference()),
+                Member(name = "func", ctype = Function_Reference()),
                 Function(name = "set_func", parameters = [
-                    Variable(name = "func", ctype = Function_Reference())]),
-                Variable(name = "member", ctype = Function_Reference(parameters = [
-                    Variable(name = "This", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Fptr"]), reference=True))]))
+                    Argument(name = "func", ctype = Function_Reference())]),
+                Member(name = "member", ctype = Function_Reference(parameters = [
+                    Argument(name = "This", ctype = Type_Reference(name = Identifier(["Capdpa", "With_Fptr"]), reference=True))]))
                 ])])
         result = CXX("tests/data/test_function_pointer.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -425,11 +426,11 @@ class Parser(Capdpa_Test):
     def test_template_function_pointer(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name="With_Fptr", children = [
-                Variable(name = "func", ctype = Function_Reference(parameters = [
-                    Variable(name = "This", ctype = Template_Argument(name="T"))])),
+                Member(name = "func", ctype = Function_Reference(parameters = [
+                    Argument(name = "This", ctype = Template_Argument(name="T"))])),
                 Function(name = "set_func", parameters = [
-                    Variable(name = "func", ctype = Function_Reference(parameters = [
-                        Variable(name = "This", ctype = Template_Argument(name="T"))]))
+                    Argument(name = "func", ctype = Function_Reference(parameters = [
+                        Argument(name = "This", ctype = Template_Argument(name="T"))]))
                     ])
                 ]), typenames = [Template_Argument(name = "T")])
             ])
@@ -439,13 +440,13 @@ class Parser(Capdpa_Test):
     def test_template_non_type(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name = "Tnt", children = [
-                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
+                Member(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                 typenames = [Template_Argument(name = "Size")]),
             Class(name = "Tnt_T_5", children = [
-                Variable(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                Member(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
                 instanceof = (['Capdpa', 'Tnt'], [Type_Literal(constant=False,name=Identifier(name=['5']),pointer=0,reference=False,value=5)])),
             Class(name = "Tnt5", children = [
-                Variable(name = "t5", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tnt"]), arguments = [
+                Member(name = "t5", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tnt"]), arguments = [
                     Type_Literal(name = Identifier(["5"]), value = 5)]))],
                     instanceof = None)
             ])
@@ -456,53 +457,53 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name = "Templ", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Template_Argument(name = "A")),
-                Variable(name = "element2", ctype = Template_Argument(name = "B"))
+                Member(name = "element1", ctype = Template_Argument(name = "A")),
+                Member(name = "element2", ctype = Template_Argument(name = "B"))
                 ]), typenames = [
                     Template_Argument(name = "A"), Template_Argument(name = "B")]),
             Class(name = "Templ_T_char_int", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
+                Member(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
+                Member(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
                 instanceof=(['Capdpa', 'Templ'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False),
                                                   Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False)])),
             Class(name = "Templ_T_char_char", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
-                Variable(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
+                Member(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "char"]))),
+                Member(name = "element2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
                 instanceof=(['Capdpa', 'Templ'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False),
                                                   Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'char']),pointer=0,reference=False)])),
             Template(entity=Class(name = "Var", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
+                Member(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))]),
                 typenames = [Template_Argument(name = "Ts", variadic=True)]),
             Class(name = "Var_T_", children = [
                 Constructor(),
-                Variable(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
+                Member(name = "element1", ctype = Type_Reference(Identifier(["Capdpa", "int"])))],
                 instanceof=(['Capdpa', 'Var'], [])),
             Class(name = "Cls", children = [
                 Constructor(),
                 Function(name = "bar", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Templ"]), arguments = [
+                    Argument(name = "p1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Templ"]), arguments = [
                         Type_Reference(name = Identifier(["Capdpa", "char"])),
                         Type_Reference(name = Identifier(["Capdpa", "int"]))])),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
+                    Argument(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
                     return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "foo", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "int"]))),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
+                    Argument(name = "p1", ctype = Type_Reference(Identifier(["Capdpa", "int"]))),
+                    Argument(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
                     return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "baz", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
+                    Argument(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
                         Type_Reference(name = Identifier(["Capdpa", "char"])),
                         Type_Reference(name = Identifier(["Capdpa", "int"]))])),
-                    Variable(name = "p2", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
+                    Argument(name = "p2", ctype = Type_Reference_Template(Identifier(["Capdpa", "Templ"]), arguments = [
                         Type_Reference(name = Identifier(["Capdpa", "char"])),
                         Type_Reference(name = Identifier(["Capdpa", "char"]))]))],
                     return_type = Type_Reference(Identifier(["Capdpa", "int"]))),
                 Function(name = "var", parameters = [
-                    Variable(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Var"]), arguments = [])),
-                    Variable(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
+                    Argument(name = "p1", ctype = Type_Reference_Template(Identifier(["Capdpa", "Var"]), arguments = [])),
+                    Argument(name = "p2", ctype = Type_Reference(Identifier(["Capdpa", "char"])))],
                     return_type = Type_Reference(Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -511,8 +512,8 @@ class Parser(Capdpa_Test):
         expected = Namespace("Capdpa", children = [
             Class(name = "Cr", children = [
                 Function(name = "method_with_function_parameter_const_ref", parameters = [
-                    Variable(name = "arg1", ctype = Function_Reference(parameters = [
-                        Variable(name = "arg1", ctype = Type_Reference(Identifier(["Capdpa", "int"]), reference=True, constant=True))]))])])])
+                    Argument(name = "arg1", ctype = Function_Reference(parameters = [
+                        Argument(name = "arg1", ctype = Type_Reference(Identifier(["Capdpa", "int"]), reference=True, constant=True))]))])])])
         result = CXX("tests/data/test_const_ref.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
