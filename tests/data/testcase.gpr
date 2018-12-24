@@ -1,0 +1,8 @@
+project Testcase
+is
+   Main := external ("Main");
+   for Languages use ("Ada", "C++");
+   for Source_Dirs use (".", "../cache");
+   for Object_Dir use "../cache";
+   for Main use (Main);
+end Testcase;

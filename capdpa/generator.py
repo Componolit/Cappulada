@@ -33,12 +33,12 @@ spec_defaults='''
 
 class Generator:
 
-    def __init__(self, project, outdir, headers, clang_args, with_include, spec_include):
+    def __init__(self, project, outdir, headers, clang_args=None, with_include=None, spec_include=None):
 
         self.project    = project
         self.outdir     = outdir
         self.headers    = headers
-        self.clang_args = clang_args
+        self.clang_args = clang_args or []
 
         if with_include is not None:
             with open(with_include, 'r') as wi:
