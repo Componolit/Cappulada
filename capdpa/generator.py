@@ -2,6 +2,7 @@ import sys
 import os
 import traceback
 from capdpa import CXX
+import clang.cindex
 
 # Default with mix-in
 with_defaults='''
@@ -61,6 +62,9 @@ class Generator:
                 compilation_units.extend(CXX(header, self.clang_args).ToIR(project=self.project,
                                                                            with_include=self.with_include,
                                                                            spec_include=self.spec_include).AdaSpecification())
+            except clang.cindex.TranslationUnitLoadError:
+                print ("Error loading \"" + header + "\"")
+                raise
             except:
                 traceback.print_exc()
 
