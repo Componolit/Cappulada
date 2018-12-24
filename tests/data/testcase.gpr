@@ -1,8 +1,10 @@
 project Testcase
 is
-   Main := external ("Main");
+   Name := external ("Name");
+   for Create_Missing_Dirs use "true";
    for Languages use ("Ada", "C++");
-   for Source_Dirs use (".", "../cache");
+   for Source_Dirs use ("tests", Name, "../cache/" & Name);
+   for Exec_Dir use "../cache/" & Name;
    for Object_Dir use "../cache";
-   for Main use (Main);
+   for Main use ("main.adb");
 end Testcase;

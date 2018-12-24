@@ -3,6 +3,10 @@ namespace Constants {
 
    class Cls {
       public:
-         int get_const () { return int_const; };
+         int get_const ();
    };
 };
+
+int Constants::Cls::get_const() {
+   return int_const;
+}
