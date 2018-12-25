@@ -50,5 +50,8 @@ class check_validation(Capdpa_Test):
     def test_multiple_custom_constructors(self):
         self.check_validation("test_multiple_custom_constructors")
 
+    def test_namespace_with_class(self):
+        self.check_validation("test_namespace_with_class")
+
 if __name__ == '__main__':
     unittest.main()
