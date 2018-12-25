@@ -6,8 +6,10 @@ is
    Two : constant := 2;
    type Negative is (Minus_One, Minus_Two);
    for Negative use (Minus_One => -1, Minus_Two => -2);
+   pragma Warnings (Off, "* bits of ""With_Everything_Private_Int"" unused");
    type With_Everything_Private_Int is null record
       with Size => Capdpa.Int'Size;
+   pragma Warnings (On, "* bits of ""With_Everything_Private_Int"" unused");
    type Class is
    limited record
       Private_Private_Int : With_Everything_Private_Int;

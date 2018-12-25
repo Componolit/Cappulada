@@ -2,12 +2,18 @@ with System;
 
 package Capdpa.Simple
 is
+   pragma Warnings (Off, "* bits of ""Simple_Private_Int"" unused");
    type Simple_Private_Int is null record
       with Size => Capdpa.Int'Size;
+   pragma Warnings (On, "* bits of ""Simple_Private_Int"" unused");
+   pragma Warnings (Off, "* bits of ""Simple_Private_Void"" unused");
    type Simple_Private_Void is null record
       with Size => Capdpa.Void_Address'Size;
+   pragma Warnings (On, "* bits of ""Simple_Private_Void"" unused");
+   pragma Warnings (Off, "* bits of ""Simple_Private_C_Float"" unused");
    type Simple_Private_C_Float is null record
       with Size => Capdpa.C_Float'Size;
+   pragma Warnings (On, "* bits of ""Simple_Private_C_Float"" unused");
    type Class is
    tagged limited record
       Public_Int : Capdpa.Int;
