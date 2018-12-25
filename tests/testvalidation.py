@@ -44,5 +44,8 @@ class check_validation(Capdpa_Test):
     def test_multiple_members_with_private_type(self):
         self.check_validation("test_multiple_members_with_private_type")
 
+    def test_class_from_custom_constructor(self):
+        self.check_validation("test_class_from_custom_constructor")
+
 if __name__ == '__main__':
     unittest.main()
