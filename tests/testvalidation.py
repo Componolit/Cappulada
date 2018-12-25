@@ -19,10 +19,27 @@ class check_validation(Capdpa_Test):
         self.assertEqual(result, 0, "Running test case failed")
 
     def test_class_from_default_constructor(self):
-        result = self.check_validation("test_class_from_default_constructor")
+        self.check_validation("test_class_from_default_constructor")
 
     def test_namespace_with_const_variable(self):
-        result = self.check_validation("test_namespace_with_const_variable")
+        self.check_validation("test_namespace_with_const_variable")
+
+    def test_project_with_reserved_name(self):
+        try:
+            Generator("class", "tests/cache/class", ["tests/data/class/impl.cpp"]).run()
+            self.fail("Invalid project name \"class\" not detected")
+        except generator.InvalidProjectName:
+            pass
+        except:
+            self.fail("Invalid project name \"class\" not detected")
+
+        try:
+            Generator("constructor", "tests/cache/class", ["tests/data/class/impl.cpp"]).run()
+            self.fail("Invalid project name \"constructor\" not detected")
+        except generator.InvalidProjectName:
+            pass
+        except:
+            self.fail("Invalid project name \"constructor\" not detected")
 
 if __name__ == '__main__':
     unittest.main()

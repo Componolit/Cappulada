@@ -4,6 +4,8 @@ import traceback
 from capdpa import CXX
 import clang.cindex
 
+class InvalidProjectName(Exception): pass
+
 # Default with mix-in
 with_defaults='''
 with Interfaces.C;
@@ -35,6 +37,9 @@ spec_defaults='''
 class Generator:
 
     def __init__(self, project, outdir, headers, clang_args=None, with_include=None, spec_include=None):
+
+        if project.lower() == "class" or project.lower() == "constructor":
+            raise InvalidProjectName()
 
         self.project    = project
         self.outdir     = outdir
