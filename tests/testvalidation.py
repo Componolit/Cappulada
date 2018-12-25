@@ -47,5 +47,8 @@ class check_validation(Capdpa_Test):
     def test_class_from_custom_constructor(self):
         self.check_validation("test_class_from_custom_constructor")
 
+    def test_multiple_custom_constructors(self):
+        self.check_validation("test_multiple_custom_constructors")
+
 if __name__ == '__main__':
     unittest.main()
