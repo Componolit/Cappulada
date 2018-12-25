@@ -41,5 +41,8 @@ class check_validation(Capdpa_Test):
         except:
             self.fail("Invalid project name \"constructor\" not detected")
 
+    def test_multiple_members_with_private_type(self):
+        self.check_validation("test_multiple_members_with_private_type")
+
 if __name__ == '__main__':
     unittest.main()

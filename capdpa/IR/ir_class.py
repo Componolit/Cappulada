@@ -59,6 +59,19 @@ class Class(ir.Base):
                 members.append(c)
         return members
 
+    def PrivateTypesSpecification(self, indentation):
+
+        # Generate order-preserving list of unique private types
+        types = []
+        for t in [m.ctype for m in self.Members() if m.IsPrivate()]:
+            if t not in types:
+                types.append(t)
+
+        return "\n".join(['{indent}type {private} is null record\n{indent}   with Size => {public}\'Size;'.format(
+                            indent = (indentation + 3) * " ",
+                            private = t.AdaSpecification(private=self.name),
+                            public = t.AdaSpecification()) for t in types] + [''])
+
     def AdaSpecification(self, indentation=0):
 
         # Generate record members
@@ -77,10 +90,7 @@ class Class(ir.Base):
                 "{indent}type Class_Address is new System.Address;\n"
                 ).format(
                         indent = (indentation + 3) * " ",
-                        private_types = "\n".join(['{indent}type {private} is null record\n{indent}   with Size => {public}\'Size;'.format(
-                            indent = (indentation + 3) * " ",
-                            private = m.ctype.AdaSpecification(private=self.name),
-                            public = m.ctype.AdaSpecification()) for m in self.Members() if m.IsPrivate()] + ['']),
+                        private_types = self.PrivateTypesSpecification(indentation),
                         classdef = (" new " + base.name.PackageFullName() + " with") if hasvirtualbase and self.isVirtual() else "",
                         tagged = "tagged " if self.isVirtual() and not hasvirtualbase else "",
                         classmembers = "\n".join([m.AdaSpecification(indentation + 6, self.name) + ";" for m in self.Members() or [null]] + ['']))
