@@ -18,6 +18,9 @@ class check_validation(Capdpa_Test):
         result = call(["tests/cache/" + name + "/main"])
         self.assertEqual(result, 0, "Running test case failed")
 
+    def test_class_from_default_constructor(self):
+        result = self.check_validation("test_class_from_default_constructor")
+
     def test_namespace_with_const_variable(self):
         result = self.check_validation("test_namespace_with_const_variable")
 

@@ -10,6 +10,6 @@ is
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN12With_VirtualC1Ev");
-   procedure Foo
+   procedure Foo (This : access Class)
    with Import, Convention => CPP, External_Name => "_ZN12With_Virtual3fooEv";
 end Capdpa.With_Virtual;

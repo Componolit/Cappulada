@@ -23,6 +23,6 @@ is
    type Class_Address is new System.Address;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN6SimpleC1Ev");
-   procedure Foo
+   procedure Foo (This : access Class)
    with Import, Convention => CPP, External_Name => "_ZN6Simple3fooEv";
 end Capdpa.Simple;

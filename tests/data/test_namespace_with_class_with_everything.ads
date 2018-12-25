@@ -15,7 +15,7 @@ is
    end record
    with Import, Convention => CPP;
    type Class_Address is new System.Address;
-   procedure Public_Function
+   procedure Public_Function (This : access Class)
    with Import, Convention => CPP, External_Name => "_ZN10With_class15With_everything15public_functionEv";
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN10With_class15With_everythingC1Ev");
