@@ -67,8 +67,9 @@ class Generator:
                 compilation_units.extend(CXX(header, self.clang_args).ToIR(project=self.project,
                                                                            with_include=self.with_include,
                                                                            spec_include=self.spec_include).AdaSpecification())
-            except clang.cindex.TranslationUnitLoadError:
-                print ("Error loading \"" + header + "\"")
+            except CXX.LoadError:
+                raise
+            except CXX.ParseError:
                 raise
             except:
                 traceback.print_exc()

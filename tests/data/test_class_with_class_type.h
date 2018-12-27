@@ -1,5 +1,5 @@
 
-#include <test_namespace_with_class.h>
+#include "test_namespace_with_class.h"
 
 class Full
 {
