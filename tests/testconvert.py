@@ -97,8 +97,8 @@ class Parser(Capdpa_Test):
                     Constant(name = "ONE", value = 1),
                     Constant(name = "TWO", value = 2),
                     Enum(name = "NEGATIVE", children = [
-                        Constant(name = "MINUS_ONE", value = -1),
-                        Constant(name = "MINUS_TWO", value = -2)]),
+                        Constant(name = "MINUS_TWO", value = -2),
+                        Constant(name = "MINUS_ONE", value = -1)]),
                     Variable(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
                     Function(name = "public_function"),
                     Variable(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
