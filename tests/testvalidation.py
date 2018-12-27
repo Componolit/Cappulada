@@ -56,5 +56,8 @@ class check_validation(Capdpa_Test):
     def test_complex_class_layout(self):
         self.check_validation("test_complex_class_layout")
 
+    def test_namespace_with_enumeration(self):
+        self.check_validation("test_namespace_with_enumeration")
+
 if __name__ == '__main__':
     unittest.main()
