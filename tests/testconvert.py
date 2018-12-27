@@ -58,9 +58,9 @@ class Parser(Capdpa_Test):
                     Constant(name = "TWO", value = 2),
                     Constant(name = "THREE", value = 3),
                     Enum(name = "NEGATIVE", children = [
-                        Constant(name = "MINUS_ONE", value = -1),
+                        Constant(name = "MINUS_THREE", value = -3),
                         Constant(name = "MINUS_TWO", value = -2),
-                        Constant(name = "MINUS_THREE", value = -3)])])])
+                        Constant(name = "MINUS_ONE", value = -1)])])])
         result = CXX("tests/data/test_class_with_constants.h").ToIR(project="Capdpa")
         self.check(result, expected)
 

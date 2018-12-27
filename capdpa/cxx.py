@@ -237,9 +237,18 @@ class CXX:
                 value = cursor.enum_value)
 
     def __convert_enum(self, cursor):
+
+        def compare(left, right):
+            if left.value < right.value:
+                return -1;
+            elif left.value > right.value:
+                return 0;
+            else:
+                return 0;
+
         return IR.Enum(
-                    name = cursor.displayname,
-                    children = [self.__convert_constant(constant) for constant in cursor.get_children()])
+            name = cursor.displayname,
+            children = sorted([self.__convert_constant(constant) for constant in cursor.get_children()], cmp=compare))
 
     def __convert_namespace(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.NAMESPACE:
