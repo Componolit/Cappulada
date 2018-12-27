@@ -4,8 +4,8 @@ package Capdpa.With_Class.With_Everything
 is
    One : constant := 1;
    Two : constant := 2;
-   type Negative is (Minus_One, Minus_Two);
-   for Negative use (Minus_One => -1, Minus_Two => -2);
+   type Negative is (Minus_Two, Minus_One);
+   for Negative use (Minus_Two => -2, Minus_One => -1);
    pragma Warnings (Off, "* bits of ""With_Everything_Private_Int"" unused");
    type With_Everything_Private_Int is null record
       with Size => Capdpa.Int'Size;
