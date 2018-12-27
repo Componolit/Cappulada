@@ -42,9 +42,30 @@ TypeMap = {
 
 class CXX:
 
+    class ParseError(Exception):
+        def __init__(self, error):
+            self.error = error
+            self.message = ""
+            for d in self.error:
+                self.message += str(d.location.file) + ":" + str(d.location.line) + ":" + str(d.location.column) +  ": " + d.spelling + "\n"
+
+        def __str__(self):
+            return self.message
+
+    class LoadError(Exception):
+        def __init__(self, error):
+            self.error = error
+
     def __init__(self, header, flags = []):
-        self.index = clang.cindex.Index.create()
-        self.translation_unit = self.index.parse(header, ["-x", "c++"] + flags)
+        try:
+            self.index = clang.cindex.Index.create()
+            self.translation_unit = self.index.parse(header, ["-x", "c++"] + flags)
+            if self.translation_unit.diagnostics:
+                for diag in self.translation_unit.diagnostics:
+                    if diag.severity > 2:
+                       raise CXX.ParseError(self.translation_unit.diagnostics)
+        except clang.cindex.TranslationUnitLoadError as e:
+            raise LoadError(e)
 
     def __print_layer(self, cursor):
         print(str(cursor.kind) + " (" + cursor.displayname + "): " + str([cursor.kind for cursor in cursor.get_children()]))
