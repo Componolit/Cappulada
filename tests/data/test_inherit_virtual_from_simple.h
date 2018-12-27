@@ -1,5 +1,5 @@
 
-#include <test_class_inheritance.h>
+#include "test_class_inheritance.h"
 
 class Simple : public Inheritance
 {

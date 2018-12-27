@@ -1,3 +1,4 @@
+class Base {};
 
 template <typename T>
 class Template
