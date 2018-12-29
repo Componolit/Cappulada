@@ -53,8 +53,12 @@ class CXX:
             return self.message
 
     class LoadError(Exception):
-        def __init__(self, error):
+        def __init__(self, error, header):
             self.error = error
+            self.header = header
+
+        def __str__(self):
+            return self.header + ": " + str(self.error)
 
     def __init__(self, header, flags = []):
         try:
@@ -65,7 +69,7 @@ class CXX:
                     if diag.severity > 2:
                        raise CXX.ParseError(self.translation_unit.diagnostics)
         except clang.cindex.TranslationUnitLoadError as e:
-            raise LoadError(e)
+            raise CXX.LoadError(e, header)
 
     def __print_layer(self, cursor):
         print(str(cursor.kind) + " (" + cursor.displayname + "): " + str([cursor.kind for cursor in cursor.get_children()]))
