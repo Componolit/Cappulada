@@ -8,9 +8,6 @@ class Mangling(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.mangling    = CXX("tests/data/test_mangling.h").ToIR(project="Capdpa").children
-        self.templates   = CXX("tests/data/test_template_mangling.h").ToIR(project="Capdpa").children
-        self.compression = CXX("tests/data/mangling_compression.h").ToIR(project="Capdpa").children
-
         self.tests = CXX("tests/data/test_mangling.h").ToIR(project="Capdpa")
 
     def test_class_with_virtual(self):
@@ -44,32 +41,32 @@ class Mangling(unittest.TestCase):
         self.assertTrue(result == "_ZN14With_functionsC1Ev", "Invalid symbol: " + result)
 
     def test_template_template_argument (self):
-        symbol = str(self.templates[0].parent["Cls", "bar"].Mangle())
+        symbol = str(self.tests["Cls", "bar"].Mangle())
         self.assertTrue (symbol == "_ZN3Cls3barE5TemplIciEc", "Invalid symbol: " + symbol)
 
     def test_template_no_template_argument (self):
-        symbol = str(self.templates[0].parent["Cls", "foo"].Mangle())
+        symbol = str(self.tests["Cls", "foo"].Mangle())
         self.assertTrue (symbol == "_ZN3Cls3fooEic", "Invalid symbol: " + symbol)
 
     def test_template_multiple_template_arguments (self):
-        symbol = str(self.templates[0].parent["Cls", "baz"].Mangle())
+        symbol = str(self.tests["Cls", "baz"].Mangle())
         self.assertTrue (symbol == "_ZN3Cls3bazE5TemplIciES0_IccE", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_4 (self):
-        symbol = str(self.templates[0].children[1].Mangle())
+        symbol = str(self.tests["Cls", "var"].Mangle())
         self.assertTrue (symbol == "_ZN3Cls3varE3VarIJEEc", "Invalid symbol: " + symbol)
 
     def test_compression_none (self):
-        symbol = str(self.compression[0].children[1].children[1].Mangle())
-        self.assertTrue (symbol == "_ZN4Root3Cls14no_compressionEii", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Root2', 'Cls'].children[1].Mangle())
+        self.assertTrue (symbol == "_ZN5Root23Cls14no_compressionEii", "Invalid symbol: " + symbol)
 
     def test_compression1 (self):
-        symbol = str(self.compression[0].children[1].children[2].Mangle())
-        self.assertTrue (symbol == "_ZN4Root3Cls12compression1EiNS_4DataE", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Root2', 'Cls'].children[2].Mangle())
+        self.assertTrue (symbol == "_ZN5Root23Cls12compression1EiNS_4DataE", "Invalid symbol: " + symbol)
 
     def test_compression2 (self):
-        symbol = str(self.compression[0].children[1].children[3].Mangle())
-        self.assertTrue (symbol == "_ZN4Root3Cls12compression2ENS_4DataEiS1_", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Root2', 'Cls'].children[3].Mangle())
+        self.assertTrue (symbol == "_ZN5Root23Cls12compression2ENS_4DataEiS1_", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_global_var (self):
         symbol = str(self.mangling[0].children[0].Mangle())
@@ -342,12 +339,12 @@ class Mangling(unittest.TestCase):
 
     # Template instances
     def test_template_instance (self):
-        symbol = str(self.tests['Templ', 'Blubber_T_int'].children[0].Mangle())
-        self.assertTrue (symbol == "_ZN5Templ7BlubberIiE3fooES1_", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Templ1', 'Blubber_T_int'].children[0].Mangle())
+        self.assertTrue (symbol == "_ZN6Templ17BlubberIiE3fooES1_", "Invalid symbol: " + symbol)
 
     def test_template_instance_multi (self):
-        symbol = str(self.tests['Templ', 'B_T_char_int'].children[1].Mangle())
-        self.assertTrue (symbol == "_ZN5Templ1BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Templ1', 'B_T_char_int'].children[1].Mangle())
+        self.assertTrue (symbol == "_ZN6Templ11BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_instance_complex (self):
         symbol = str(self.tests['Templ2', ['Cde_T_char_int', 'foo']].Mangle())
