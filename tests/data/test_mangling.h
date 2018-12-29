@@ -15,26 +15,26 @@ class Main
       void method_with_pointer (char *ptr) { };
       void method_with_pointers (char *ptr1, int *ptr2) { };
       void method_with_pointers_mixed (char *ptr1, int value, int *ptr2) { };
-      char *method_with_pointer_return () { };
-      char *method_with_pointer_return_and_arg (char *ptr) { };
-      char *method_with_pointer_return_and_args (char *ptr1, int *ptr2) { };
-      char *method_with_pointer_return_and_mixed (char *ptr1, int value, int *ptr2) { };
+      char *method_with_pointer_return () { return (char *)0; };
+      char *method_with_pointer_return_and_arg (char *ptr) { return (char *)0; };
+      char *method_with_pointer_return_and_args (char *ptr1, int *ptr2) { return (char *)0; };
+      char *method_with_pointer_return_and_mixed (char *ptr1, int value, int *ptr2) { return (char *)0; };
 
       void method_with_class_pointer (Root::Test1 *ptr) { };
       void method_with_class_pointers (Root::Test1 *ptr1, Root::Test2 *ptr2) { };
       void method_with_class_pointers_mixed (Root::Test1 *ptr1, int value, Root::Test2 *ptr2) { };
-      Root::Test1 *method_with_class_pointer_return () { };
-      Root::Test1 *method_with_class_pointer_return_and_arg (Root::Test1 *ptr) { };
-      Root::Test1 *method_with_class_pointer_return_and_args (Root::Test1 *ptr1, Root::Test2 *ptr2) { };
-      Root::Test1 *method_with_class_pointer_return_and_mixed (Root::Test1 *ptr1, int value, Root::Test2 *ptr2) { };
+      Root::Test1 *method_with_class_pointer_return () { return (Root::Test1 *)0; };
+      Root::Test1 *method_with_class_pointer_return_and_arg (Root::Test1 *ptr) { return (Root::Test1 *)0;};
+      Root::Test1 *method_with_class_pointer_return_and_args (Root::Test1 *ptr1, Root::Test2 *ptr2) { return (Root::Test1 *)0;};
+      Root::Test1 *method_with_class_pointer_return_and_mixed (Root::Test1 *ptr1, int value, Root::Test2 *ptr2) { return (Root::Test1 *)0;};
 
       void method_with_class_reference (Root::Test1& ref) { };
       void method_with_class_references (Root::Test1& ref1, Root::Test2& ref2) { };
       void method_with_class_references_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { };
-      Root::Test1& method_with_class_reference_return () { };
-      Root::Test1& method_with_class_reference_return_and_arg (Root::Test1& ref) { };
-      Root::Test1& method_with_class_reference_return_and_args (Root::Test1& ref1, Root::Test2& ref2) { };
-      Root::Test1& method_with_class_reference_return_and_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { };
+      Root::Test1& method_with_class_reference_return () { return *(new Root::Test1); };
+      Root::Test1& method_with_class_reference_return_and_arg (Root::Test1& ref) { return *(new Root::Test1); };
+      Root::Test1& method_with_class_reference_return_and_args (Root::Test1& ref1, Root::Test2& ref2) { return *(new Root::Test1); };
+      Root::Test1& method_with_class_reference_return_and_mixed (Root::Test1& ref1, int value, Root::Test2& ref2) { return *(new Root::Test1); };
 
       void method_with_const_data_pointer (char * const ptr) { };
       void method_with_const_address_pointer (const char * ptr) { };
@@ -81,7 +81,6 @@ class Main
       void method_builtin_float (float) { };
       void method_builtin_double (double) { };
       void method_builtin_long_double (long double) { };
-      void method_builtin___float128 (__float128) { };
 };
 
 namespace std {
@@ -101,7 +100,7 @@ namespace Bar {
    };
 }
 
-namespace Templ {
+namespace Templ1 {
 
    template<typename T>
    struct Blubber {
@@ -127,4 +126,46 @@ namespace Templ2 {
 
 
    // template<> void Cde<char, Bar::Foo>::foo(char, Cde<char, Bar::Foo>, int) {};
+}
+
+template <typename A, typename B>
+class Templ
+{
+   public:
+      Templ() { };
+      A element1;
+      B element2;
+};
+
+template <typename ...Ts>
+class Var
+{
+   public:
+      Var() { };
+      int element1;
+};
+
+class Cls
+{
+   public:
+      Cls() { };
+      int bar (Templ<char, int> p1, char p2) { };
+      int foo (int p1, char p2) { };
+      int baz (Templ<char, int> p1, Templ<char,char> p2) { };
+      // int var (Var<> p1, char p2) { };
+};
+
+namespace Root2
+{
+   class Data {
+      public:
+         int elem;
+   };
+
+   class Cls {
+      public:
+         int no_compression (int p1, int p2) { };
+         Data compression1 (int p1, Data p2) { };
+         int compression2 (Data p1, int p2, Data p3) { };
+   };
 }
