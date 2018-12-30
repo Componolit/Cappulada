@@ -59,5 +59,8 @@ class check_validation(Capdpa_Test):
     def test_namespace_with_enumeration(self):
         self.check_validation("test_namespace_with_enumeration")
 
+    def test_namespace_with_constants(self):
+        self.check_validation("test_namespace_with_constants")
+
 if __name__ == '__main__':
     unittest.main()
