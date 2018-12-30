@@ -10,11 +10,6 @@ class NamedType(ir.Base):
         self.ctype = ctype
         self.ctype.SetParent(self)
 
-    def AdaSpecification(self, indentation=0):
-        return " " * indentation + "%(name)s : %(type)s" % \
-                { 'name': self.ConvertName(self.name),
-                  'type': self.ctype.AdaSpecification() }
-
     def InstantiateTemplates(self):
         if isinstance(self.ctype, ir_type.Type_Reference_Template):
             template = self.GetRoot()[self.ctype.FullyQualifiedName()[1:]]
@@ -30,6 +25,11 @@ class Argument(NamedType):
     def __init__(self, name, ctype):
         super(Argument, self).__init__(name, ctype)
 
+    def AdaSpecification(self, indentation=0):
+        return " " * indentation + "%(name)s : %(type)s" % \
+                { 'name': self.ConvertName(self.name),
+                  'type': self.ctype.AdaSpecification() }
+
     def Mangle(self):
         return self.ctype.Mangle()
 
@@ -37,6 +37,12 @@ class Variable(NamedType):
 
     def __init__(self, name, ctype):
         super(Variable, self).__init__(name, ctype)
+
+    def AdaSpecification(self, indentation=0):
+        return (" " * indentation + "%(name)s : %(type)s\n" + " " * indentation + "%(with)s") % \
+                { 'name': self.ConvertName(self.name),
+                  'type': self.ctype.AdaSpecification(),
+                  'with': 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle()) + '";\n' }
 
     def Mangle(self):
 
