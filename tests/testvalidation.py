@@ -6,16 +6,21 @@ from capdpa import *
 
 class check_validation(Capdpa_Test):
 
+    @classmethod
+    def setUpClass(self):
+        if not os.path.exists("tests/compile/"):
+            os.mkdir("tests/compile/")
+
     def check_validation(self, name):
 
         Generator(project = name,
-                  outdir  = "tests/cache/" + name,
+                  outdir  = "tests/compile/" + name,
                   headers = ["tests/data/" + name + "/impl.h"]).run()
 
         result = call(["gprbuild", "-q", "-P", "tests/data/testcase.gpr", "-XName=" + name])
         self.assertEqual(result, 0, "Build failed")
 
-        result = call(["tests/cache/" + name + "/main"])
+        result = call(["tests/compile/" + name + "/main"])
         self.assertEqual(result, 0, "Running test case failed")
 
     def test_class_from_default_constructor(self):
@@ -26,7 +31,7 @@ class check_validation(Capdpa_Test):
 
     def test_project_with_reserved_name(self):
         try:
-            Generator("class", "tests/cache/class", ["tests/data/class/impl.cpp"]).run()
+            Generator("class", "tests/compile/class", ["tests/data/class/impl.cpp"]).run()
             self.fail("Invalid project name \"class\" not detected")
         except generator.InvalidProjectName:
             pass
@@ -34,7 +39,7 @@ class check_validation(Capdpa_Test):
             self.fail("Invalid project name \"class\" not detected")
 
         try:
-            Generator("constructor", "tests/cache/class", ["tests/data/class/impl.cpp"]).run()
+            Generator("constructor", "tests/compile/class", ["tests/data/class/impl.cpp"]).run()
             self.fail("Invalid project name \"constructor\" not detected")
         except generator.InvalidProjectName:
             pass
