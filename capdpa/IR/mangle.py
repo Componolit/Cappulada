@@ -137,6 +137,10 @@ class Sequence (Base):
 class Name (Base):
 
     def __init__ (self, name, entity = None):
+
+        if not name and not entity:
+            raise Exception("No name set")
+
         self.obj = None
         for n in name:
             self.obj = Names(n, self.obj)
@@ -187,12 +191,19 @@ class Entity (Base):
         self.name = name
 
     def __len__ (self):
-        l = 1 if self.name else 0
-        return l + len(self.obj)
+        l = 0
+
+        l += 1 if self.name else 0
+        l += len(self.obj) if self.obj else 0
+
+        return l;
 
     def serialize (self, namedb, subst):
 
-        result = self.obj.serialize(namedb, subst)
+        result = ""
+
+        if self.obj:
+            result = self.obj.serialize(namedb, subst)
         if self.name:
             result += str(self.name)
         return result
