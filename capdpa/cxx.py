@@ -96,6 +96,12 @@ class CXX:
         return IR.Function(
                 name = cursor.spelling,
                 parameters = self.__convert_arguments(cursor.get_children()),
+                return_type = self.__convert_type([], cursor.result_type))
+
+    def __convert_method(self, cursor):
+        return IR.Method(
+                name = cursor.spelling,
+                parameters = self.__convert_arguments(cursor.get_children()),
                 return_type = self.__convert_type([], cursor.result_type),
                 virtual = cursor.is_virtual_method(),
                 static = cursor.is_static_method())
@@ -312,7 +318,7 @@ class CXX:
                     else:
                         [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
                 elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
-                    children.append(self.__convert_function(cursor))
+                    children.append(self.__convert_method(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
                     children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
@@ -325,6 +331,8 @@ class CXX:
                     children.append(self.__convert_member(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
                     children.append(self.__convert_variable(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.FUNCTION_DECL:
+                    children.append(self.__convert_function(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.UNEXPOSED_DECL,

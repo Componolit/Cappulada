@@ -1,11 +1,12 @@
 import ir
 import ir_type
 import ir_identifier
+import ir_namespace
 import mangle
 
 class Function(ir.Base):
 
-    def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False):
+    def __init__(self, name, parameters=None, return_type=None, static=True):
         super(Function, self).__init__()
         self.name = name
         self.parameters = parameters or []
@@ -13,11 +14,12 @@ class Function(ir.Base):
         self.return_type = return_type
         if self.return_type:
             self.return_type.parent = self
-        self.virtual = virtual
         self.static = static
 
-    def isVirtual(self):
-        return self.virtual
+    def InstantiateTemplates(self):
+        for p in self.parameters:
+            p.InstantiateTemplates()
+        #TODO: return_code templates
 
     def AdaSpecification(self, indentation=0):
 
@@ -42,10 +44,19 @@ class Function(ir.Base):
 
         return result
 
-    def InstantiateTemplates(self):
-        for p in self.parameters:
-            p.InstantiateTemplates()
-        #TODO: return_code templates
+    def Mangle(self):
+        name = mangle.Name ([mangle.String(n) for n in self.parent.FullyQualifiedName()[1:]], mangle.String(self.name))
+        parameters = [p.Mangle() for p in self.parameters] if self.parameters else [mangle.Type ([mangle.String("void")])]
+        return mangle.Symbol ([mangle.Nested (name)] + parameters)
+
+class Method(Function):
+
+    def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False):
+        super(Method, self).__init__(name, parameters, return_type, static)
+        self.virtual = virtual
+
+    def isVirtual(self):
+        return self.virtual
 
     def Mangle(self):
         return self.Mangle_Function(False)
@@ -70,7 +81,7 @@ class Function(ir.Base):
         parameters = [p.Mangle() for p in self.parameters] if self.parameters else [mangle.Type ([mangle.String("void")])]
         return mangle.Symbol ([mangle.Nested (name)] + parameters)
 
-class Function_Reference(Function):
+class Function_Reference(Method):
 
     def __init__(self, parameters=None, return_type=None, pointer=1, reference=False, static=False):
         super(Function_Reference, self).__init__(name="", parameters=parameters, return_type=return_type, virtual=False, static=static)
@@ -129,7 +140,7 @@ class Function_Reference(Function):
 
         return result
 
-class Constructor(Function):
+class Constructor(Method):
 
     def __init__(self, parameters=None):
         super(Constructor, self).__init__("__constructor__", parameters, None)
