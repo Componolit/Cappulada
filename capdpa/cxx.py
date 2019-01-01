@@ -300,7 +300,13 @@ class CXX:
         clist = list(cursors)
         for cursor in clist:
             if cursor.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
-                if cursor.kind == clang.cindex.CursorKind.NAMESPACE:
+                if cursor.semantic_parent and \
+                   cursor.semantic_parent.kind == clang.cindex.CursorKind.CLASS_DECL and \
+                   cursor.lexical_parent and \
+                   cursor.lexical_parent != cursor.semantic_parent:
+                    # Filter out method definitions outside the class declaration
+                    pass
+                elif cursor.kind == clang.cindex.CursorKind.NAMESPACE:
                     children.append(self.__convert_namespace(cursor))
                 elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                     decl = self.__convert_class(cursor)
