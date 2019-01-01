@@ -1,20 +1,4 @@
 sudo: required
-dist: trusty
-addons:
-    apt:
-        update: true
-        packages:
-            - python-clang-3.8
-            - libclang-3.8-dev
-jobs:
-  include:
-    - name: "Python Tests"
-      language: python
-      python:
-        - 2.7
-      install:
-        - pip install -r requirements.txt
-      virtualenv:
-         system_site_packages: true
-      script:
-        - python -m unittest discover tests
+
+script:
+   - docker run -v $PWD:/app -w /app jklmnn/gnat:gpl.2018.slim /bin/sh -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates python-clang-3.8 libclang-3.8-dev python-pip && pip install -r requirements.txt && python -m unittest discover tests"
