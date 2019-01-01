@@ -133,7 +133,7 @@ class GenerateConstant(Capdpa_Test):
                     Member("field1", Type_Reference(Identifier(["Capdpa", "bar", "baz", "my_type"]))),
                     Member("field2", Type_Reference(Identifier(["Capdpa", "local_type"]))),
                     Member("field3", Type_Reference(Identifier(["Capdpa", "bar", "foo", "blub", "some_type"]))),
-                    Function(name = "do_something", parameters = [
+                    Method(name = "do_something", parameters = [
                         Argument("param1", Type_Reference(Identifier(["Capdpa", "foo", "bar"]))),
                         Argument("param2", Type_Reference(Identifier(["Capdpa", "foo", "baz"])))],
                         return_type = Type_Reference(Identifier(["Capdpa", "Blah", "Some_Type"])))]
@@ -286,14 +286,14 @@ class GenerateConstant(Capdpa_Test):
     def test_class_with_virtual(self):
         result = Namespace(name="Capdpa", children=[
             Class(name = "With_Virtual", children = [
-                Function(name = "Foo", virtual = True)])]).AdaSpecification()
+                Method(name = "Foo", virtual = True)])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_base_with_virtual.txt"))
 
     def test_inherit_from_virtual(self):
         result = Namespace(name="Capdpa", children=[
             Class(name = "With_Virtual", children = [
-                Function(name = "Foo", virtual = True)]),
+                Method(name = "Foo", virtual = True)]),
             Class(name = "From_Virtual",
                 children = [
                     Class_Reference(name=Identifier(["Capdpa", "With_Virtual"])),
@@ -377,7 +377,7 @@ class GenerateConstant(Capdpa_Test):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "With_Fptr", children = [
                 Member(name = "func", ctype = Function_Reference(pointer=1)),
-                Function(name = "set_func", parameters = [
+                Method(name = "set_func", parameters = [
                     Argument(name = "func", ctype = Function_Reference(pointer=1))])
                 ])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))

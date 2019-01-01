@@ -1,12 +1,4 @@
-namespace Constants {
-   enum { int_const = 42 };
-
-   class Cls {
-      public:
-         int get_const ();
-         Cls ();
-   };
-};
+#include "impl.h"
 
 Constants::Cls::Cls() { };
 

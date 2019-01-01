@@ -4,6 +4,7 @@ import ir_constant
 import ir_enum
 import ir_type
 import ir_variable
+import ir_function
 
 from ..ada import Specification
 
@@ -30,6 +31,7 @@ class Namespace(ir.Base):
                             filter(lambda c: ir_constant.Constant.isInst(c) or
                                              ir_enum.Enum.isInst(c) or
                                              ir_variable.Variable.isInst(c) or
+                                             ir_function.Function.isInst(c) or
                                              ir_type.Type_Definition.isInst(c),
                                 self.children))),
                         with_include = self.with_include,

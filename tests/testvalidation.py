@@ -10,7 +10,7 @@ class check_validation(Capdpa_Test):
 
         Generator(project = name,
                   outdir  = "tests/cache/" + name,
-                  headers = ["tests/data/" + name + "/impl.cpp"]).run()
+                  headers = ["tests/data/" + name + "/impl.h"]).run()
 
         result = call(["gprbuild", "-q", "-P", "tests/data/testcase.gpr", "-XName=" + name])
         self.assertEqual(result, 0, "Build failed")
@@ -61,6 +61,9 @@ class check_validation(Capdpa_Test):
 
     def test_namespace_with_constants(self):
         self.check_validation("test_namespace_with_constants")
+
+    def test_namespace_with_functions(self):
+        self.check_validation("test_namespace_with_functions")
 
 if __name__ == '__main__':
     unittest.main()
