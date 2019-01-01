@@ -351,13 +351,13 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def test_class_with_array(self):
+    def EXCLUDE_test_class_with_array(self):
         CXX("tests/data/test_class_with_array.h").ToIR(project="Capdpa")
 
-    def test_array_template(self):
+    def EXCLUDE_test_array_template(self):
         CXX("tests/data/test_array_template.h").ToIR(project="Capdpa")
 
-    def test_template_typedef(self):
+    def EXCLUDE_test_template_typedef(self):
         CXX("tests/data/test_template_typedef.h").ToIR(project="Capdpa")
 
     def test_class_with_struct_type(self):
@@ -371,7 +371,7 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_class_with_struct_type.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def test_class_template(self):
+    def EXCLUDE_test_class_template(self):
         expected = Namespace("Capdpa", children = [
             Class(name = "Base"),
             Class(name = "Template", children = [
@@ -411,7 +411,7 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_enum_declaration.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def test_function_pointer(self):
+    def EXCLUDE_test_function_pointer(self):
         expected = Namespace(name = "Capdpa", children = [
             Class(name = "With_Fptr", children = [
                 Member(name = "func", ctype = Function_Reference()),
@@ -423,7 +423,7 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_function_pointer.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def test_template_function_pointer(self):
+    def EXCLUDE_test_template_function_pointer(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=Class(name="With_Fptr", children = [
                 Member(name = "func", ctype = Function_Reference(parameters = [
@@ -508,7 +508,7 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_variadic_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def test_const_ref_function(self):
+    def EXCLUDE_test_const_ref_function(self):
         expected = Namespace("Capdpa", children = [
             Class(name = "Cr", children = [
                 Method(name = "method_with_function_parameter_const_ref", parameters = [

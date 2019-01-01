@@ -148,7 +148,7 @@ class check_integration(Capdpa_Test):
             "test_capdpa.ads",
             "test_enum_member.ads"])
 
-    def test_class_with_array(self):
+    def EXCLUDE_test_class_with_array(self):
         self.check_integration("test_class_with_array.h", [
             "test_capdpa.ads",
             "test_class_with_array.ads"])
