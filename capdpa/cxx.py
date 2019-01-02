@@ -237,7 +237,8 @@ class CXX:
         return IR.Member(
                 name = cursor.displayname,
                 ctype = self.__convert_type(list(cursor.get_children()), cursor.type),
-                access="public" if cursor.access_specifier == clang.cindex.AccessSpecifier.PUBLIC else "private")
+                access="public" if cursor.access_specifier == clang.cindex.AccessSpecifier.PUBLIC else "private",
+                constant=cursor.type.is_const_qualified())
 
     def __convert_variable(self, cursor):
         return IR.Variable(
