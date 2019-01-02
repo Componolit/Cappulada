@@ -56,13 +56,15 @@ class Variable(NamedType):
 
 class Member(NamedType):
 
-    def __init__(self, name, ctype, access="public"):
+    def __init__(self, name, ctype, access="public", constant=False):
         super(Member, self).__init__(name, ctype)
         self.access = access
+        self.constant = constant
 
     def AdaSpecification(self, indentation=0, private_name=""):
-        return " " * indentation + "%(private)s%(name)s : %(type)s" % \
-                { 'private' : "" if self.access == "public" else "Private_",
+        return " " * indentation + "%(constant)s%(private)s%(name)s : %(type)s" % \
+                { 'constant': "" if not self.constant or self.access != "public" else "Constant_",
+                  'private' : "" if self.access == "public" else "Private_",
                   'name': self.ConvertName(self.name),
                   'type': self.ctype.AdaSpecification(private=("" if self.access == "public" else private_name)) }
 
