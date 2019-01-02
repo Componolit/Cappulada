@@ -26,7 +26,11 @@ class Function(ir.Base):
         result = " " * indentation + ("function " if self.return_type else "procedure ")
         result += self.ConvertName(self.name)
 
-        result += " ("
+        has_parameters = not self.static or self.parameters
+
+        if has_parameters:
+            result += " ("
+
         first = self.static
         if not self.static:
             result += "This : access Class"
@@ -37,7 +41,9 @@ class Function(ir.Base):
                     result += "; "
                 first = False
                 result += p.AdaSpecification()
-        result += ")"
+
+        if has_parameters:
+            result += ")"
 
         result += (" return " + self.return_type.AdaSpecification() + "\n") if self.return_type else "\n"
         result += " " * indentation + 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle ()) + '";\n'
