@@ -82,5 +82,8 @@ class check_validation(Capdpa_Test):
     def test_class_with_constants(self):
         self.check_validation("test_class_with_constants")
 
+    def test_class_members(self):
+        self.check_validation("test_class_members")
+
 if __name__ == '__main__':
     unittest.main()
