@@ -76,5 +76,8 @@ class check_validation(Capdpa_Test):
     def test_static_method(self):
         self.check_validation("test_static_method")
 
+    def test_static_parameterless(self):
+        self.check_validation("test_static_parameterless")
+
 if __name__ == '__main__':
     unittest.main()
