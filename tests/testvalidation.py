@@ -73,5 +73,8 @@ class check_validation(Capdpa_Test):
     def test_function_outside_namespace(self):
         self.check_validation("test_function_outside_namespace")
 
+    def test_static_method(self):
+        self.check_validation("test_static_method")
+
 if __name__ == '__main__':
     unittest.main()
