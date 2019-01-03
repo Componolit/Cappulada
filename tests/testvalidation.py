@@ -94,5 +94,8 @@ class check_validation(Capdpa_Test):
     def test_class_with_class_pointer_member(self):
         self.check_validation("test_class_with_class_pointer_member")
 
+    def test_builtin_types(self):
+        self.check_validation("test_builtin_types")
+
 if __name__ == '__main__':
     unittest.main()
