@@ -97,5 +97,8 @@ class check_validation(Capdpa_Test):
     def test_builtin_types(self):
         self.check_validation("test_builtin_types")
 
+    def test_template_instance(self):
+        self.check_validation("test_template_instance")
+
 if __name__ == '__main__':
     unittest.main()
