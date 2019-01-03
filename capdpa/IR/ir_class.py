@@ -69,7 +69,7 @@ class Class(ir.Base):
 
         return "\n".join([('{indent}pragma Warnings (Off, "* bits of ""{private}"" unused");\n' +
                            '{indent}type {private} is null record\n' +
-                           '{indent}   with Size => {public}\'Size;\n' +
+                           '{indent}   with Size => {public}_Size;\n' +
                            '{indent}pragma Warnings (On, "* bits of ""{private}"" unused");').format(
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=self.name),

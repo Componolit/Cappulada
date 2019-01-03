@@ -4,15 +4,15 @@ package Capdpa.Child
 is
    pragma Warnings (Off, "* bits of ""Child_Private_Int"" unused");
    type Child_Private_Int is null record
-      with Size => Capdpa.Int'Size;
+      with Size => Capdpa.Int_Size;
    pragma Warnings (On, "* bits of ""Child_Private_Int"" unused");
    pragma Warnings (Off, "* bits of ""Child_Private_Void"" unused");
    type Child_Private_Void is null record
-      with Size => Capdpa.Void_Address'Size;
+      with Size => Capdpa.Void_Address_Size;
    pragma Warnings (On, "* bits of ""Child_Private_Void"" unused");
    pragma Warnings (Off, "* bits of ""Child_Private_C_Float"" unused");
    type Child_Private_C_Float is null record
-      with Size => Capdpa.C_Float'Size;
+      with Size => Capdpa.C_Float_Size;
    pragma Warnings (On, "* bits of ""Child_Private_C_Float"" unused");
    type Class is
    limited record

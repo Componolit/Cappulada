@@ -8,7 +8,7 @@ is
    for Negative use (Minus_Two => -2, Minus_One => -1);
    pragma Warnings (Off, "* bits of ""With_Everything_Private_Int"" unused");
    type With_Everything_Private_Int is null record
-      with Size => Capdpa.Int'Size;
+      with Size => Capdpa.Int_Size;
    pragma Warnings (On, "* bits of ""With_Everything_Private_Int"" unused");
    type Class is
    limited record
