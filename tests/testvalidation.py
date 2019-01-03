@@ -88,5 +88,8 @@ class check_validation(Capdpa_Test):
     def test_class_methods(self):
         self.check_validation("test_class_methods")
 
+    def test_class_with_class_type_member(self):
+        self.check_validation("test_class_with_class_type_member")
+
 if __name__ == '__main__':
     unittest.main()
