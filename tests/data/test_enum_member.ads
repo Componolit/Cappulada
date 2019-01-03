@@ -9,7 +9,7 @@ is
       E : Capdpa.With_Enum.E_T;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN9With_EnumC1Ev");
 end Capdpa.With_Enum;

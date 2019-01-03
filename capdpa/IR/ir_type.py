@@ -94,7 +94,7 @@ class Type_Definition(ir.Base):
         else:
             return ("{0}package {1} is\n"
                     "{0}{0}type Class is null record;\n"
-                    "{0}{0}type Class_Address is new System.Address;\n"
+                    "{0}{0}type Class_Address is access Class;\n"
                     "{0}end {1};").format(
                             " " * indentation,
                             self.ConvertName(self.name))

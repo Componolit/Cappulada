@@ -7,7 +7,7 @@ is
       null;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    procedure Public_Function (This : access Class; Arg1 : Capdpa.Int)
    with Import, Convention => CPP, External_Name => "_ZN14With_functions15public_functionEi";
    function Named_Param (This : access Class; Param : Capdpa.Int) return Capdpa.Int

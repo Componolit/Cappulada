@@ -16,7 +16,7 @@ is
       Public_Int : Capdpa.Int;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    procedure Public_Function (This : access Class)
    with Import, Convention => CPP, External_Name => "_ZN10With_class15With_everything15public_functionEv";
    function Constructor return Class;
