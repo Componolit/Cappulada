@@ -90,7 +90,7 @@ class Class(ir.Base):
                 "{classmembers}"
                 "{indent}end record\n"
                 "{indent}with Import, Convention => CPP;\n"
-                "{indent}type Class_Address is new System.Address;\n"
+                "{indent}type Class_Address is access Class;\n"
                 ).format(
                         indent = (indentation + 3) * " ",
                         private_types = self.PrivateTypesSpecification(indentation),

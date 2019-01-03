@@ -13,7 +13,7 @@ is
       Field3 : Capdpa.Bar.Foo.Blub.Some_Type;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
    function Do_Something (This : access Class; Param1 : Capdpa.Foo.Bar; Param2 : Capdpa.Foo.Baz) return Capdpa.Blah.Some_Type

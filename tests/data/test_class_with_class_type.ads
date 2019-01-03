@@ -9,7 +9,7 @@ is
       Value_Ptr : Capdpa.With_Class.In_Namespace.Class_Address;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN4FullC1Ev");
 end Capdpa.Full;

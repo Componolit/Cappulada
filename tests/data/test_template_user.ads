@@ -9,7 +9,7 @@ is
       Cic2 : Capdpa.Container_T_Int_Char;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "_ZN4UserC1Ev");
 end Capdpa.User;

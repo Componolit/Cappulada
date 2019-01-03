@@ -8,7 +8,7 @@ is
       B : Capdpa.Char;
    end record
    with Import, Convention => CPP;
-   type Class_Address is new System.Address;
+   type Class_Address is access Class;
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
 end Capdpa.Container_T_Int_Char;
