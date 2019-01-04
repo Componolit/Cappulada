@@ -254,14 +254,14 @@ class GenerateConstant(Capdpa_Test):
     def test_type_template_one_arg(self):
         result = Type_Reference_Template(Identifier(["Capdpa", "Class"]),
                 arguments=[Type_Reference(name=Identifier(["Capdpa", "Int"]))]).AdaSpecification()
-        self.check(result, "Capdpa.Class_T_Int")
+        self.check(result, "Capdpa.Class_T_Int.Class")
 
     def test_type_template_two_args(self):
         result = Type_Reference_Template(Identifier(["Capdpa", "Class"]),
                 arguments=[
                     Type_Reference(name=Identifier(["Capdpa", "Int"])),
                     Type_Reference(name=Identifier(["Capdap", "Char"]))]).AdaSpecification()
-        self.check(result, "Capdpa.Class_T_Int_Char")
+        self.check(result, "Capdpa.Class_T_Int_Char.Class")
 
     def test_type_template_template_arg(self):
         result = Type_Reference_Template(name=Identifier(["Capdpa", "Class"]),
@@ -269,7 +269,7 @@ class GenerateConstant(Capdpa_Test):
                     Type_Reference_Template(name=Identifier(["Capdpa", "Tclass"]),
                         arguments=[
                             Type_Reference(name=Identifier(["Capdpa", "Int"]))])]).AdaSpecification()
-        self.check(result, "Capdpa.Class_T_Tclass_T_Int")
+        self.check(result, "Capdpa.Class_T_Tclass_T_Int.Class")
 
     def test_inheritance_simple(self):
         result = Namespace(name="Capdpa", children=[
