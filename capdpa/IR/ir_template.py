@@ -1,6 +1,6 @@
 import ir
 import ir_function
-from copy import deepcopy
+from copy import deepcopy, copy
 
 class UnspecifiedTemplate: pass
 
@@ -23,27 +23,30 @@ class Template(ir.Base):
     def __replace(self, entity, resolves):
         if hasattr(entity, "children"):
             for c in entity.children:
-                if c in resolves.keys():
+                if c.name in resolves.keys():
                     if not c.variadic:
-                        c = resolves[c]
+                        c = resolves[c.name]
                     else:
                         entity.children.extend(c)
                 self.__replace(c, resolves)
         if hasattr(entity, "parameters"):
             for c in entity.parameters:
-                if c in resolves.keys():
+                if c.name in resolves.keys():
                     if not c.variadic:
-                        c = resolves[c]
+                        c = resolves[c.name]
                     else:
-                        entity.parameters.extend(resolves[c])
+                        entity.parameters.extend(resolves[c.name])
                 self.__replace(c, resolves)
         if hasattr(entity, "ctype"):
-            if entity.ctype in resolves.keys():
-                entity.ctype = resolves[entity.ctype]
+            if entity.ctype.name in resolves.keys():
+                ct = resolves[entity.ctype.name]
+                ct.reference = entity.ctype.reference
+                ct.pointer   = entity.ctype.pointer
+                entity.ctype = copy(ct)
             self.__replace(entity.ctype, resolves)
         if hasattr(entity, "return_type"):
-            if entity.return_type in resolves.keys():
-                entity.return_type = resolves[entity.return_type]
+            if entity.return_type and entity.return_type.name in resolves.keys():
+                entity.return_type = resolves[entity.return_type.name]
             self.__replace(entity.return_type, resolves)
 
     def InstantiateTemplates(self):
@@ -51,9 +54,9 @@ class Template(ir.Base):
 
     def instantiate(self, ref):
         if not self.typenames[-1].variadic:
-            resolves = {t[0]:t[1] for t in zip(self.typenames, ref.arguments)}
+            resolves = {t[0].name:t[1] for t in zip(self.typenames, ref.arguments)}
         else:
-            resolves = {t[0]:t[1] for t in zip(self.typenames[:-1], ref.arguments[:len(self.typenames) - 1])}
+            resolves = {t[0].name:t[1] for t in zip(self.typenames[:-1], ref.arguments[:len(self.typenames) - 1])}
             resolves[self.typenames[-1]] = ref.arguments[len(self.typenames) - 1:]
         entity = deepcopy(self.entity)
         self.__replace(entity, resolves)
@@ -63,11 +66,12 @@ class Template(ir.Base):
 
 class Template_Argument(ir.Base):
 
-    def __init__(self, name, variadic=False):
+    def __init__(self, name, variadic=False, reference=False, pointer=0):
         self.name = name
         self.variadic = variadic
+        self.reference = reference
+        self.pointer = pointer
         super(Template_Argument, self).__init__()
-
 
 class Template_Reference(ir.Base):
 

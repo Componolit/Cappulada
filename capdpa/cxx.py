@@ -166,7 +166,10 @@ class CXX:
             elif decl.kind == clang.cindex.CursorKind.NO_DECL_FOUND:
                 canon = type_cursor.get_canonical().kind
                 if canon == clang.cindex.TypeKind.UNEXPOSED:
-                    return IR.Template_Argument(type_cursor.spelling)
+                    return IR.Template_Argument(
+                        name = type_cursor.spelling,
+                        reference = reference,
+                        pointer = ptr)
                 elif canon == clang.cindex.TypeKind.FUNCTIONPROTO:
                     return IR.Function_Reference(
                         parameters=self.__convert_arguments(children),
@@ -293,7 +296,8 @@ class CXX:
                 entity = IR.Class(
                     name = cursor.spelling,
                     children = self.__convert_children(list(cursor.get_children())[len(targs):])),
-                typenames = [IR.Template_Argument(c.spelling, list(c.get_tokens())[1].spelling == "...") for c in targs])
+                typenames = [IR.Template_Argument(name = c.spelling,
+                                                  variadic = list(c.get_tokens())[1].spelling == "...") for c in targs])
 
 
     def __convert_children(self, cursors):

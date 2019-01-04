@@ -8,6 +8,6 @@ class Cls {
 };
 
 namespace Foo {
-   Cls<int> Cls_inst1;
-   Cls<char> Cls_inst2;
+   Cls<char> cls_inst1('x');
+   Cls<int> cls_inst2(1);
 };
