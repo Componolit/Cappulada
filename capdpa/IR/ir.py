@@ -10,7 +10,12 @@ Keywords = ["abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
             "delta", "loop", "rem", "while", "digits", "renames", "with", "do",
             "mod", "requeue", "xor"]
 
-class NoSerializationDefined: pass
+class NoSerializationDefined(Exception): pass
+
+class NotImplemented(Exception):
+
+    def __init__(self, message):
+        super(NotImplemented, self).__init__(message);
 
 class Base(object):
 
