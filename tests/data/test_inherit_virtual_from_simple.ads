@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Simple
 is
    pragma Warnings (Off, "* bits of ""Simple_Private_Int"" unused");

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Inherit_Simple
 is
    type Class is

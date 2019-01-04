@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Pointer
 is
    type Class is

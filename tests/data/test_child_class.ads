@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Child
 is
    pragma Warnings (Off, "* bits of ""Child_Private_Int"" unused");

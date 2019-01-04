@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Outer
 is
    package Inner

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Members
 is
    pragma Warnings (Off, "* bits of ""With_Members_Private_Int"" unused");

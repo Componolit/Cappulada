@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.From_Virtual
 is
    type Class is new Capdpa.With_Virtual with

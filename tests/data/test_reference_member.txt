@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Reference
 is
    type Class is
