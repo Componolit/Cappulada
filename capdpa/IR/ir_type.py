@@ -65,9 +65,14 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
               reference = reference)
         self.arguments = arguments
 
+    def PackageName(self):
+        # Add instance postfix
+        name = self.name.name[:-1] + [self.name.name[-1] + self.postfix()]
+        return ".".join(map(self.ConvertName, name))
+
     def AdaSpecification(self, indentation=0, private=""):
         post = "_" + self.ConvertName(self.postfix()[1:])
-        return super(Type_Reference_Template, self).AdaSpecification(indentation) + post
+        return super(Type_Reference_Template, self).AdaSpecification(indentation) + post + ".Class"
 
     def Mangle(self):
 
