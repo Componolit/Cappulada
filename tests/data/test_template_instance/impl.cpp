@@ -1,7 +1,10 @@
 #include "impl.h"
 
-Cls::Cls() { };
+template<typename T>
+Cls<T>::Cls() { };
 
-Cls::Cls(T val) : _data(val) { };
+template<typename T>
+Cls<T>::Cls(T val) : _data(val) { };
 
-void Cls::get(T &val) { val = _data };
+template<typename T>
+void Cls<T>::get(T &val) { val = _data; };
