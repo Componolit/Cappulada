@@ -1,6 +1,5 @@
 with Capdpa.Bar.Baz;
 with Capdpa.Bar.Foo.Blub;
-with System;
 
 package Capdpa.Bar.Foo.Brabbel
 is

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Container_T_Int_Int
 is
    type Class is

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Struct
 is
    package Ws

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Empty
 is
    type Class is

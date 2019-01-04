@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Inheritance
 is
    pragma Warnings (Off, "* bits of ""Inheritance_Private_Int"" unused");

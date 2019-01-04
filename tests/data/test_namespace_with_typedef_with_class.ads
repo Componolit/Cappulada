@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Typedef.Use_Type
 is
    type Class is

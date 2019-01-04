@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Bar.Foo.Class
 is
    Constant1 : constant := 5;

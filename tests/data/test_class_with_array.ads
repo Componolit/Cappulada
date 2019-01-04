@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Array
 is
    type Int_Array is array (Integer range <>) of Capdpa.Int;

@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Constants
 is
    One : constant := 1;

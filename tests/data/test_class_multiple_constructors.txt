@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.Foo.Brabbel
 is
    type Class is

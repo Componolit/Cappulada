@@ -1,5 +1,3 @@
-with System;
-
 package Capdpa.With_Enum
 is
    type E_T is (A, B);
