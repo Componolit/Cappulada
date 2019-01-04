@@ -2,6 +2,7 @@ with Tests;
 with Interfaces.C.Extensions;
 with Test_Template_Instance.Cls_T_Int;
 with Test_Template_Instance.Cls_T_Char;
+with Test_Template_Instance.Foo;
 
 procedure Main
 is

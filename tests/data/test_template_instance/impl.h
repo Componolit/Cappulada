@@ -7,5 +7,7 @@ class Cls {
       void get(T &val);
 };
 
-Cls<int> Cls_inst1;
-Cls<char> Cls_inst2;
+namespace Foo {
+   Cls<int> Cls_inst1;
+   Cls<char> Cls_inst2;
+};
