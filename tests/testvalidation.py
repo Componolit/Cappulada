@@ -100,5 +100,8 @@ class check_validation(Capdpa_Test):
     def test_template_instance(self):
         self.check_validation("test_template_instance")
 
+    def test_class_variable(self):
+        self.check_validation("test_class_variable")
+
 if __name__ == '__main__':
     unittest.main()
