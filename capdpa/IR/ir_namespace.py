@@ -5,10 +5,11 @@ import ir_enum
 import ir_type
 import ir_variable
 import ir_function
+import ir_unit
 
 from ..ada import Specification
 
-class Namespace(ir.Base):
+class Namespace(ir_unit.Unit):
 
     def __init__(self, name, children=None, with_include="", spec_include=""):
         self.name = name
@@ -21,12 +22,18 @@ class Namespace(ir.Base):
     def AdaSpecification(self, indentation=0):
         fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
 
+        if self.UsedPackages():
+            withs = "\n".join(map("with {};".format, self.UsedPackages()) + ['', ''])
+        else:
+            withs = ""
+
         compilation_units = [
                 Specification(
                     name = [self.ConvertName(name) for name in self.FullyQualifiedName()],
-                    text = "{with_include}package {name}\nis{spec_include}{body}\nend {name};\n".format(
-                        name = fqn_ada,
-                        body = "\n".join([""] + map(
+                    text = "{withs}{with_include}package {name}\nis{spec_include}{body}\nend {name};\n".format(
+                        withs = withs,
+                        name  = fqn_ada,
+                        body  = "\n".join([""] + map(
                             lambda c: c.AdaSpecification(indentation=3),
                             filter(lambda c: ir_constant.Constant.isInst(c) or
                                              ir_enum.Enum.isInst(c) or
