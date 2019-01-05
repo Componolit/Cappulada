@@ -3,8 +3,8 @@ class Cls {
       T _data;
    public:
       Cls();
-      Cls(T val);
-      void get(T &val);
+      Cls(T val1);
+      void get(T &val2);
 };
 
 namespace Foo {
