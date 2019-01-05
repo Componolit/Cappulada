@@ -10,10 +10,7 @@ Keywords = ["abort", "else", "new", "return", "abs", "elsif", "not", "reverse",
             "delta", "loop", "rem", "while", "digits", "renames", "with", "do",
             "mod", "requeue", "xor"]
 
-class NoSerializationDefined(Exception): pass
-
 class NotImplemented(Exception):
-
     def __init__(self, message):
         super(NotImplemented, self).__init__(message);
 
@@ -140,4 +137,7 @@ class Base(object):
         return tmp
 
     def AdaSpecification(self, indentation=0):
-	raise NoSerializationDefined
+	raise NotImplemented("No specification defined for " + type(self).__name__)
+
+    def Mangle(self):
+	raise NotImplemented("No mangling defined for " + type(self).__name__)
