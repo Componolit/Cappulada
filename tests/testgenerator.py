@@ -387,5 +387,12 @@ class GenerateConstant(Capdpa_Test):
     def EXCLUDE_test_class_with_array(self):
         self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
 
+    def test_private_reference_member(self):
+        result = Class(name = "Class_Priv_Ref", children = [
+                Member(name = "ref_member",
+                       ctype = Type_Reference(name = Identifier(["Capdpa", "int"]), reference = True),
+                       access = "private")]).AdaSpecification()
+        self.check(result, self.load("test_private_reference_member.txt"))
+
 if __name__ == '__main__':
     unittest.main()

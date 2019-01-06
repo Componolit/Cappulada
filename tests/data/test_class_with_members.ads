@@ -6,7 +6,7 @@ is
    pragma Warnings (On, "* bits of ""With_Members_Private_Int"" unused");
    pragma Warnings (Off, "* bits of ""With_Members_Private_Void"" unused");
    type With_Members_Private_Void is null record
-      with Size => Capdpa.Void_Address_Size;
+      with Size => Capdpa.Void_Size;
    pragma Warnings (On, "* bits of ""With_Members_Private_Void"" unused");
    pragma Warnings (Off, "* bits of ""With_Members_Private_C_Float"" unused");
    type With_Members_Private_C_Float is null record
