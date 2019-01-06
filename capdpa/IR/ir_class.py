@@ -6,6 +6,7 @@ import ir_identifier
 import ir_type
 import ir_variable
 import ir_unit
+from copy import copy
 
 class Class(ir_unit.Unit):
 
@@ -41,7 +42,10 @@ class Class(ir_unit.Unit):
 
         # Generate order-preserving list of unique private types
         types = []
-        for t in [m.ctype for m in self.Members() if m.IsPrivate()]:
+        for t in [copy(m.ctype) for m in self.Members() if m.IsPrivate()]:
+            t.reference = False
+            t.pointer = 0
+            t.const = False
             if t not in types:
                 types.append(t)
 
