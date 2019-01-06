@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import unittest
@@ -50,3 +51,6 @@ class IR_Test(Capdpa_Test):
             Class(name="C", children=[
                 Enum(name="E", children=[const])])])
         self.check(const.FullyQualifiedName(), ["N", "C", "E", "K"])
+
+if __name__ == '__main__':
+    unittest.main()
