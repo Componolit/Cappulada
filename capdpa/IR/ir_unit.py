@@ -24,7 +24,7 @@ class Class_Reference(ir.Base):
     def AdaSpecification(self, indentation=0, private_name=""):
         converted = map(self.ConvertName, self.name.PackageFull())
         name = converted[-1]
-        return " " * indentation + name + " : " + ".".join(converted + ['Class'])
+        return " " * indentation + name + " : aliased " + ".".join(converted + ['Class'])
 
     def PackagePath(self):
         return self.name.PackageFull()
