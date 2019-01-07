@@ -84,6 +84,8 @@ spec_defaults='''
    Long_Double_Size : constant := Long_Double'Size;
    type Long_Double_Address is access all Long_Double;
 
+   Void_Size : constant := Long_Integer'Size;
+
    subtype Void_Address is Interfaces.C.Extensions.void_ptr;
    Void_Address_Size : constant := Long_Integer'Size;
 '''
