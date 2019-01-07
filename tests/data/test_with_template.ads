@@ -2,9 +2,9 @@ package Capdpa.User
 is
    type Class is
    limited record
-      Cic : Container_T_Int_Char;
-      Cii : Container_T_Int_Int;
-      Cic2 : Container_T_Int_Char;
+      Cic : aliased Container_T_Int_Char;
+      Cii : aliased Container_T_Int_Int;
+      Cic2 : aliased Container_T_Int_Char;
    end record
    with Import, Convention => CPP;
    type Class_Address is new System.Address;

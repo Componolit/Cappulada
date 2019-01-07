@@ -10,8 +10,8 @@ is
    pragma Warnings (On, "* bits of ""With_Everything_Private_Int"" unused");
    type Class is
    limited record
-      Private_Private_Int : With_Everything_Private_Int;
-      Public_Int : Capdpa.Int;
+      Private_Private_Int : aliased With_Everything_Private_Int;
+      Public_Int : aliased Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

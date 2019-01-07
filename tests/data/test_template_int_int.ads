@@ -2,8 +2,8 @@ package Capdpa.Container_T_Int_Int
 is
    type Class is
    limited record
-      A : Capdpa.Int;
-      B : Capdpa.Int;
+      A : aliased Capdpa.Int;
+      B : aliased Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

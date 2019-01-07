@@ -4,8 +4,8 @@ package Capdpa.Full
 is
    type Class is
    limited record
-      Value : Capdpa.With_Class.In_Namespace.Class;
-      Value_Ptr : Capdpa.With_Class.In_Namespace.Class_Address;
+      Value : aliased Capdpa.With_Class.In_Namespace.Class;
+      Value_Ptr : aliased Capdpa.With_Class.In_Namespace.Class_Address;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

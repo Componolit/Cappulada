@@ -14,12 +14,12 @@ is
    pragma Warnings (On, "* bits of ""With_Members_Private_C_Float"" unused");
    type Class is
    limited record
-      Public_Int : Capdpa.Int;
-      Public_Pointer : Capdpa.Void_Address;
-      Public_Float : Capdpa.C_Float;
-      Private_Private_Int : With_Members_Private_Int;
-      Private_Private_Pointer : With_Members_Private_Void;
-      Private_Private_Float : With_Members_Private_C_Float;
+      Public_Int : aliased Capdpa.Int;
+      Public_Pointer : aliased Capdpa.Void_Address;
+      Public_Float : aliased Capdpa.C_Float;
+      Private_Private_Int : aliased With_Members_Private_Int;
+      Private_Private_Pointer : aliased With_Members_Private_Void;
+      Private_Private_Float : aliased With_Members_Private_C_Float;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

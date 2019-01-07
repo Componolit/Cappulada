@@ -4,7 +4,7 @@ package Capdpa.From_Virtual
 is
    type Class is new Capdpa.With_Virtual with
    limited record
-      V : Capdpa.Int;
+      V : aliased Capdpa.Int;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;
