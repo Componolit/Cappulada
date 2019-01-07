@@ -2,8 +2,8 @@ with Capdpa.With_Virtual;
 
 package Capdpa.From_Virtual
 is
-   type Class is new Capdpa.With_Virtual with
-   limited record
+   type Class is new Capdpa.With_Virtual.Class with
+   record
       V : aliased Capdpa.Int;
    end record
    with Import, Convention => CPP;

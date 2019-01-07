@@ -68,7 +68,7 @@ class Class(ir_unit.Unit):
         class_record = (
                 "{private_types}"
                 "{indent}type Class is{classdef}\n"
-                "{indent}{tagged}limited record\n"
+                "{indent}{tagged}{limited}record\n"
                 "{classmembers}"
                 "{indent}end record\n"
                 "{indent}with Import, Convention => CPP;\n"
@@ -76,8 +76,9 @@ class Class(ir_unit.Unit):
                 ).format(
                         indent = (indentation + 3) * " ",
                         private_types = self.PrivateTypesSpecification(indentation),
-                        classdef = (" new " + base.name.PackageFullName() + " with") if hasvirtualbase and self.isVirtual() else "",
+                        classdef = (" new " + base.PackageName() + ".Class with") if hasvirtualbase and self.isVirtual() else "",
                         tagged = "tagged " if self.isVirtual() and not hasvirtualbase else "",
+                        limited = "limited " if not hasvirtualbase else "",
                         classmembers = "\n".join([m.AdaSpecification(indentation + 6, self.name) + ";" for m in self.Members() or [null]] + ['']))
 
         # Generate functions and procedures
