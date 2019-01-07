@@ -65,10 +65,12 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
               reference = reference)
         self.arguments = arguments
 
+    def PackagePath(self):
+        return self.name.name[:-1] + [self.name.name[-1] + self.postfix()]
+
     def PackageName(self):
         # Add instance postfix
-        name = self.name.name[:-1] + [self.name.name[-1] + self.postfix()]
-        return ".".join(map(self.ConvertName, name))
+        return ".".join(map(self.ConvertName, self.PackagePath()))
 
     def AdaSpecification(self, indentation=0, private=""):
         post = "_" + self.ConvertName(self.postfix()[1:])
