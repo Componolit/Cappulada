@@ -359,7 +359,10 @@ class CXX:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
-                        clang.cindex.CursorKind.CXX_METHOD]:
+                        clang.cindex.CursorKind.CXX_METHOD,
+                        # Just ignore private constructors
+                        clang.cindex.CursorKind.CONSTRUCTOR
+                    ]:
                     pass
                 else:
                     raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))

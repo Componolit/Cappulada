@@ -13,5 +13,8 @@ class Regression(Capdpa_Test):
     def test_external_method_def(self):
         unused = CXX("tests/data/test_external_method_def.cpp").ToIR(project="Capdpa").AdaSpecification()
 
+    def test_private_constructor(self):
+        unused = CXX("tests/data/test_private_constructor.h").ToIR(project="Capdpa").AdaSpecification()
+
 if __name__ == '__main__':
     unittest.main()
