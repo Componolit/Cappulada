@@ -5,6 +5,7 @@ class Cls {
       Cls();
       Cls(T val1);
       void get(T &val2);
+      T& get();
 };
 
 namespace Foo {
