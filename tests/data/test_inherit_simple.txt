@@ -4,8 +4,8 @@ package Capdpa.Inherit_Simple
 is
    type Class is
    limited record
-      Simple : Capdpa.Simple.Class;
-      B : Int;
+      Simple : aliased Capdpa.Simple.Class;
+      B : aliased Int;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

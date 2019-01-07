@@ -2,8 +2,8 @@ package Capdpa.Bar.Foo.Brabbel
 is
    type Class is
    limited record
-      Field1 : Int;
-      Field2 : Long;
+      Field1 : aliased Int;
+      Field2 : aliased Long;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

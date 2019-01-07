@@ -2,7 +2,7 @@ package Capdpa.With_Pointer
 is
    type Class is
    limited record
-      P : Int_Address;
+      P : aliased Int_Address;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

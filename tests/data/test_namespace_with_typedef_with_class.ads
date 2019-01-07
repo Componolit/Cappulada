@@ -2,8 +2,8 @@ package Capdpa.With_Typedef.Use_Type
 is
    type Class is
    limited record
-      C : U8;
-      I : I32;
+      C : aliased U8;
+      I : aliased I32;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

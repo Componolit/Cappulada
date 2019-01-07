@@ -2,7 +2,7 @@ package Capdpa.With_Fptr
 is
    type Class is
    limited record
-      Func : access procedure (This : access Class);
+      Func : aliased access procedure (This : access Class);
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

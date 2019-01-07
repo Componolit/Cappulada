@@ -13,7 +13,7 @@ is
    end Inner;
    type Class is
    limited record
-      Field : Capdpa.Outer.Inner.Class;
+      Field : aliased Capdpa.Outer.Inner.Class;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;

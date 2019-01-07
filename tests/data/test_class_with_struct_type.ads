@@ -4,7 +4,7 @@ is
    is
       type Class is
       limited record
-         X : Capdpa.Int;
+         X : aliased Capdpa.Int;
       end record
       with Import, Convention => CPP;
       type Class_Address is access Class;
@@ -17,8 +17,8 @@ is
    end Ws2;
    type Class is
    limited record
-      Value : Capdpa.With_Struct.Ws.Class_Address;
-      Value2 : Capdpa.With_Struct.Ws2.Class_Address;
+      Value : aliased Capdpa.With_Struct.Ws.Class_Address;
+      Value2 : aliased Capdpa.With_Struct.Ws2.Class_Address;
    end record
    with Import, Convention => CPP;
    type Class_Address is access Class;
