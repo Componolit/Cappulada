@@ -83,6 +83,9 @@ spec_defaults='''
    subtype Long_Double is Interfaces.C.long_double;
    Long_Double_Size : constant := Long_Double'Size;
    type Long_Double_Address is access all Long_Double;
+
+   subtype Void_Address is Interfaces.C.Extensions.void_ptr;
+   Void_Address_Size : constant := Long_Integer'Size;
 '''
 
 class Generator:
