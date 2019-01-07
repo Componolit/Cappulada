@@ -126,5 +126,8 @@ class check_validation(Capdpa_Test):
     def test_member_pointer(self):
         self.check_validation("test_member_pointer")
 
+    def test_member_reference(self):
+        self.check_validation("test_member_reference")
+
 if __name__ == '__main__':
     unittest.main()
