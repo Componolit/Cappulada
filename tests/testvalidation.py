@@ -120,5 +120,8 @@ class check_validation(Capdpa_Test):
     def test_class_inheritance_early_overloaded(self):
         self.check_validation("test_class_inheritance_late")
 
+    def test_nested_class(self):
+        self.check_validation("test_nested_class")
+
 if __name__ == '__main__':
     unittest.main()
