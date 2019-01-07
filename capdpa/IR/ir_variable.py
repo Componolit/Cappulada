@@ -62,7 +62,7 @@ class Member(NamedType):
         self.constant = constant
 
     def AdaSpecification(self, indentation=0, private_name=""):
-        return " " * indentation + "%(constant)s%(private)s%(name)s : %(type)s" % \
+        return " " * indentation + "%(constant)s%(private)s%(name)s : aliased %(type)s" % \
                 { 'constant': "" if not self.constant or self.access != "public" else "Constant_",
                   'private' : "" if self.access == "public" else "Private_",
                   'name': self.ConvertName(self.name),
