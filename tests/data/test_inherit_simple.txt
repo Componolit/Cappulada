@@ -1,8 +1,10 @@
+with Capdpa.Simple;
+
 package Capdpa.Inherit_Simple
 is
    type Class is
    limited record
-      A : Int;
+      Simple : Capdpa.Simple.Class;
       B : Int;
    end record
    with Import, Convention => CPP;

@@ -84,8 +84,12 @@ class Base(object):
         else:
             return [self.name]
 
+    def PackagePath(self):
+        return self.name.name[:-1]
+
     def PackageName(self):
-        return self.name.PackagePathName()
+        return ".".join(map(self.ConvertName, self.PackagePath()))
+
 
     def isVirtual(self):
         return False

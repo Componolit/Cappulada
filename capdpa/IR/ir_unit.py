@@ -15,19 +15,28 @@ class Class_Reference(ir.Base):
     def isVirtual(self):
         return self.getClass().isVirtual()
 
+    def IsPrivate(self):
+        return False
+
     def InstantiateTemplates(self):
         pass
+
+    def AdaSpecification(self, indentation=0, private_name=""):
+        converted = map(self.ConvertName, self.name.PackageFull())
+        name = converted[-1]
+        return " " * indentation + name + " : " + ".".join(converted + ['Class'])
+
+    def PackagePath(self):
+        return self.name.PackageFull()
 
 class Unit(ir.Base):
 
     def UsedPackages(self):
         types = []
 
-        isLocalType = lambda t: \
-            ir_type.Type_Reference_Template.isInst(t) or \
-            (t.name.PackagePath() and \
-             self.FullyQualifiedName()[:len(t.name.PackagePath())] != t.name.PackagePath() and \
-             t.name.PackagePath() not in [c.FullyQualifiedName() for c in self.children])
+        def isLocalType(t):
+            return self.FullyQualifiedName()[:len(t.PackagePath())] != t.PackagePath() and \
+                   t.PackagePath()[:len(self.FullyQualifiedName())] != self.FullyQualifiedName()
 
         for f in filter(ir_function.Function.isInst, self.children):
             map(lambda p: types.append(p.ctype), f.parameters)

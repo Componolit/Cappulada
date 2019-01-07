@@ -33,7 +33,7 @@ class Class(ir_unit.Unit):
         members = []
         for c in self.children:
             if ir_unit.Class_Reference.isInst(c) and not c.isVirtual():
-                members.extend(c.getClass().Members())
+                members.append(c)
             if ir_variable.Member.isInst(c):
                 members.append(c)
         return members
