@@ -123,5 +123,8 @@ class check_validation(Capdpa_Test):
     def test_nested_class(self):
         self.check_validation("test_nested_class")
 
+    def test_member_pointer(self):
+        self.check_validation("test_member_pointer")
+
 if __name__ == '__main__':
     unittest.main()
