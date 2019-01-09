@@ -4,6 +4,7 @@ with Interfaces.C;
 with Test_Member_Pointer.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Member_Pointer;
 
@@ -12,6 +13,6 @@ is
    Val1 : Int;
    use Interfaces.C;
 begin
-   Val1 := Cls.Method (C'Access);
+   Val1 := Cls.Method (C);
    Tests.Assert (Val1 = V + 1, "Wrong value returned (1): " & Val1'Img);
 end Main;

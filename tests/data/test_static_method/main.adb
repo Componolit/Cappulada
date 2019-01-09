@@ -3,6 +3,7 @@ with Interfaces.C;
 with Test_Static_Method.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Static_Method;
    use Interfaces.C;

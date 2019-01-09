@@ -5,12 +5,21 @@ package Capdpa.User
 is
    type Class is
    limited record
-      Cic : aliased Capdpa.Container_T_Int_Char.Class;
-      Cii : aliased Capdpa.Container_T_Int_Int.Class;
-      Cic2 : aliased Capdpa.Container_T_Int_Char.Class;
+      Cic : Capdpa.Container_T_Int_Char.Class;
+      Cii : Capdpa.Container_T_Int_Int.Class;
+      Cic2 : Capdpa.Container_T_Int_Char.Class;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
-   function Constructor return Class;
+
+   type Class_Address is private;
+
+   function Constructor return Class
+   with Global => null;
    pragma Cpp_Constructor (Constructor, "_ZN4UserC1Ev");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+
 end Capdpa.User;

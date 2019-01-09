@@ -1,15 +1,22 @@
 package Class_Priv_Ref
 is
-   pragma Warnings (Off, "* bits of ""Class_Priv_Ref_Private_Int"" unused");
-   type Class_Priv_Ref_Private_Int is null record
-      with Size => Capdpa.Int_Size;
-   pragma Warnings (On, "* bits of ""Class_Priv_Ref_Private_Int"" unused");
+   type Private_Int is limited private;
+
    type Class is
    limited record
-      Private_Ref_Member : access Class_Priv_Ref_Private_Int;
+      Private_Ref_Member : Private_Int_Address;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
-   function Constructor return Class;
+
+   type Class_Address is private;
+
+   function Constructor return Class
+   with Global => null;
    pragma Cpp_Constructor (Constructor, "_ZC1v");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+   type Private_Int is new Capdpa.Int;
 end Class_Priv_Ref;

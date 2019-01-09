@@ -4,6 +4,7 @@ with Test_Class_With_Class_Type_Member.Outer;
 with Test_Class_With_Class_Type_Member.Inner;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Class_With_Class_Type_Member;
    use Interfaces.C;
@@ -14,6 +15,6 @@ is
 
 begin
    Tests.Assert (O.Data = 37, "Wrong data (1): " & O.Data'Img);
-   I := Outer.Get_Inner_Data (O'Access);
+   I := Outer.Get_Inner_Data (O);
    Tests.Assert (I = 123456, "Wrong data (2): " & I'Img);
 end Main;

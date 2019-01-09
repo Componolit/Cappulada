@@ -2,11 +2,19 @@ package Capdpa.Container_T_Int_Char
 is
    type Class is
    limited record
-      A : aliased Capdpa.Int;
-      B : aliased Capdpa.Char;
+      A : Capdpa.Int;
+      B : Capdpa.Char;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
+
+   type Class_Address is limited private;
+
    function Constructor return Class;
    pragma Cpp_Constructor (Constructor, "");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+
 end Capdpa.Container_T_Int_Char;

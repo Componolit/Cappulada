@@ -11,11 +11,12 @@ from ..ada import Specification
 
 class Namespace(ir_unit.Unit):
 
-    def __init__(self, name, children=None, with_include="", spec_include=""):
+    def __init__(self, name, children=None, with_include="", spec_include="", spec_private=""):
         self.name = name
         self.children = children or []
         self.with_include = with_include
         self.spec_include = spec_include
+        self.spec_private = spec_private
         self._parentize_list(self.children)
         super(Namespace, self).__init__()
 
@@ -30,7 +31,7 @@ class Namespace(ir_unit.Unit):
         compilation_units = [
                 Specification(
                     name = [self.ConvertName(name) for name in self.FullyQualifiedName()],
-                    text = "{withs}{with_include}package {name}\nis{spec_include}{body}\nend {name};\n".format(
+                    text = "{withs}{with_include}package {name}\nis{spec_include}{body}\n{private_include}end {name};\n".format(
                         withs = withs,
                         name  = fqn_ada,
                         body  = "\n".join([""] + map(
@@ -43,6 +44,7 @@ class Namespace(ir_unit.Unit):
                                 self.children))),
                         with_include = self.with_include,
                         spec_include = self.spec_include,
+                        private_include = "private\n" + self.spec_private + "\n" if self.spec_private else "",
                         ))]
 
         for p in self.children:

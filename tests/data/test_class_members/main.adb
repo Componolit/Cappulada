@@ -3,6 +3,7 @@ with Interfaces.C.Extensions;
 with Test_Class_Members.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Class_Members;
    use Interfaces.C;

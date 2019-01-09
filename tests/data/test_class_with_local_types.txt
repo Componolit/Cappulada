@@ -5,13 +5,22 @@ package Capdpa.Bar.Foo.Brabbel
 is
    type Class is
    limited record
-      Field1 : aliased Capdpa.Bar.Baz.My_Type;
-      Field2 : aliased Local_Type;
-      Field3 : aliased Capdpa.Bar.Foo.Blub.Some_Type;
-      Field4 : aliased Capdpa.Bar.Foo.Brabbel.Some_Type;
+      Field1 : Capdpa.Bar.Baz.My_Type;
+      Field2 : Local_Type;
+      Field3 : Capdpa.Bar.Foo.Blub.Some_Type;
+      Field4 : Capdpa.Bar.Foo.Brabbel.Some_Type;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
-   function Constructor return Class;
+
+   type Class_Address is private;
+
+   function Constructor return Class
+   with Global => null;
    pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+
 end Capdpa.Bar.Foo.Brabbel;

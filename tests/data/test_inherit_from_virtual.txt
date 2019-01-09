@@ -4,10 +4,19 @@ package Capdpa.From_Virtual
 is
    type Class is new Capdpa.With_Virtual.Class with
    record
-      V : aliased Capdpa.Int;
+      V : Capdpa.Int;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
-   function Constructor return Class;
+
+   type Class_Address is private;
+
+   function Constructor return Class
+   with Global => null;
    pragma Cpp_Constructor (Constructor, "_ZN12From_VirtualC1Ev");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+
 end Capdpa.From_Virtual;

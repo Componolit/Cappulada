@@ -1,8 +1,10 @@
 with Tests;
 with Interfaces.C.Extensions;
 with Test_Builtin_Types.Cls;
+with Ada.Unchecked_Conversion;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Interfaces.C;
    use Interfaces.C.Extensions;
@@ -25,7 +27,61 @@ is
    D    : aliased double;
    Ld   : aliased long_double;
 
+   function To_LD is new Ada.Unchecked_Conversion (Interfaces.C.long_double, Test_Builtin_Types.long_double);
+
    use Test_Builtin_Types;
+
+   type BA is access all Test_Builtin_Types.bool;
+   function To_Address is new Ada.Unchecked_Conversion (BA, Bool_Address);
+
+   type UCA is access all Test_Builtin_Types.unsigned_char;
+   function To_Address is new Ada.Unchecked_Conversion (UCA, Unsigned_Char_Address);
+
+   type USA is access all Test_Builtin_Types.unsigned_short;
+   function To_Address is new Ada.Unchecked_Conversion (USA, Unsigned_Short_Address);
+
+   type UA is access all Test_Builtin_Types.unsigned_int;
+   function To_Address is new Ada.Unchecked_Conversion (UA, Unsigned_Int_Address);
+
+   type ULA is access all Test_Builtin_Types.unsigned_long;
+   function To_Address is new Ada.Unchecked_Conversion (ULA, Unsigned_Long_Address);
+
+   type ULLA is access all Test_Builtin_Types.unsigned_long_long;
+   function To_Address is new Ada.Unchecked_Conversion (ULLA, Unsigned_Long_Long_Address);
+
+   type CA is access all Test_Builtin_Types.char;
+   function To_Address is new Ada.Unchecked_Conversion (CA, Char_Address);
+
+   type SCA is access all Test_Builtin_Types.signed_char;
+   function To_Address is new Ada.Unchecked_Conversion (SCA, Signed_Char_Address);
+
+   type WCTA is access all Test_Builtin_Types.wchar_t;
+   function To_Address is new Ada.Unchecked_Conversion (WCTA, Wchar_t_Address);
+
+   type SA is access all Test_Builtin_Types.short;
+   function To_Address is new Ada.Unchecked_Conversion (SA, Short_Address);
+
+   type IA is access all Test_Builtin_Types.int;
+   function To_Address is new Ada.Unchecked_Conversion (IA, Int_Address);
+
+   type I128A is access all Test_Builtin_Types.C_X_Int128;
+   function To_Address is new Ada.Unchecked_Conversion (I128A, C_X_Int128_Address);
+
+   type LA is access all Test_Builtin_Types.long;
+   function To_Address is new Ada.Unchecked_Conversion (LA, Long_Address);
+
+   type LLA is access all Test_Builtin_Types.long_long;
+   function To_Address is new Ada.Unchecked_Conversion (LLA, Long_Long_Address);
+
+   type FA is access all Test_Builtin_Types.c_float;
+   function To_Address is new Ada.Unchecked_Conversion (FA, C_Float_Address);
+
+   type DA is access all Test_Builtin_Types.double;
+   function To_Address is new Ada.Unchecked_Conversion (DA, Double_Address);
+
+   type LDA is access all Interfaces.C.long_double;
+   function To_Address is new Ada.Unchecked_Conversion (LDA, Long_Double_Address);
+
    Klass : aliased Cls.Class :=
       Cls.Constructor (True,
                        54,
@@ -43,11 +99,28 @@ is
                        9999994334343,
                        32.4343,
                        -433434.1223,
-                       593430024.559);
+                       To_LD (593430024.559));
 
 begin
-   Cls.Get (Klass'Access, B'Access, Uc'Access, Us'Access, U'Access, Ul'Access, Ull'Access, C'Access, Sc'Access,
-            Wct'Access, S'Access, I'Access, I128'Access, L'Access, Ll'Access, F'Access, D'Access, Ld'Access);
+   Cls.Get (Klass,
+            To_Address (B'Access),
+            To_Address (Uc'Access),
+            To_Address (Us'Access),
+            To_Address (U'Access),
+            To_Address (Ul'Access),
+            To_Address (Ull'Access),
+            To_Address (C'Access),
+            To_Address (Sc'Access),
+            To_Address (Wct'Access),
+            To_Address (S'Access),
+            To_Address (I'Access),
+            To_Address (I128'Access),
+            To_Address (L'Access),
+            To_Address (Ll'Access),
+            To_Address (F'Access),
+            To_Address (D'Access),
+            To_Address (Ld'Access));
+
    Tests.Assert (B    = True,                     "Wrong value returned  (1): " & B'Img);
    Tests.Assert (Uc   = 54,                       "Wrong value returned  (2): " & Uc'Img);
    Tests.Assert (Us   = 6453,                     "Wrong value returned  (3): " & Uc'Img);

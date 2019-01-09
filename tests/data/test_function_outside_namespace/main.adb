@@ -3,6 +3,7 @@ with Interfaces.C;
 with Test_Function_Outside_Namespace;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Function_Outside_Namespace;
    use Interfaces.C;
