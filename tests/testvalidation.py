@@ -132,7 +132,7 @@ class check_validation(Capdpa_Test):
     def test_member_reference(self):
         self.check_validation("test_member_reference")
 
-    def EXCLUDE_test_enumeration_member(self):
+    def test_enumeration_member(self):
         self.check_validation("test_enumeration_member")
 
 if __name__ == '__main__':
