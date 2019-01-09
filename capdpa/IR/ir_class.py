@@ -38,7 +38,7 @@ class Class(ir_unit.Unit):
                 members.append(c)
         return members
 
-    def PrivateTypesSpecification(self, indentation):
+    def TypeList(self):
 
         # Generate order-preserving list of unique private types
         types = []
@@ -49,13 +49,30 @@ class Class(ir_unit.Unit):
             if t not in types:
                 types.append(t)
 
-        return "\n".join([('{indent}pragma Warnings (Off, "* bits of ""{private}"" unused");\n' +
-                           '{indent}type {private} is null record\n' +
-                           '{indent}   with Size => {public}_Size;\n' +
-                           '{indent}pragma Warnings (On, "* bits of ""{private}"" unused");').format(
+        return types
+
+    def PublicTypesSpecification(self, indentation):
+
+        types = self.TypeList()
+        if not types:
+            return ""
+
+        return "\n".join([('{indent}type {private} is limited private;').format(
                             indent = (indentation + 3) * " ",
-                            private = t.AdaSpecification(private=self.name),
-                            public = t.AdaSpecification()) for t in types] + [''])
+                            private = t.AdaSpecification(private=True)) for t in types] + ['', ''])
+
+    def PrivateTypesSpecification(self, indentation):
+
+        result = ("{indent}private\n" +
+                  "{indent}   pragma SPARK_Mode (Off);\n\n" +
+                  "{indent}   type Class_Address is access Class;\n").format(indent = (indentation) * " ")
+
+        result += "\n".join([('{indent}type {private} is new {basetype};').format(
+                            indent = (indentation + 3) * " ",
+                            private = t.AdaSpecification(private=True),
+                            basetype = t.AdaSpecification()) for t in self.TypeList()])
+
+        return result + "\n";
 
     def AdaSpecification(self, indentation=0):
 
@@ -71,15 +88,14 @@ class Class(ir_unit.Unit):
                 "{indent}{tagged}{limited}record\n"
                 "{classmembers}"
                 "{indent}end record\n"
-                "{indent}with Import, Convention => CPP;\n"
-                "{indent}type Class_Address is access Class;\n"
+                "{indent}with Import, Convention => CPP;\n\n"
                 ).format(
                         indent = (indentation + 3) * " ",
-                        private_types = self.PrivateTypesSpecification(indentation),
+                        private_types = self.PublicTypesSpecification(indentation),
                         classdef = (" new " + base.PackageName() + ".Class with") if hasvirtualbase and self.isVirtual() else "",
                         tagged = "tagged " if self.isVirtual() and not hasvirtualbase else "",
                         limited = "limited " if not hasvirtualbase else "",
-                        classmembers = "\n".join([m.AdaSpecification(indentation + 6, self.name) + ";" for m in self.Members() or [null]] + ['']))
+                        classmembers = "\n".join([m.AdaSpecification(indentation + 6, True) + ";" for m in self.Members() or [null]] + ['']))
 
         # Generate functions and procedures
         isOp = lambda e: ir_function.Function.isInst(e) or ir_function.Constructor.isInst(e)
@@ -92,6 +108,9 @@ class Class(ir_unit.Unit):
         # Generate typedefs
         types = filter(ir_type.Type_Definition.isInst, self.children)
 
+        # Private types
+        private_part = self.PrivateTypesSpecification(indentation)
+
         # Main package structure
 
         return ("{indent}package {package}\n"
@@ -100,12 +119,15 @@ class Class(ir_unit.Unit):
                 "{types}"
                 "{constants}"
                 "{classrecord}"
-                "{operations}"
+                "{indent}   type Class_Address is private;\n\n"
+                "{operations}\n"
+                "{private}"
                 "{indent}end {package};\n").format(
                         indent = indentation * " ",
                         package = self.name if Class.isInst(self.parent) else ".".join(map(self.ConvertName, self.FullyQualifiedName())),
                         subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
+                        private = private_part or "",
                         constants = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), constants) + ['']),
                         classrecord = class_record,
-                        operations = "".join(map(lambda o: o.AdaSpecification(indentation + 3), ops)))
+                        operations = "\n".join(map(lambda o: o.AdaSpecification(indentation + 3), ops)))

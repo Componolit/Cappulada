@@ -1,7 +1,9 @@
 with Ada.Text_IO;
 with GNAT.OS_Lib;
 
-package body Tests is
+package body Tests
+   with SPARK_Mode => Off
+is
 
    ------------
    -- Assert --

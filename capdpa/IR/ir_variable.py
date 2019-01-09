@@ -38,7 +38,7 @@ class Variable(NamedType):
     def __init__(self, name, ctype):
         super(Variable, self).__init__(name, ctype)
 
-    def AdaSpecification(self, indentation=0):
+    def AdaSpecification(self, indentation=0, private=False):
         return (" " * indentation + "%(name)s : %(type)s\n" + " " * indentation + "%(with)s") % \
                 { 'name': self.ConvertName(self.name),
                   'type': self.ctype.AdaSpecification(),
@@ -61,13 +61,12 @@ class Member(NamedType):
         self.access = access
         self.constant = constant
 
-    def AdaSpecification(self, indentation=0, private_name=""):
-        return " " * indentation + "%(constant)s%(private)s%(name)s : %(aliased)s%(type)s" % \
+    def AdaSpecification(self, indentation=0, private=False):
+        return " " * indentation + "%(constant)s%(private)s%(name)s : %(type)s" % \
                 { 'constant': "" if not self.constant or self.access != "public" else "Constant_",
                   'private' : "" if self.access == "public" else "Private_",
                   'name': self.ConvertName(self.name),
-                  'aliased': "" if self.ctype.reference else "aliased ",
-                  'type': self.ctype.AdaSpecification(private=("" if self.access == "public" else private_name)) }
+                  'type': self.ctype.AdaSpecification(private=(self.access != "public")) }
 
     def IsPrivate(self):
         return self.access != "public"

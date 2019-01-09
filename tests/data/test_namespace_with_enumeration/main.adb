@@ -4,6 +4,7 @@ with Interfaces.C.Extensions;
 with Test_Namespace_With_Enumeration.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Namespace_With_Enumeration.Cls;
    type Raw_Days is mod 2**Numbered_Days'Size;

@@ -368,7 +368,7 @@ class CXX:
                     raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))
         return children
 
-    def ToIR(self, project, with_include="", spec_include=""):
+    def ToIR(self, project, with_include="", spec_include="", spec_private=""):
 #        self.__print_tree(self.translation_unit.cursor, 0)
         self.project = project
         if self.translation_unit.cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
@@ -377,7 +377,8 @@ class CXX:
                 name=project,
                 children = self.__convert_children(self.translation_unit.cursor.get_children()),
                 with_include = with_include,
-                spec_include = spec_include
+                spec_include = spec_include,
+                spec_private = spec_private
                 )
         namespace.InstantiateTemplates()
         return namespace

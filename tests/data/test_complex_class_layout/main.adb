@@ -3,6 +3,7 @@ with Interfaces.C.Extensions;
 with Test_Complex_Class_Layout.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Complex_Class_Layout;
    use Interfaces.C;

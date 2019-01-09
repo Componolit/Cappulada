@@ -12,9 +12,9 @@ class Type_Reference(ir.Base):
         self.reference = reference
         self.constant = constant
 
-    def AdaSpecification(self, indentation=0, private=""):
+    def AdaSpecification(self, indentation=0, private=False):
         if private:
-            name = self.ConvertName(private + "_Private_" + self.name.PackageBaseNameRaw())
+            name = self.ConvertName("Private_" + self.name.PackageBaseNameRaw())
         elif self.pointer > 0:
             if self.pointer == 1:
                 name = self.name.PackageFullName() + "_Address"
@@ -22,7 +22,7 @@ class Type_Reference(ir.Base):
                 raise ValueError("Pointer nesting to deep: {}".format(self.pointer))
         else:
             name = self.name.PackageFullName()
-        return " " * indentation + ("access " if self.reference else "") + name
+        return " " * indentation + name + ("_Address" if self.reference else "")
 
     def FullyQualifiedName(self):
         return self.name.name
@@ -72,7 +72,7 @@ class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
         # Add instance postfix
         return ".".join(map(self.ConvertName, self.PackagePath()))
 
-    def AdaSpecification(self, indentation=0, private=""):
+    def AdaSpecification(self, indentation=0, private=False):
         post = "_" + self.ConvertName(self.postfix()[1:])
         return super(Type_Reference_Template, self).AdaSpecification(indentation) + post + ".Class"
 
@@ -101,7 +101,6 @@ class Type_Definition(ir.Base):
         else:
             return ("{0}package {1} is\n"
                     "{0}{0}type Class is null record;\n"
-                    "{0}{0}type Class_Address is access Class;\n"
                     "{0}end {1};").format(
                             " " * indentation,
                             self.ConvertName(self.name))

@@ -4,6 +4,7 @@ with Test_Class_Inheritance_Early.Base;
 with Test_Class_Inheritance_Early.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Class_Inheritance_Early;
 
@@ -13,10 +14,10 @@ is
    Val1, Val2 : Int;
    use Interfaces.C;
 begin
-   Val1 := Base.Parent (B'Access);
+   Val1 := Base.Parent (B);
    Tests.Assert (Val1 = 56789, "Wrong value returned (1): " & Val1'Img & " / " & B.Parent_Member'Img);
 
-   Val2 := Cls.Local (C'Access);
+   Val2 := Cls.Local (C);
    Tests.Assert (Val2 = 12345, "Wrong value returned (2): " & Val2'Img & " / " & C.Local_Member'Img);
 
 end Main;

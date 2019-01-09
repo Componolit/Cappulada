@@ -4,6 +4,7 @@ with Test_Class_Inheritance_Early_Overloaded.Base;
 with Test_Class_Inheritance_Early_Overloaded.Cls;
 
 procedure Main
+   with SPARK_Mode => Off
 is
    use Test_Class_Inheritance_Early_Overloaded;
 
@@ -13,14 +14,14 @@ is
    Val1, Val2, Val3 : Int;
    use Interfaces.C;
 begin
-   Val1 := Base.Method (B'Access);
+   Val1 := Base.Method (B);
    Tests.Assert (Val1 = 56789, "Wrong value returned (1): " & Val1'Img);
 
-   Val2 := Cls.Method (C'Access);
+   Val2 := Cls.Method (C);
    Tests.Assert (Val2 = 42, "Wrong value returned (2): " & Val2'Img);
 
    --  Use parent method
-   Val3 := Base.Method (C.Base'Access);
+   Val3 := Base.Method (C.Base);
    Tests.Assert (Val3 = 1234, "Wrong value returned (3): " & Val3'Img);
 
 end Main;

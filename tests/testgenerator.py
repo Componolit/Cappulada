@@ -350,21 +350,21 @@ class GenerateConstant(Capdpa_Test):
         self.check(result[1].Text(), self.load("test_enum_member.ads"))
 
     def test_function_pointer_base(self):
-        self.check(Function_Reference(pointer=1).AdaSpecification(), "access procedure (This : access Class)")
+        self.check(Function_Reference(pointer=1).AdaSpecification(), "access procedure (This : Class)")
         self.check(Function_Reference(
             parameters=[Argument(name = "a", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"]))),
                         Argument(name = "b", ctype=Type_Reference(name=Identifier(["A", "Class"])))],
             pointer=1).AdaSpecification(),
-            "access procedure (This : access Class; A : Capdpa.Int; B : A.Class)")
+            "access procedure (This : Class; A : Capdpa.Int; B : A.Class)")
         self.check(Function_Reference(
             pointer=1,
             return_type=Type_Reference(name=Identifier(["Capdpa", "Int"]))).AdaSpecification(),
-                "access function (This : access Class) return Capdpa.Int")
+                "access function (This : Class) return Capdpa.Int")
         self.check(Function_Reference(
             pointer=1,
             return_type=Type_Reference(name=Identifier(["Capdpa", "Int"])),
             parameters=[Argument(name="X", ctype=Type_Reference(name=Identifier(["Capdpa", "Int"])))]
-            ).AdaSpecification(), "access function (This : access Class; X : Capdpa.Int) return Capdpa.Int")
+            ).AdaSpecification(), "access function (This : Class; X : Capdpa.Int) return Capdpa.Int")
         self.check(Function_Reference(
             pointer=1,
             return_type=Function_Reference(
@@ -372,7 +372,7 @@ class GenerateConstant(Capdpa_Test):
                 return_type=Function_Reference(
                     pointer=1,
                     return_type=Function_Reference()))).AdaSpecification(),
-            "access function (This : access Class) return access function (This : access Class) return access function (This : access Class) return access procedure (This : access Class)")
+            "access function (This : Class) return access function (This : Class) return access function (This : Class) return access procedure (This : Class)")
 
     def test_function_pointer(self):
         result = Namespace(name = "Capdpa", children = [

@@ -4,11 +4,20 @@ package Capdpa.Child
 is
    type Class is
    limited record
-      Inheritance : aliased Capdpa.Inheritance.Class;
-      C : aliased Capdpa.Int;
+      Inheritance : Capdpa.Inheritance.Class;
+      C : Capdpa.Int;
    end record
    with Import, Convention => CPP;
-   type Class_Address is access Class;
-   function Constructor return Class;
+
+   type Class_Address is private;
+
+   function Constructor return Class
+   with Global => null;
    pragma Cpp_Constructor (Constructor, "_ZN5ChildC1Ev");
+
+private
+   pragma SPARK_Mode (Off);
+
+   type Class_Address is access Class;
+
 end Capdpa.Child;

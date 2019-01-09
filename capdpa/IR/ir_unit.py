@@ -21,10 +21,10 @@ class Class_Reference(ir.Base):
     def InstantiateTemplates(self):
         pass
 
-    def AdaSpecification(self, indentation=0, private_name=""):
+    def AdaSpecification(self, indentation=0, private=False):
         converted = map(self.ConvertName, self.name.PackageFull())
         name = converted[-1]
-        return " " * indentation + name + " : aliased " + ".".join(converted + ['Class'])
+        return " " * indentation + name + " : " + ".".join(converted + ['Class'])
 
     def PackagePath(self):
         return self.name.PackageFull()
