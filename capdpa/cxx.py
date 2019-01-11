@@ -63,10 +63,10 @@ class CXX:
     def __init__(self, header, flags = []):
         try:
             self.index = clang.cindex.Index.create()
-            self.translation_unit = self.index.parse(header, ["-x", "c++"] + flags)
+            self.translation_unit = self.index.parse(header, ["-x", "c++", "-std=c++14"] + flags)
             if self.translation_unit.diagnostics:
                 for diag in self.translation_unit.diagnostics:
-                    if diag.severity > 2:
+                    if diag.severity > 0:
                        raise CXX.ParseError(self.translation_unit.diagnostics)
         except clang.cindex.TranslationUnitLoadError as e:
             raise CXX.LoadError(e, header)

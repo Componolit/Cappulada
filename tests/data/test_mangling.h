@@ -149,9 +149,9 @@ class Cls
 {
    public:
       Cls() { };
-      int bar (Templ<char, int> p1, char p2) { };
-      int foo (int p1, char p2) { };
-      int baz (Templ<char, int> p1, Templ<char,char> p2) { };
+      int bar (Templ<char, int> p1, char p2) { return 0; };
+      int foo (int p1, char p2) { return 0; };
+      int baz (Templ<char, int> p1, Templ<char,char> p2) { return 0; };
       // int var (Var<> p1, char p2) { };
 };
 
@@ -164,8 +164,8 @@ namespace Root2
 
    class Cls {
       public:
-         int no_compression (int p1, int p2) { };
-         Data compression1 (int p1, Data p2) { };
-         int compression2 (Data p1, int p2, Data p3) { };
+         int no_compression (int p1, int p2) { return 0; };
+         Data compression1 (int p1, Data p2) { return *(new Data); };
+         int compression2 (Data p1, int p2, Data p3) { return 0; };
    };
 }
