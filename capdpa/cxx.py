@@ -110,6 +110,9 @@ class CXX:
         return IR.Constructor(
                 parameters = self.__convert_arguments(cursor.get_children()))
 
+    def __convert_destructor(self, cursor):
+        return IR.Destructor()
+
     def __resolve_name(self, cursor):
         identifier = []
         while cursor and cursor.kind != clang.cindex.CursorKind.TRANSLATION_UNIT:
@@ -334,6 +337,8 @@ class CXX:
                     children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
                     children.append(self.__convert_constructor(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.DESTRUCTOR:
+                    children.append(self.__convert_destructor(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
                     children.append(self.__convert_template(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
@@ -347,8 +352,7 @@ class CXX:
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.UNEXPOSED_DECL,
-                        clang.cindex.CursorKind.NAMESPACE_REF,
-                        clang.cindex.CursorKind.DESTRUCTOR]:
+                        clang.cindex.CursorKind.NAMESPACE_REF]:
                     pass
                 else:
                     raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))

@@ -65,14 +65,19 @@ class Method(Function):
         return self.virtual
 
     def Mangle(self):
-        return self.Mangle_Function(False)
+        return self.Mangle_Function()
 
-    def Mangle_Function(self, constructor):
+    def Mangle_Function(self, constructor=False, destructor=False):
 
         if not self.parent:
             raise Exception ("Parent not set")
 
-        entity = mangle.Literal("C1") if constructor else mangle.String(self.name)
+        if constructor:
+            entity = mangle.Literal("C1")
+        elif destructor:
+            entity = mangle.Literal("D1")
+        else:
+            entity = mangle.String(self.name)
 
         if not self.parent.instanceof:
             # Regular class
@@ -164,4 +169,21 @@ class Constructor(Method):
                     map(lambda p: p.AdaSpecification(), self.parameters))) if self.parameters else "", str(self.Mangle ()))
 
     def Mangle(self):
-        return super(Constructor, self).Mangle_Function(True)
+        return super(Constructor, self).Mangle_Function(constructor=True)
+
+class Destructor(Method):
+
+    def __init__(self):
+        super(Destructor, self).__init__("__destructor__")
+
+    def __repr__(self):
+        return "Destructor()"
+
+    def AdaSpecification(self, indentation=0):
+        return "{indent}procedure Destructor (This : Class)\n" \
+               "{indent}with Global => null, Import, Convention => CPP, External_Name => \"{symbol}\";\n".format(
+                indent = " " * indentation,
+                symbol = str(self.Mangle ()))
+
+    def Mangle(self):
+        return super(Destructor, self).Mangle_Function(destructor=True)
