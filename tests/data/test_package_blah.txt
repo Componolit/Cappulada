@@ -1,3 +1,4 @@
 package Blah
+   with SPARK_Mode
 is
 end Blah;

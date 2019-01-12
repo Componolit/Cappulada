@@ -1,4 +1,5 @@
 package Capdpa.With_Enum
+   with SPARK_Mode
 is
    type E_T is (A, B);
    for E_T use (A => 0, B => 1);

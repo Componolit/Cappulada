@@ -1,2 +1,1 @@
-pragma SPARK_Mode (On);
 pragma Warnings (Off, "pragma ""Cpp_Constructor"" ignored (not yet supported)");

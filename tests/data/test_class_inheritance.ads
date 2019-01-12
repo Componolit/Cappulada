@@ -1,6 +1,7 @@
 with Capdpa.With_Members;
 
 package Capdpa.Inheritance
+   with SPARK_Mode
 is
    type Class is
    limited record

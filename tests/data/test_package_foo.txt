@@ -1,3 +1,4 @@
 package Capdpa.Foo
+   with SPARK_Mode
 is
 end Capdpa.Foo;

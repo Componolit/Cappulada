@@ -1,4 +1,5 @@
 package Capdpa.Bar.Foo.Namespace
+   with SPARK_Mode
 is
    Constant1 : constant := 5;
    Constant2 : constant := 42;
