@@ -22,7 +22,11 @@ class Type_Reference(ir.Base):
                 raise ValueError("Pointer nesting to deep: {}".format(self.pointer))
         else:
             name = self.name.PackageFullName()
-        return " " * indentation + name + ("_Address" if self.reference else "")
+
+        if self.reference and self.FullyQualifiedName()[-1] != "Class":
+            name += "_Address"
+
+        return " " * indentation + name
 
     def FullyQualifiedName(self):
         return self.name.name
