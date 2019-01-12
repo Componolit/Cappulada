@@ -144,5 +144,8 @@ class check_validation(Capdpa_Test):
     def test_enum_with_excess_value(self):
         self.check_validation("test_enum_with_excess_value")
 
+    def test_export_method(self):
+        self.check_validation("test_export_method")
+
 if __name__ == '__main__':
     unittest.main()

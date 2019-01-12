@@ -6,7 +6,7 @@ import mangle
 
 class Function(ir.Base):
 
-    def __init__(self, name, parameters=None, return_type=None, static=True):
+    def __init__(self, name, parameters=None, return_type=None, static=True, export=False):
         super(Function, self).__init__()
         self.name = name
         self.parameters = parameters or []
@@ -15,6 +15,7 @@ class Function(ir.Base):
         if self.return_type:
             self.return_type.parent = self
         self.static = static
+        self.export = export
 
     def InstantiateTemplates(self):
         for p in self.parameters:
@@ -45,8 +46,11 @@ class Function(ir.Base):
         if has_parameters:
             result += ")"
 
-        result += (" return " + self.return_type.AdaSpecification() + "\n") if self.return_type else "\n"
-        result += " " * indentation + 'with Global => null, Import, Convention => CPP, External_Name => "' + str(self.Mangle ()) + '";\n'
+        result += '{ret}\n{indent}with Global => null, {impexp}, Convention => CPP, External_Name => "{symbol}";\n'.format(
+            ret    = " return {rtype}".format (rtype = self.return_type.AdaSpecification()) if self.return_type else "",
+            indent = " " * indentation,
+            symbol = str(self.Mangle ()),
+            impexp = "Export" if self.export else "Import")
 
         return result
 
@@ -57,8 +61,8 @@ class Function(ir.Base):
 
 class Method(Function):
 
-    def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False):
-        super(Method, self).__init__(name, parameters, return_type, static)
+    def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False, export=False):
+        super(Method, self).__init__(name, parameters, return_type, static, export)
         self.virtual = virtual
 
     def isVirtual(self):

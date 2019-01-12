@@ -63,7 +63,7 @@ class CXX:
     def __init__(self, header, flags = []):
         try:
             self.index = clang.cindex.Index.create()
-            self.translation_unit = self.index.parse(header, ["-x", "c++", "-std=c++14"] + flags)
+            self.translation_unit = self.index.parse(header, ["-x", "c++", "-std=c++14", "-Wno-attributes"] + flags)
             if self.translation_unit.diagnostics:
                 for diag in self.translation_unit.diagnostics:
                     if diag.severity > 0:
@@ -99,12 +99,16 @@ class CXX:
                 return_type = self.__convert_type([], cursor.result_type))
 
     def __convert_method(self, cursor):
+
+        ada = len([x for x in cursor.get_children() if (x.kind == clang.cindex.CursorKind.ANNOTATE_ATTR and x.spelling == "ada")]) > 0
+
         return IR.Method(
                 name = cursor.spelling,
                 parameters = self.__convert_arguments(cursor.get_children()),
                 return_type = self.__convert_type([], cursor.result_type),
                 virtual = cursor.is_virtual_method(),
-                static = cursor.is_static_method())
+                static = cursor.is_static_method(),
+                export = ada)
 
     def __convert_constructor(self, cursor):
         return IR.Constructor(
