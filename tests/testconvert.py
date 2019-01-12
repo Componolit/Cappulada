@@ -518,5 +518,15 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_const_ref.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_export_method(self):
+        expected = Namespace("Capdpa", children = [
+                Class(name = "Cls", children = [
+                    Method(name = "method", parameters = [
+                        Argument("param", Type_Reference(Identifier(["Capdpa", "int"])))],
+                        return_type = Type_Reference(Identifier(["Capdpa", "int"])),
+                        export = True)])])
+        result = CXX("tests/data/test_export_method.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
 if __name__ == '__main__':
     unittest.main()
