@@ -1,6 +1,8 @@
 package Capdpa.With_Struct
+   with SPARK_Mode
 is
    package Ws
+      with SPARK_Mode
    is
       type Class is
       limited record

@@ -2,6 +2,7 @@ with Capdpa.Bar.Baz;
 with Capdpa.Bar.Foo.Blub;
 
 package Capdpa.Bar.Foo.Brabbel
+   with SPARK_Mode
 is
    type Class is
    limited record

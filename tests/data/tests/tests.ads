@@ -1,4 +1,5 @@
 package Tests
+   with SPARK_Mode
 is
    procedure Assert
      (Condition : Boolean;

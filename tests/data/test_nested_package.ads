@@ -1,6 +1,8 @@
 package Capdpa.Outer
+   with SPARK_Mode
 is
    package Inner
+      with SPARK_Mode
    is
       type Class is
       limited record

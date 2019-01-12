@@ -31,7 +31,7 @@ class Namespace(ir_unit.Unit):
         compilation_units = [
                 Specification(
                     name = [self.ConvertName(name) for name in self.FullyQualifiedName()],
-                    text = "{withs}{with_include}package {name}\nis{spec_include}{body}\n{private_include}end {name};\n".format(
+                    text = "{withs}{with_include}package {name}\n{spark_mode}is{spec_include}{body}\n{private_include}end {name};\n".format(
                         withs = withs,
                         name  = fqn_ada,
                         body  = "\n".join([""] + map(
@@ -42,6 +42,7 @@ class Namespace(ir_unit.Unit):
                                              ir_function.Function.isInst(c) or
                                              ir_type.Type_Definition.isInst(c),
                                 self.children))),
+                        spark_mode = "   with SPARK_Mode\n",
                         with_include = self.with_include,
                         spec_include = self.spec_include,
                         private_include = "private\n" + self.spec_private + "\n" if self.spec_private else "",

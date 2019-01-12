@@ -1,4 +1,5 @@
 package Capdpa.Empty
+   with SPARK_Mode
 is
    type Class is
    limited record

@@ -1,4 +1,5 @@
 package Capdpa.With_Enum
+   with SPARK_Mode
 is
    type Weekend is (Saturday, Sunday);
    for Weekend use (Saturday => 0, Sunday => 1);

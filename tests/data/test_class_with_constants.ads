@@ -1,4 +1,5 @@
 package Capdpa.With_Constants
+   with SPARK_Mode
 is
    One : constant := 1;
    Two : constant := 2;

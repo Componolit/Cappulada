@@ -1,4 +1,5 @@
 package Capdpa.With_Virtual
+   with SPARK_Mode
 is
    type Class is
    tagged limited record

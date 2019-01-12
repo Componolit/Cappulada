@@ -114,6 +114,7 @@ class Class(ir_unit.Unit):
         # Main package structure
 
         return ("{indent}package {package}\n"
+                "{indent}   with SPARK_Mode\n"
                 "{indent}is\n"
                 "{subpackages}"
                 "{types}"
