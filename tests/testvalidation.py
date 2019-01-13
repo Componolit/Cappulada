@@ -150,5 +150,8 @@ class check_validation(Capdpa_Test):
     def test_enumeration_custom_base_type(self):
         self.check_validation("test_enumeration_custom_base_type")
 
+    def test_enumeration_class(self):
+        self.check_validation("test_enumeration_class")
+
 if __name__ == '__main__':
     unittest.main()
