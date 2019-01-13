@@ -1,7 +1,7 @@
 with Capdpa.Inheritance;
 
 package Capdpa.Child
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is
    limited record

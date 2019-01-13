@@ -42,7 +42,7 @@ class Namespace(ir_unit.Unit):
                                              ir_function.Function.isInst(c) or
                                              ir_type.Type_Definition.isInst(c),
                                 self.children))),
-                        spark_mode = "   with SPARK_Mode\n",
+                        spark_mode = "   with SPARK_Mode => On\n",
                         with_include = self.with_include,
                         spec_include = self.spec_include,
                         private_include = "private\n" + self.spec_private + "\n" if self.spec_private else "",

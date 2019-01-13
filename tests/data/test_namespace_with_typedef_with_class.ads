@@ -1,5 +1,5 @@
 package Capdpa.With_Typedef.Use_Type
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is
    limited record

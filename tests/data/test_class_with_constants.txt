@@ -1,5 +1,5 @@
 package Capdpa.Bar.Foo.Class
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    Constant1 : constant := 5;
    Constant2 : constant := 42;

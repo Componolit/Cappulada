@@ -1,5 +1,5 @@
 package Capdpa.Container_T_Int_Int
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is
    limited record

@@ -1,7 +1,7 @@
 with Capdpa.With_Class.In_Namespace;
 
 package Capdpa.Full
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is
    limited record

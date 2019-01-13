@@ -1,4 +1,4 @@
 package Capdpa.Bar
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
 end Capdpa.Bar;
