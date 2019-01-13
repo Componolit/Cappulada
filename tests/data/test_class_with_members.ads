@@ -2,8 +2,11 @@ package Capdpa.With_Members
    with SPARK_Mode
 is
    type Private_Int is limited private;
+   type Private_Int_Address is limited private;
    type Private_Void is limited private;
+   type Private_Void_Address is limited private;
    type Private_C_Float is limited private;
+   type Private_C_Float_Address is limited private;
 
    type Class is
    limited record
@@ -27,6 +30,9 @@ private
 
    type Class_Address is access Class;
    type Private_Int is new Capdpa.Int;
+   type Private_Int_Address is access Private_Int;
    type Private_Void is new Capdpa.Void;
+   type Private_Void_Address is access Private_Void;
    type Private_C_Float is new Capdpa.C_Float;
+   type Private_C_Float_Address is access Private_C_Float;
 end Capdpa.With_Members;

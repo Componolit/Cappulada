@@ -2,6 +2,7 @@ package Class_Priv_Ref
    with SPARK_Mode
 is
    type Private_Int is limited private;
+   type Private_Int_Address is limited private;
 
    type Class is
    limited record
@@ -20,4 +21,5 @@ private
 
    type Class_Address is access Class;
    type Private_Int is new Capdpa.Int;
+   type Private_Int_Address is access Private_Int;
 end Class_Priv_Ref;
