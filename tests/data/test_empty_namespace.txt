@@ -1,4 +1,4 @@
 package Blah.Blubb
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
 end Blah.Blubb;

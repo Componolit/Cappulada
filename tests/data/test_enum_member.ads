@@ -1,5 +1,5 @@
 package Capdpa.With_Enum
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type E_T is (A, B)
    with Size => Capdpa.Unsigned_Int'Size;

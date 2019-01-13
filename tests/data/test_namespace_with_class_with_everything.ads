@@ -1,5 +1,5 @@
 package Capdpa.With_Class.With_Everything
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    One : constant := 1;
    Two : constant := 2;

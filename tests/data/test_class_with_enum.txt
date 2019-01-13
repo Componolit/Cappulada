@@ -1,5 +1,5 @@
 package Capdpa.Bar.Foo.Class
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Enum1 is (Elem11, Elem12);
    for Enum1 use (Elem11 => 5, Elem12 => 6);

@@ -1,5 +1,5 @@
 package Capdpa.With_Members
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Private_Int is limited private;
    type Private_Int_Address is limited private;

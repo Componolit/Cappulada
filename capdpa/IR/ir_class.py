@@ -80,6 +80,10 @@ class Class(ir_unit.Unit):
 
         return result + "\n";
 
+    def SparkFeatureSet(self):
+
+        return len([c for c in self.children if ir_variable.Member.isInst(c) and ir_function.Function_Reference.isInst(c.ctype)]) == 0
+
     def AdaSpecification(self, indentation=0):
 
         # Generate record members
@@ -117,7 +121,7 @@ class Class(ir_unit.Unit):
         # Main package structure
 
         return ("{indent}package {package}\n"
-                "{indent}   with SPARK_Mode\n"
+                "{indent}   with SPARK_Mode => {spark_mode}\n"
                 "{indent}is\n"
                 "{subpackages}"
                 "{types}"
@@ -130,6 +134,7 @@ class Class(ir_unit.Unit):
                 "{indent}end {package};\n").format(
                         indent = indentation * " ",
                         package = self.name if Class.isInst(self.parent) else ".".join(map(self.ConvertName, self.FullyQualifiedName())),
+                        spark_mode = "On" if self.SparkFeatureSet() else "Off",
                         subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
                         private = self.PrivatePart(indentation) or "",

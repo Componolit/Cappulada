@@ -1,5 +1,5 @@
 package Capdpa
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    subtype Uint8_T is Capdpa.Unsigned_Char;
    subtype Int32_T is Capdpa.Int;

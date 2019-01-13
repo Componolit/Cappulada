@@ -1,5 +1,5 @@
 package Capdpa.With_Array
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Int_Array is array (Integer range <>) of Capdpa.Int;
 

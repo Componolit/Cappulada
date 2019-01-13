@@ -1,7 +1,7 @@
 with Capdpa.With_Virtual;
 
 package Capdpa.From_Virtual
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is new Capdpa.With_Virtual.Class with
    record

@@ -2,7 +2,7 @@ with Capdpa.Container_T_Int_Char;
 with Capdpa.Container_T_Int_Int;
 
 package Capdpa.User
-   with SPARK_Mode
+   with SPARK_Mode => On
 is
    type Class is
    limited record
