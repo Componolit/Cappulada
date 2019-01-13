@@ -35,10 +35,11 @@ class Argument(NamedType):
 
 class Variable(NamedType):
 
-    def __init__(self, name, ctype):
+    def __init__(self, name, ctype, private=False):
         super(Variable, self).__init__(name, ctype)
+        self.private = private
 
-    def AdaSpecification(self, indentation=0, private=False):
+    def AdaSpecification(self, indentation=0):
         return "{indent}{name} : {constant}{ctype}\n{indent}{extern};\n".format(
             indent   = " " * indentation,
             name     = self.ConvertName(self.name),
@@ -46,6 +47,9 @@ class Variable(NamedType):
             constant = "constant " if self.ctype.constant else "",
             extern   = 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle()) + '"'
         )
+
+    def IsPrivate(self):
+        return self.private
 
     def Mangle(self):
 

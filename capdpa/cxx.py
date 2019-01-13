@@ -253,6 +253,7 @@ class CXX:
     def __convert_variable(self, cursor):
         return IR.Variable(
                 name = cursor.displayname,
+                private = cursor.access_specifier == clang.cindex.AccessSpecifier.PRIVATE,
                 ctype = self.__convert_type(list(cursor.get_children()), cursor.type))
 
     def __convert_constant(self, cursor):
@@ -364,6 +365,8 @@ class CXX:
             else:
                 if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.VAR_DECL:
+                    children.append(self.__convert_variable(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind in [
