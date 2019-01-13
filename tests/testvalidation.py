@@ -162,5 +162,8 @@ class check_validation(Capdpa_Test):
     def test_private_reference_member(self):
         self.check_validation("test_private_reference_member")
 
+    def test_function_pointer(self):
+        self.check_validation("test_function_pointer")
+
 if __name__ == '__main__':
     unittest.main()
