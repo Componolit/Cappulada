@@ -38,6 +38,9 @@ class Class(ir_unit.Unit):
                 members.append(c)
         return members
 
+    def StaticMembers(self, private=False):
+        return [v for v in self.children if ir_variable.Variable.isInst(v) and v.IsPrivate() == private]
+
     def TypeList(self):
 
         # Generate order-preserving list of unique private types
@@ -61,11 +64,14 @@ class Class(ir_unit.Unit):
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True)) for t in types] + ['', ''])
 
-    def PrivateTypesSpecification(self, indentation):
+    def PrivatePart(self, indentation):
 
-        result = ("{indent}private\n" +
-                  "{indent}   pragma SPARK_Mode (Off);\n\n" +
-                  "{indent}   type Class_Address is access Class;\n").format(indent = (indentation) * " ")
+        result = ("{indent}private\n"
+                  "{indent}   pragma SPARK_Mode (Off);\n\n"
+                  "{private_static_members}"
+                  "{indent}   type Class_Address is access Class;\n").format(
+                            indent = (indentation) * " ",
+                            private_static_members = "\n".join([m.AdaSpecification(indentation + 3) for m in self.StaticMembers(private=True)]))
 
         result += "\n".join([('{indent}type {private} is new {basetype};').format(
                             indent = (indentation + 3) * " ",
@@ -108,9 +114,6 @@ class Class(ir_unit.Unit):
         # Generate typedefs
         types = filter(ir_type.Type_Definition.isInst, self.children)
 
-        # Private types
-        private_part = self.PrivateTypesSpecification(indentation)
-
         # Main package structure
 
         return ("{indent}package {package}\n"
@@ -120,6 +123,7 @@ class Class(ir_unit.Unit):
                 "{types}"
                 "{constants}"
                 "{classrecord}"
+                "{static_members}"
                 "{indent}   type Class_Address is private;\n\n"
                 "{operations}\n"
                 "{private}"
@@ -128,7 +132,8 @@ class Class(ir_unit.Unit):
                         package = self.name if Class.isInst(self.parent) else ".".join(map(self.ConvertName, self.FullyQualifiedName())),
                         subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
-                        private = private_part or "",
+                        private = self.PrivatePart(indentation) or "",
                         constants = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), constants) + ['']),
                         classrecord = class_record,
+                        static_members = "\n".join([m.AdaSpecification(indentation + 3) for m in self.StaticMembers()]),
                         operations = "\n".join(map(lambda o: o.AdaSpecification(indentation + 3), ops)))

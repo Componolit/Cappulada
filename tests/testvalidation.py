@@ -153,5 +153,11 @@ class check_validation(Capdpa_Test):
     def test_enumeration_class(self):
         self.check_validation("test_enumeration_class")
 
+    def test_static_class_member(self):
+        self.check_validation("test_static_class_member")
+
+    def test_private_static_class_member(self):
+        self.check_validation("test_private_static_class_member")
+
 if __name__ == '__main__':
     unittest.main()
