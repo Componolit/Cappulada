@@ -395,5 +395,14 @@ class GenerateConstant(Capdpa_Test):
                        access = "private")]).AdaSpecification()
         self.check(result, self.load("test_private_reference_member.txt"))
 
+    def test_constants_are_const(self):
+        result = Namespace (name = "Capdpa",
+                            children = [Namespace(name = "Constants", children = [
+                                            Variable(name = "constval",
+                                                     ctype = Type_Reference(name = Identifier(["Capdpa", "int"]),
+                                                                            constant = True,
+                                                                            reference = False))])]).AdaSpecification()
+        self.check(result[1].Text(), self.load("test_constants_are_const.ads"))
+
 if __name__ == '__main__':
     unittest.main()

@@ -39,10 +39,13 @@ class Variable(NamedType):
         super(Variable, self).__init__(name, ctype)
 
     def AdaSpecification(self, indentation=0, private=False):
-        return (" " * indentation + "%(name)s : %(type)s\n" + " " * indentation + "%(with)s") % \
-                { 'name': self.ConvertName(self.name),
-                  'type': self.ctype.AdaSpecification(),
-                  'with': 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle()) + '";\n' }
+        return "{indent}{name} : {constant}{ctype}\n{indent}{extern};\n".format(
+            indent   = " " * indentation,
+            name     = self.ConvertName(self.name),
+            ctype    = self.ctype.AdaSpecification(),
+            constant = "constant " if self.ctype.constant else "",
+            extern   = 'with Import, Convention => CPP, External_Name => "' + str(self.Mangle()) + '"'
+        )
 
     def Mangle(self):
 
