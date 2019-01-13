@@ -533,5 +533,15 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/test_export_method.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_constants_are_const(self):
+        expected = Namespace (name = "Capdpa",
+                              children = [Namespace(name = "Constants", children = [
+                                              Variable (name = "constval",
+                                                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"]),
+                                                                               constant = True,
+                                                                               reference = False))])])
+        result = CXX("tests/data/test_constants_are_const.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
 if __name__ == '__main__':
     unittest.main()
