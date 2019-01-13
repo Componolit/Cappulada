@@ -274,7 +274,8 @@ class CXX:
 
         return IR.Enum(
             name = cursor.displayname,
-            children = sorted([self.__convert_constant(constant) for constant in cursor.get_children()], cmp=compare))
+            children = sorted([self.__convert_constant(constant) for constant in cursor.get_children()], cmp=compare),
+            ctype = self.__convert_type([], cursor.enum_type))
 
     def __convert_namespace(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.NAMESPACE:
@@ -369,7 +370,9 @@ class CXX:
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.CXX_METHOD,
                         # Just ignore private constructors
-                        clang.cindex.CursorKind.CONSTRUCTOR
+                        clang.cindex.CursorKind.CONSTRUCTOR,
+                        # Just ignore private enumerations
+                        clang.cindex.CursorKind.ENUM_DECL
                     ]:
                     pass
                 else:

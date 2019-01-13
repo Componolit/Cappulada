@@ -344,7 +344,8 @@ class GenerateConstant(Capdpa_Test):
             Class(name = "With_Enum", children = [
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
-                    Constant(name = "B", value = 1)]),
+                    Constant(name = "B", value = 1)],
+                    ctype = Type_Reference(name=Identifier(["Capdpa", "unsigned_int"]))),
                 Member(name = "E", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("test_capdpa.txt"))
         self.check(result[1].Text(), self.load("test_enum_member.ads"))

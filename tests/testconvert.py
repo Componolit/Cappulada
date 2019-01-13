@@ -45,11 +45,13 @@ class Parser(Capdpa_Test):
                 children = [
                     Enum(name = "WEEKEND", children = [
                         Constant(name = "SATURDAY", value = 0),
-                        Constant(name = "SUNDAY", value = 1)]),
+                        Constant(name = "SUNDAY", value = 1)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "unsigned_int"]))),
                     Enum(name = "Constants", children = [
                         Constant(name = "ONE", value = 1),
                         Constant(name = "TWO", value = 2),
-                        Constant(name = "THREE", value = 3)])])])
+                        Constant(name = "THREE", value = 3)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "unsigned_int"])))])])
         result = CXX("tests/data/test_namespace_with_enum.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -61,7 +63,8 @@ class Parser(Capdpa_Test):
                     Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_THREE", value = -3),
                         Constant(name = "MINUS_TWO", value = -2),
-                        Constant(name = "MINUS_ONE", value = -1)])])])
+                        Constant(name = "MINUS_ONE", value = -1)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/test_class_with_constants.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -99,7 +102,8 @@ class Parser(Capdpa_Test):
                     Constant(name = "TWO", value = 2),
                     Enum(name = "NEGATIVE", children = [
                         Constant(name = "MINUS_TWO", value = -2),
-                        Constant(name = "MINUS_ONE", value = -1)]),
+                        Constant(name = "MINUS_ONE", value = -1)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
                     Member(name = "private_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])), access="private"),
                     Method(name = "public_function"),
                     Member(name = "public_int", ctype = Type_Reference(name = Identifier(["Capdpa", "int"]))),
@@ -347,7 +351,8 @@ class Parser(Capdpa_Test):
             Class(name = "With_Enum", children = [
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
-                    Constant(name = "B", value = 1)]),
+                    Constant(name = "B", value = 1)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "unsigned_int"]))),
                 Member(name = "e", ctype=Type_Reference(name = Identifier(["Capdpa", "With_Enum", "E_t"])))])])
         result = CXX("tests/data/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
@@ -405,8 +410,8 @@ class Parser(Capdpa_Test):
             Class(name = "With_Enum_Decl", children = [
                 Enum(name = "E_t", children = [
                     Constant(name = "A", value = 0),
-                    Constant(name = "B", value = 1)
-                    ]),
+                    Constant(name = "B", value = 1)],
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "unsigned_int"]))),
                 Member(name = "e", ctype=Type_Reference(Identifier(["Capdpa", "With_Enum_Decl", "E_t"])))
             ])])
         result = CXX("tests/data/test_enum_declaration.h").ToIR(project="Capdpa")

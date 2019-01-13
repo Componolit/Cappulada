@@ -147,5 +147,8 @@ class check_validation(Capdpa_Test):
     def test_export_method(self):
         self.check_validation("test_export_method")
 
+    def test_enumeration_custom_base_type(self):
+        self.check_validation("test_enumeration_custom_base_type")
+
 if __name__ == '__main__':
     unittest.main()
