@@ -1,6 +1,6 @@
 #include "impl.h"
 
-Cls::Cls() { };
+Cls::Cls() : data(Invalid) { };
 Cls::Cls(Elements e) : data(e) { };
 
 Elements Cls::get() { return data; };

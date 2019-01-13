@@ -3,7 +3,8 @@ package Capdpa.With_Class.With_Everything
 is
    One : constant := 1;
    Two : constant := 2;
-   type Negative is (Minus_Two, Minus_One);
+   type Negative is (Minus_Two, Minus_One)
+   with Size => Capdpa.Int'Size;
    for Negative use (Minus_Two => -2, Minus_One => -1);
    type Private_Int is limited private;
 
