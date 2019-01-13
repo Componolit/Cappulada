@@ -159,5 +159,8 @@ class check_validation(Capdpa_Test):
     def test_private_static_class_member(self):
         self.check_validation("test_private_static_class_member")
 
+    def test_private_reference_member(self):
+        self.check_validation("test_private_reference_member")
+
 if __name__ == '__main__':
     unittest.main()

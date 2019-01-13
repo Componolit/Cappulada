@@ -7,6 +7,7 @@ is
    with Size => Capdpa.Int'Size;
    for Negative use (Minus_Two => -2, Minus_One => -1);
    type Private_Int is limited private;
+   type Private_Int_Address is limited private;
 
    type Class is
    limited record
@@ -29,4 +30,5 @@ private
 
    type Class_Address is access Class;
    type Private_Int is new Capdpa.Int;
+   type Private_Int_Address is access Private_Int;
 end Capdpa.With_Class.With_Everything;

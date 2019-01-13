@@ -60,7 +60,7 @@ class Class(ir_unit.Unit):
         if not types:
             return ""
 
-        return "\n".join([('{indent}type {private} is limited private;').format(
+        return "\n".join([('{indent}type {private} is limited private;\n{indent}type {private}_Address is limited private;').format(
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True)) for t in types] + ['', ''])
 
@@ -73,7 +73,7 @@ class Class(ir_unit.Unit):
                             indent = (indentation) * " ",
                             private_static_members = "\n".join([m.AdaSpecification(indentation + 3) for m in self.StaticMembers(private=True)]))
 
-        result += "\n".join([('{indent}type {private} is new {basetype};').format(
+        result += "\n".join([('{indent}type {private} is new {basetype};\n{indent}type {private}_Address is access {private};').format(
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True),
                             basetype = t.AdaSpecification()) for t in self.TypeList()])
