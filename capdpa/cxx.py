@@ -100,7 +100,7 @@ class CXX:
 
     def __convert_method(self, cursor):
 
-        ada = len([x for x in cursor.get_children() if (x.kind == clang.cindex.CursorKind.ANNOTATE_ATTR and x.spelling == "ada")]) > 0
+        ada = True in [x.kind == clang.cindex.CursorKind.ANNOTATE_ATTR and x.spelling == "ada" for x in cursor.get_children()]
 
         return IR.Method(
                 name = cursor.spelling,
@@ -131,7 +131,6 @@ class CXX:
         while type_cursor.kind == clang.cindex.TypeKind.POINTER:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
-
 
         if type_cursor.kind == clang.cindex.TypeKind.LVALUEREFERENCE:
             reference = True
