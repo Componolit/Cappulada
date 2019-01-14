@@ -6,7 +6,7 @@ import mangle
 
 class Function(ir.Base):
 
-    def __init__(self, name, parameters=None, return_type=None, static=True, export=False):
+    def __init__(self, name, parameters=None, return_type=None, export=False):
         super(Function, self).__init__()
         self.name = name
         self.parameters = parameters or []
@@ -14,7 +14,7 @@ class Function(ir.Base):
         self.return_type = return_type
         if self.return_type:
             self.return_type.parent = self
-        self.static = static
+        self.static = True
         self.export = export
 
     def InstantiateTemplates(self):
@@ -62,8 +62,9 @@ class Function(ir.Base):
 class Method(Function):
 
     def __init__(self, name, parameters=None, return_type=None, virtual=False, static=False, export=False):
-        super(Method, self).__init__(name, parameters, return_type, static, export)
+        super(Method, self).__init__(name, parameters, return_type, export)
         self.virtual = virtual
+        self.static = static
 
     def isVirtual(self):
         return self.virtual
