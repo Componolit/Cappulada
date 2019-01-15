@@ -165,5 +165,8 @@ class check_validation(Capdpa_Test):
     def test_function_pointer(self):
         self.check_validation("test_function_pointer")
 
+    def test_namespace_with_typedefs(self):
+        self.check_validation("test_namespace_with_typedefs")
+
 if __name__ == '__main__':
     unittest.main()
