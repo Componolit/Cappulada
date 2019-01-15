@@ -12,4 +12,8 @@ is
       for Global_Configuration_Pragmas use "tests.adc";
    end Builder;
 
+   package Compiler is
+      for Default_Switches ("C++") use ("-Wall", "-Wextra", "-Wno-attributes");
+   end Compiler;
+
 end Testcase;
