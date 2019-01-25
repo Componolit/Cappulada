@@ -1,0 +1,1 @@
+../integration/test_nested_class.h

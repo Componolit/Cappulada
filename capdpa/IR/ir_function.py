@@ -22,6 +22,14 @@ class Function(ir.Base):
             p.InstantiateTemplates()
         #TODO: return_code templates
 
+    def UsedTypes(self, parent):
+        types = []
+        if self.return_type:
+            types.extend(self.return_type.UsedTypes(parent))
+        for arg in self.parameters:
+            types.extend(arg.ctype.UsedTypes(parent))
+        return types
+
     def AdaSpecification(self, indentation=0):
 
         result = " " * indentation + ("function " if self.return_type else "procedure ")

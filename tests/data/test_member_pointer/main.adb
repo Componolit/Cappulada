@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Member_Pointer.Cls;
+with Test_Member_Pointer;
 
 procedure Main
    with SPARK_Mode => Off

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
-import unittest
+import sys
+if __name__ == '__main__':
+    sys.path.append (".")
 
+import unittest
 from subprocess import call
 from capdpa_test import *
 from capdpa import *

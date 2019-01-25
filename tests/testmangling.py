@@ -338,15 +338,15 @@ class Mangling(unittest.TestCase):
 
     # Template instances
     def test_template_instance (self):
-        symbol = str(self.tests['Templ1', 'Blubber_T_int', 'foo'].Mangle())
+        symbol = str(self.tests['Templ1', 'Blubber_T_Int', 'foo'].Mangle())
         self.assertTrue (symbol == "_ZN6Templ17BlubberIiE3fooES1_", "Invalid symbol: " + symbol)
 
     def test_template_instance_multi (self):
-        symbol = str(self.tests['Templ1', 'B_T_char_int', 'foo'].Mangle())
+        symbol = str(self.tests['Templ1', 'B_T_Char_Int', 'foo'].Mangle())
         self.assertTrue (symbol == "_ZN6Templ11BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_instance_complex (self):
-        symbol = str(self.tests['Templ2', ['Cde_T_char_int', 'foo']].Mangle())
+        symbol = str(self.tests['Templ2', ['Cde_T_Char_Int', 'foo']].Mangle())
         self.assertTrue (symbol == "_ZN6Templ23CdeIcN3Bar3FooEE3fooEcS3_i", "Invalid symbol: " + symbol)
 
     # ::std namespace tests -- NOT IMPLEMENTED

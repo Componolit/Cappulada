@@ -1,0 +1,1 @@
+../integration/test_pointer_member.h

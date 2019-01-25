@@ -1,7 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Class_Inheritance_Late.Base;
-with Test_Class_Inheritance_Late.Cls;
+with Test_Class_Inheritance_Late;
 
 procedure Main
    with SPARK_Mode => Off

@@ -12,6 +12,12 @@ class Type_Reference(ir.Base):
         self.reference = reference
         self.constant = constant
 
+    def UsedTypes(self, parent):
+        fqn = self.FullyQualifiedName()
+        if parent == fqn[:-1] or (parent == fqn[:-2] and fqn[-1] == "Class"):
+            return []
+        return [self.FullyQualifiedName()]
+
     def AdaSpecification(self, indentation=0, private=False):
         if private:
             name = self.ConvertName("Private_" + self.name.PackageBaseNameRaw())
@@ -104,10 +110,13 @@ class Type_Definition(ir.Base):
                     self.reference.AdaSpecification())
         else:
             return ("{0}package {1} is\n"
-                    "{0}{0}type Class is null record;\n"
+                    "{0}   type Class is null record;\n"
                     "{0}end {1};").format(
                             " " * indentation,
                             self.ConvertName(self.name))
+
+    def UsedTypes(self, parent):
+        return self.reference.UsedTypes(parent) if self.reference else [];
 
     def isVirtual(self):
         return False

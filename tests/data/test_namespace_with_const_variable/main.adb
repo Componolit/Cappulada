@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Namespace_With_Const_Variable.Constants.Cls;
+with Test_Namespace_With_Const_Variable.Constants;
 
 procedure Main
    with SPARK_Mode => Off
