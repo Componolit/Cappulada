@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Multiple_Members_With_Private_Type.Cls;
+with Test_Multiple_Members_With_Private_Type;
 
 procedure Main
    with SPARK_Mode => Off

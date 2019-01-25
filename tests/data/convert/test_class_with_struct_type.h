@@ -1,0 +1,1 @@
+../integration/test_class_with_struct_type.h

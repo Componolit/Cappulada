@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Private_Reference_Member.Privref;
+with Test_Private_Reference_Member;
 
 procedure Main
    with SPARK_Mode => Off

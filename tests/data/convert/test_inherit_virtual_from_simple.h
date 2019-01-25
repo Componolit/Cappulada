@@ -1,0 +1,1 @@
+../integration/test_inherit_virtual_from_simple.h

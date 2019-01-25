@@ -1,0 +1,31 @@
+with Capdpa.Bar.Baz;
+
+package Capdpa.Bar.Foo
+   with SPARK_Mode => On
+is
+   package Brabbel
+      with SPARK_Mode => On
+   is
+      type Class is
+      limited record
+         Field1 : Capdpa.Bar.Baz.My_Type;
+         Field2 : Capdpa.Bar.Foo.Brabbel.Local_Type;
+         Field3 : Capdpa.Bar.Foo.Blub.Some_Type;
+         Field4 : Capdpa.Bar.Foo.Brabbel.Some_Type;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+   end Brabbel;
+
+end Capdpa.Bar.Foo;

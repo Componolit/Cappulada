@@ -1,7 +1,7 @@
 with Ada.Unchecked_Conversion;
 with Tests;
 with Interfaces.C.Extensions;
-with Test_Namespace_With_Enumeration.Cls;
+with Test_Namespace_With_Enumeration;
 
 procedure Main
    with SPARK_Mode => Off

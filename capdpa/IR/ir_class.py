@@ -54,6 +54,12 @@ class Class(ir_unit.Unit):
 
         return types
 
+    def UsedTypes(self, parent):
+        types = []
+        for m in self.children:
+            types.extend(m.UsedTypes(self.FullyQualifiedName()))
+        return types
+
     def PublicTypesSpecification(self, indentation):
 
         types = self.TypeList()
@@ -118,7 +124,7 @@ class Class(ir_unit.Unit):
         # Generate typedefs
         types = filter(ir_type.Type_Definition.isInst, self.children)
 
-        # Main package structure
+        # Main structure
 
         return ("{indent}package {package}\n"
                 "{indent}   with SPARK_Mode => {spark_mode}\n"
@@ -133,7 +139,7 @@ class Class(ir_unit.Unit):
                 "{private}"
                 "{indent}end {package};\n").format(
                         indent = indentation * " ",
-                        package = self.name if Class.isInst(self.parent) else ".".join(map(self.ConvertName, self.FullyQualifiedName())),
+                        package = self.ConvertName(self.name),
                         spark_mode = "On" if self.SparkFeatureSet() else "Off",
                         subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),

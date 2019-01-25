@@ -76,6 +76,12 @@ class Base(object):
         for c in self.children:
             c.InstantiateTemplates()
 
+    def UsedTypes(self, parent=None):
+        types = []
+        for c in self.children:
+            types.extend (c.UsedTypes(parent))
+        return types
+
     def FullyQualifiedName(self):
         if self.parent:
             fqn = self.parent.FullyQualifiedName()

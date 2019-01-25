@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Enumeration_Declaration.Cls;
+with Test_Enumeration_Declaration;
 
 procedure Main
 is

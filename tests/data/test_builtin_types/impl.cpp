@@ -17,8 +17,7 @@ Cls::Cls(bool b,
          long l,
          long long ll,
          float f,
-         double d,
-         long double ld)
+         double d)
          :
          bool_member(b),
          unsigned_char_member(uc),
@@ -35,8 +34,7 @@ Cls::Cls(bool b,
          long_member(l),
          long_long_member(ll),
          float_member(f),
-         double_member(d),
-         long_double_member(ld) { };
+         double_member(d) { };
 
 void Cls::get(bool &b,
               unsigned char &uc,
@@ -53,8 +51,7 @@ void Cls::get(bool &b,
               long &l,
               long long &ll,
               float &f,
-              double &d,
-              long double &ld)
+              double &d)
 {
    b    = bool_member;
    uc   = unsigned_char_member;
@@ -72,5 +69,4 @@ void Cls::get(bool &b,
    ll   = long_long_member;
    f    = float_member;
    d    = double_member;
-   ld   = long_double_member;
 };

@@ -1,0 +1,1 @@
+../integration/test_class_with_class_type.h

@@ -4,7 +4,7 @@ Inner::Inner() { };
 Inner::Inner(int d) : data(d) { };
 
 Outer::Outer() { };
-Outer::Outer(short d, int i) : data(d), class_data(i) { };
+Outer::Outer(short d, int i) : class_data(i), data(d) { };
 
 int Inner::get_data() { return data; };
 

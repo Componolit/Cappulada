@@ -20,6 +20,19 @@ class Namespace(ir_unit.Unit):
         self._parentize_list(self.children)
         super(Namespace, self).__init__()
 
+    def UsedTypes(self, parent):
+
+        external = []
+        fqn = self.FullyQualifiedName()
+
+        for c in filter (lambda x: not Namespace.isInst(x), self.children):
+            for t in c.UsedTypes(c.FullyQualifiedName()):
+                name = t[:-2] if t[-1] == "Class" else t[:-1]
+                if name and parent[:len(name)] != name and name[:len(parent)] != parent:
+                    external.append (name)
+
+        return external
+
     def AdaSpecification(self, indentation=0):
         fqn_ada = ".".join(map(lambda name: self.ConvertName(name), self.FullyQualifiedName()))
 
@@ -40,7 +53,8 @@ class Namespace(ir_unit.Unit):
                                              ir_enum.Enum.isInst(c) or
                                              ir_variable.Variable.isInst(c) or
                                              ir_function.Function.isInst(c) or
-                                             ir_type.Type_Definition.isInst(c),
+                                             ir_type.Type_Definition.isInst(c) or
+                                             ir_class.Class.isInst(c),
                                 self.children))),
                         spark_mode = "   with SPARK_Mode => On\n",
                         with_include = self.with_include,
@@ -51,13 +65,5 @@ class Namespace(ir_unit.Unit):
         for p in self.children:
             if isinstance(p, Namespace):
                 compilation_units.extend(p.AdaSpecification())
-            if isinstance(p, ir_class.Class):
-                if p.UsedPackages():
-                    withs = "\n".join(map("with {};".format, p.UsedPackages()) + ['', ''])
-                else:
-                    withs = ""
-                compilation_units.append(Specification(
-                    name = [self.ConvertName(name) for name in p.FullyQualifiedName()],
-                    text = withs + p.AdaSpecification()))
 
         return compilation_units

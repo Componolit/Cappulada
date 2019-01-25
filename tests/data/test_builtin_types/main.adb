@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C.Extensions;
-with Test_Builtin_Types.Cls;
+with Test_Builtin_Types;
 with Ada.Unchecked_Conversion;
 
 procedure Main
@@ -25,9 +25,6 @@ is
    Ll   : aliased long_long;
    F    : aliased c_float;
    D    : aliased double;
-   Ld   : aliased long_double;
-
-   function To_LD is new Ada.Unchecked_Conversion (Interfaces.C.long_double, Test_Builtin_Types.long_double);
 
    use Test_Builtin_Types;
 
@@ -79,9 +76,6 @@ is
    type DA is access all Test_Builtin_Types.double;
    function To_Address is new Ada.Unchecked_Conversion (DA, Double_Address);
 
-   type LDA is access all Interfaces.C.long_double;
-   function To_Address is new Ada.Unchecked_Conversion (LDA, Long_Double_Address);
-
    Klass : aliased Cls.Class :=
       Cls.Constructor (True,
                        54,
@@ -98,8 +92,7 @@ is
                        434993434,
                        9999994334343,
                        32.4343,
-                       -433434.1223,
-                       To_LD (593430024.559));
+                       -433434.1223);
 
 begin
    Cls.Get (Klass,
@@ -118,8 +111,7 @@ begin
             To_Address (L'Access),
             To_Address (Ll'Access),
             To_Address (F'Access),
-            To_Address (D'Access),
-            To_Address (Ld'Access));
+            To_Address (D'Access));
 
    Tests.Assert (B    = True,                     "Wrong value returned  (1): " & B'Img);
    Tests.Assert (Uc   = 54,                       "Wrong value returned  (2): " & Uc'Img);
@@ -137,5 +129,4 @@ begin
    Tests.Assert (Ll   = 9999994334343,            "Wrong value returned (14): " & Ll'Img);
    Tests.Assert (F    = 32.4343,                  "Wrong value returned (15): " & F'Img);
    Tests.Assert (D    = -433434.1223,             "Wrong value returned (16): " & D'Img);
-   Tests.Assert (Ld   = 593430024.559,            "Wrong value returned (17): " & Ld'Img);
 end Main;

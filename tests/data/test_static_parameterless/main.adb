@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Static_Parameterless.Cls;
+with Test_Static_Parameterless;
 
 procedure Main
    with SPARK_Mode => Off

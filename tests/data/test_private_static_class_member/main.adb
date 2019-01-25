@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Private_Static_Class_Member.Cls;
+with Test_Private_Static_Class_Member;
 
 procedure Main
    with SPARK_Mode => Off

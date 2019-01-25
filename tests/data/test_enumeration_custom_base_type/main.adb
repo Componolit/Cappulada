@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Enumeration_Custom_Base_Type.Cls;
+with Test_Enumeration_Custom_Base_Type;
 with Ada.Unchecked_Conversion;
 
 procedure Main

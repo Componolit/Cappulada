@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Nested_Class.Outer;
+with Test_Nested_Class;
 
 procedure Main
    with SPARK_Mode => Off

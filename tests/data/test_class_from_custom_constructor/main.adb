@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Class_From_Custom_Constructor.Cls;
+with Test_Class_From_Custom_Constructor;
 
 procedure Main
    with SPARK_Mode => Off

@@ -1,0 +1,49 @@
+package Capdpa
+   with SPARK_Mode => On
+is
+   package Simple
+      with SPARK_Mode => On
+   is
+      type Class is
+      limited record
+         A : Capdpa.Int;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN6SimpleC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+   end Simple;
+
+   package Inherit_Simple
+      with SPARK_Mode => On
+   is
+      type Class is
+      limited record
+         Simple : Capdpa.Simple.Class;
+         B : Capdpa.Int;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN14Inherit_SimpleC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+   end Inherit_Simple;
+
+end Capdpa;

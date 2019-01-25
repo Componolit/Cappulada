@@ -1,0 +1,1 @@
+../integration/test_namespace_with_constants.h

@@ -31,7 +31,6 @@ spec_defaults='''
    subtype Long_Long is Interfaces.C.Extensions.long_long;
    subtype C_float is Interfaces.C.C_float;
    subtype Double is Interfaces.C.double;
-   type Long_Double is private;
    subtype Void is Interfaces.C.Extensions.void;
    subtype Void_Address is Interfaces.C.Extensions.void_ptr;
 
@@ -57,8 +56,6 @@ spec_defaults='''
 spec_private_defaults='''
    pragma SPARK_Mode(Off);
 
-   type Long_Double is new Interfaces.C.long_double;
-
    type Bool_Address is access all Bool;
    type Unsigned_Char_Address is access all Unsigned_Char;
    type Unsigned_Short_Address is access all Unsigned_Short;
@@ -75,7 +72,7 @@ spec_private_defaults='''
    type Long_Long_Address is access all Long_Long;
    type C_float_Address is access all C_float;
    type Double_Address is access all Double;
-   type Long_Double_Address is access all Long_Double;
+   type Long_Double_Address is access all Interfaces.C.long_double;
 '''
 
 class Generator:

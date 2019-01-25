@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Enumeration_Member.Cls;
+with Test_Enumeration_Member;
 
 procedure Main
    with SPARK_Mode => Off

@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Namespace_With_Class.Outer.Cls;
+with Test_Namespace_With_Class.Outer;
 
 procedure Main
    with SPARK_Mode => Off

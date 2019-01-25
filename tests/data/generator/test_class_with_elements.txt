@@ -1,0 +1,27 @@
+package Capdpa.Bar.Foo
+   with SPARK_Mode => On
+is
+   package Brabbel
+      with SPARK_Mode => On
+   is
+      type Class is
+      limited record
+         Field1 : Capdpa.Int;
+         Field2 : Capdpa.Long;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN3bar3foo7brabbelC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+   end Brabbel;
+
+end Capdpa.Bar.Foo;

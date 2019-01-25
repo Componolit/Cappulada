@@ -20,6 +20,9 @@ class NamedType(ir.Base):
                 #FIXME: set instance parent correctly
                 template.parent_index += 1
 
+    def UsedTypes(self, parent):
+        return self.ctype.UsedTypes(parent)
+
 class Argument(NamedType):
 
     def __init__(self, name, ctype):

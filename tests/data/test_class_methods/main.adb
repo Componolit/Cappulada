@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C.Extensions;
-with Test_Class_Methods.Cls;
+with Test_Class_Methods;
 with Ada.Unchecked_Conversion;
 
 procedure Main

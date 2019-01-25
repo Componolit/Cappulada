@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C.Extensions;
-with Test_Complex_Class_Layout.Cls;
+with Test_Complex_Class_Layout;
 
 procedure Main
    with SPARK_Mode => Off
