@@ -52,6 +52,12 @@ class Template(ir.Base):
     def InstantiateTemplates(self):
         pass
 
+    def UsedTypes(self, parent):
+        types = []
+        for t in self.entity.UsedTypes(parent) or []:
+            types.extend (t)
+        return types
+
     def instantiate(self, ref):
         if not self.typenames[-1].variadic:
             resolves = {t[0].name:t[1] for t in zip(self.typenames, ref.arguments)}
@@ -73,6 +79,9 @@ class Template_Argument(ir.Base):
         self.pointer = pointer
         super(Template_Argument, self).__init__()
 
+    def UsedTypes(self, parent):
+        return []
+
 class Template_Reference(ir.Base):
 
     # don't use this class alone, inherit from it and provide arguments
@@ -85,5 +94,5 @@ class Template_Reference(ir.Base):
                 name += arg.postfix()
             idlist.append(name)
         return "_T_{}".format(
-                "_".join(idlist))
+                "_".join(map(self.ConvertName, idlist)))
 

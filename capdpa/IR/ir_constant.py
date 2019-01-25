@@ -15,5 +15,10 @@ class Constant(ir.Base):
             ctype  = self.ctype.AdaSpecification() + " " if self.ctype else "",
             value  = str(self.value))
 
+    def UsedTypes(self, parent):
+        if self.ctype:
+            return [self.ctype.UsedTypes(parent)]
+        return []
+
     def InstantiateTemplates(self):
         pass

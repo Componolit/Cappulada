@@ -1,6 +1,6 @@
 with Tests;
 with Interfaces.C;
-with Test_Function_Pointer.Cls;
+with Test_Function_Pointer;
 
 procedure Main
    with SPARK_Mode => Off

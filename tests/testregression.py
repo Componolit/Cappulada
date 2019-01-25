@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import sys
+if __name__ == '__main__':
+    sys.path.append (".")
+
 import unittest
 import clang.cindex
 from capdpa import *

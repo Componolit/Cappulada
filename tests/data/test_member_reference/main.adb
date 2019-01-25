@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Member_Reference.Cls;
+with Test_Member_Reference;
 with Ada.Unchecked_Conversion;
 
 procedure Main

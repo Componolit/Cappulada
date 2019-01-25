@@ -15,7 +15,6 @@ class Cls {
       long long long_long_member;
       float float_member;
       double double_member;
-      long double long_double_member;
    public:
       Cls();
 
@@ -34,8 +33,7 @@ class Cls {
           long l,
           long long ll,
           float f,
-          double d,
-          long double ld);
+          double d);
 
       void get(bool &b,
                unsigned char &uc,
@@ -52,6 +50,5 @@ class Cls {
                long &l,
                long long &ll,
                float &f,
-               double &d,
-               long double &ld);
+               double &d);
 };

@@ -1,0 +1,1 @@
+../integration/test_empty_namespace.h

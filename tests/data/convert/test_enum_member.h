@@ -1,0 +1,1 @@
+../integration/test_enum_member.h

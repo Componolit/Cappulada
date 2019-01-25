@@ -1,8 +1,7 @@
 with Ada.Unchecked_Conversion;
 with Tests;
 with Interfaces.C;
-with Test_Template_Instance.Cls_T_Int;
-with Test_Template_Instance.Cls_T_Char;
+with Test_Template_Instance;
 
 procedure Main
    with SPARK_Mode => Off

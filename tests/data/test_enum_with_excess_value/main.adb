@@ -1,7 +1,7 @@
 with System;
 with Tests;
 with Interfaces.C;
-with Test_Enum_With_Excess_Value.Cls;
+with Test_Enum_With_Excess_Value;
 with Ada.Unchecked_Conversion;
 with System;
 

@@ -1,8 +1,7 @@
 with Ada.Unchecked_Conversion;
 with Tests;
 with Interfaces.C.Extensions;
-with Test_Class_With_Class_Pointer_Member.Outer;
-with Test_Class_With_Class_Pointer_Member.Inner;
+with Test_Class_With_Class_Pointer_Member;
 
 procedure Main
    with SPARK_Mode => Off
