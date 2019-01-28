@@ -65,7 +65,7 @@ class check_integration(Capdpa_Test):
             "test_namespace_with_class_with_everything.ads",
             "test_namespace_with_class_with_everything-with_class.ads"])
 
-    def test_class_with_class_type(self):
+    def EXCLUDE_test_class_with_class_type(self):
         self.check_integration("test_class_with_class_type.h", [
             "test_class_with_class_type.ads",
             "test_class_with_class_type-with_class.ads"])
@@ -124,6 +124,13 @@ class check_integration(Capdpa_Test):
     def test_class_with_static_functions(self):
         self.check_integration(
                 "test_class_with_static_functions.h", ["test_class_with_static_functions.ads"])
+
+    def EXCLUDE_test_class_with_namespace_members(self):
+        self.check_integration(
+                "test_class_with_namespace_members.h",
+                ["test_class_with_namespace_members.ads",
+                 "test_class_with_namespace_members-foo.ads",
+                 "test_class_with_namespace_members-root.ads"])
 
 if __name__ == '__main__':
     unittest.main()
