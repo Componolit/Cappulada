@@ -14,6 +14,8 @@ class Capdpa_Test(unittest.TestCase):
         return open("tests/data/" + directory + "/" + spec, "r").read()
 
     def cache(self, res, spec, directory=""):
+        if not os.path.exists("tests/cache"):
+            os.mkdir("tests/cache")
         if not os.path.exists("tests/cache/" + directory):
             os.mkdir("tests/cache/" + directory)
         return open("tests/cache/" + directory + "/" + spec, "w").write(res)
