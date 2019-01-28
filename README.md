@@ -1,5 +1,7 @@
 # Cappulada
 
+[![Build Status](https://travis-ci.org/Componolit/Cappulada.svg?branch=master)](https://travis-ci.org/Componolit/Cappulada)
+
 Cappulada is a tool to generate Ada bindings for C++. It aims to support complex features such as object orientation and templates while keeping a semantically appropriate mapping of namespaces and classes in C++ to packages and types in Ada.
 
 ## Function and Features
@@ -10,9 +12,9 @@ Cappulada uses libclang to parse C++ headers. It converts clangs abstract syntax
 - Instances of C++ templates
 - Parent relations in the tree
 
-The intermediate representation is a tree of classes, functions, types, etc. Each of these entities own a function to generate Ada specification snippets. When Ada code is generated the generator traverses the tree and combines those snippets into complete specification files. The specifications are aimed to be SPARK compatible as far as it is possible.
+The intermediate representation is a tree of classes, functions, types, etc. Each of these entities own a function to generate Ada specification snippets. When Ada code is generated the generator traverses the tree and combines those snippets into complete specification files. The specifications are aimed to be SPARK compatible where possible.
 
-The generated Ada code resides in child packages of a single project package. This project package provides basic builtin types and hosts C++ code that resides in the `::` namespace. To provide a type mapping between C++ and Ada it depends on Adas `Interfaces.C` package.
+The generated Ada code resides in child packages of a single project package. This project package provides basic builtin types and hosts C++ code that resides in the `::` namespace. To provide a type mapping between C++ and Ada it depends on Ada's `Interfaces.C` package.
 
 The currently supported C++ features include
 
@@ -22,7 +24,7 @@ The currently supported C++ features include
 - Function pointers
 - Templates
 
-This list is not exhaustive, of course. Also there are many corner cases that currently aren't working properly. Array support has not yet been implemented, too. So there's still a long list of todos:
+This list is not exhaustive. There are various corner cases that still need improvement. Array support has not been implemented, yet, but it is on our TODO list among other features:
 
 - Array support
 - properly handling all clang AST types
@@ -126,6 +128,3 @@ begin
    Ada.Text_Io.Put_Line (Integer'Image (A.Add(X, Y)));
 end Main;
 ```
-
-
-
