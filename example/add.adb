@@ -1,15 +1,16 @@
 with Ada.Command_Line;
 with Ada.Text_Io;
 with Example;
-with Example.Number;
+with Example.Number_T_Int;
 
 procedure Add is
 
    function Number_Add (X : Integer; Y : Integer) return Integer is
-      A : Example.Number.Class := Example.Number.Constructor (Example.Int(X));
+      A : Example.Number_T_Int.Class :=
+         Example.Number_T_Int.Constructor (Example.Int(X));
    begin
-      Example.Number.Add (A, Example.Int (Y));
-      return Integer(Example.Number.Value (A));
+      Example.Number_T_Int.Add (A, Example.Int (Y));
+      return Integer(Example.Number_T_Int.Value (A));
    end Number_Add;
 
 begin

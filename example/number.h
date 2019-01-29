@@ -1,10 +1,28 @@
 
+template <typename T>
 class Number
 {
     private:
-        int _value;
+        T _value;
     public:
-        Number(int v);
-        void add(int n);
-        int value();
+        Number(T v) : _value(v)
+        { }
+
+        void add(T n)
+        {
+            _value += n;
+        }
+
+        T value()
+        {
+            return _value;
+        }
 };
+
+namespace temp{
+    void dummy(){
+        Number<int> n = Number<int>(1);
+        n.add(1);
+        n.value();
+    }
+}
