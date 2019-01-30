@@ -68,63 +68,136 @@ options:
 
 ### Example
 
-A header residing in `/cppproject/` named `a.h` can be converted to `/adaproject` via
-
-```
-cappulada -p cappulada -o /adaproject /cppproject/a.h
-```
-
-If for example `a.h` looks as follows:
+The `example` directory contains an example using a C++ template in Ada. It consists of a C++ class that represents a number and implements methods to add another number and to get its value:
 
 ```C++
-class A
+//number.h
+template <typename T>
+class Number
 {
+    private:
+        T _value;
     public:
-        A();
-        int add(int x, int y);
+        Number(T v) : _value(v)
+        { }
+
+        void add(T n)
+        {
+            _value += n;
+        }
+
+        T value()
+        {
+            return _value;
+        }
 };
 ```
 
-Cappulada will generate a project specification file, in this case named `cappulada.ads` and a package for class `A` named `cappulada-a.ads` with the following contents:
+Cappulada currently only creates templates instances for templates that are used in C++ itself as it cannot collect them from Ada. Since this template is never used a dummy class has been added that uses the template.
+
+```C++
+class Dummy{
+    public:
+        Dummy(Number<int> n)
+        {
+            n.add(1);
+            n.value();
+        }
+};
+```
+
+Now Cappulada recognizes an instance of `Number` that uses `int` and creates an according template instance. Since GCC only exports symbols of functions that are actually used into the binary each class method is called once. Otherwise the linker won't find them when linking against the Ada object.
+
+To trigger GCC to create an object file a compilation unit is required. This is done via `number.cc` which needs to create an instance of `Dummy`:
+
+````C++
+//number.cc
+#include <number.h>
+
+Dummy d = Dummy(Number<int>(5));
+````
+
+To create an Ada binding for this small library Cappulada is called (in this case with the project name `Example`):
+
+```
+$ cappulada -P Example number.h
+```
+
+This creates a file called `example.ads`. It contains type definitions for standard C types and contains the two classes. The interesting part is the instantiated `Number` class that looks as follows in Ada:
 
 ```Ada
-package Cappulada.A
+package Number_T_Int
    with SPARK_Mode => On
 is
+   type Private_Int is limited private;
+   type Private_Int_Address is limited private;
+
    type Class is
    limited record
-      null;
+      Private_X_Value : Private_Int;
    end record
    with Import, Convention => CPP;
 
    type Class_Address is private;
 
-   function Constructor return Class
+   function Constructor (V : Example.Int) return Class
    with Global => null;
-   pragma Cpp_Constructor (Constructor, "_ZN1AC1Ev");
+   pragma Cpp_Constructor (Constructor, "_ZN6NumberIiEC1Ei");
 
-   function Add (This : Class; X : Cappulada.Int; Y : Cappulada.Int) return Cappulada.Int
-   with Global => null, Import, Convention => CPP, External_Name => "_ZN1A3addEii";
+   procedure Add (This : Class; N : Example.Int)
+   with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE3addEi";
+
+   function Value (This : Class) return Example.Int
+   with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE5valueEv";
 
 private
    pragma SPARK_Mode (Off);
 
    type Class_Address is access Class;
-
-end Cappulada.A;
+   type Private_Int is new Example.Int;
+   type Private_Int_Address is access Private_Int;
+end Number_T_Int;
 ```
 
-In an Ada project this class can be used easily:
+Since Ada does not support compile time templates the class name is mangled. I contains a `_T` to show that it is a template instance and a `_Int` to show its instantiation type. To keep the memory layout all class members, public, protected and private are included in the class record. Yet only public members are given their original type. All others get a private type which cannot be assigned directly.
+
+The class functions are imported into the package. Since those are member functions their first argument is the object (which is invisible in C++).
+
+The example program that uses this library only adds two command line arguments and prints the output:
 
 ```Ada
+with Ada.Command_Line;
 with Ada.Text_Io;
-with Cappulada.A;
-
-procedure Main is
-   X : Integer := 1;
-   Y : Integer := 2;
-   A : Cappulada.A.Class := Cappulada.A.Constructor;
-begin
-   Ada.Text_Io.Put_Line (Integer'Image (A.Add(X, Y)));
-end Main;
+with Example;
+   
+procedure Add is
+   
+   function Number_Add (X : Integer; Y : Integer) return Integer is
+      A : Example.Number_T_Int.Class :=
+         Example.Number_T_Int.Constructor (Example.Int(X));
+   begin
+      Example.Number_T_Int.Add (A, Example.Int (Y));
+      return Integer(Example.Number_T_Int.Value (A));
+   end Number_Add;
+         
+begin 
+   if Ada.Command_Line.Argument_Count = 2 then
+      Ada.Text_Io.Put_Line (Integer'Image (Number_Add (
+         Integer'Value (Ada.Command_Line.Argument(1)),
+         Integer'Value (Ada.Command_Line.Argument(2))
+         )));
+   end if; 
+end Add;
 ```
+
+It imports the Example package and can use the `Number` class natively in Ada. The interesting part happens in `Number_Add`. Since encapsulation and storage are different in Ada from C++ each package that resembles a C++ class has a Class type that stores the data. So an instance of number is of the type `Number_T_Int.Class` and the classes constructor is called via the package function `Number_T_Int.Constructor`. Since the same applies to class methods the first argument here needs to be the object itself. So a call to value (which has no arguments in C++) is transformed to `Number_T_Int.Value (A)` with `A` being the class object.
+
+To try the example in this repository run:
+
+```
+$ cd example
+$ ../cappulada -p Example number.h
+$ make
+$ ./add 1 1
+```
+
