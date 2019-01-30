@@ -1,4 +1,5 @@
 
+
 template <typename T>
 class Number
 {
@@ -19,10 +20,11 @@ class Number
         }
 };
 
-namespace temp{
-    void dummy(){
-        Number<int> n = Number<int>(1);
-        n.add(1);
-        n.value();
-    }
-}
+class Dummy{
+    public:
+        Dummy(Number<int> n)
+        {
+            n.add(1);
+            n.value();
+        }
+};

@@ -1,10 +1,10 @@
 all: add
 
-number.o: number.h
+number.o: number.cc number.h
 	g++ -c -I. number.cc
 
-add: number.o example.ads example-number_t_int.ads
+add: number.o example.ads add.adb
 	gnatmake add.adb -largs number.o
 
 clean:
-	rm -rvf number.o add.ali add.o example.ali example.o example-number_t_int.ali example-number_t_int.o add
+	rm -rvf number.o add.ali add.o example.ali example.o add

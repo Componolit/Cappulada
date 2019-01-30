@@ -1,7 +1,6 @@
 with Ada.Command_Line;
 with Ada.Text_Io;
 with Example;
-with Example.Number_T_Int;
 
 procedure Add is
 
