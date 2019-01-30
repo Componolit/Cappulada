@@ -41,5 +41,5 @@ class Class_Reference(ir.Base):
 class Unit(ir.Base):
 
     def UsedPackages(self):
-        packages = map(lambda x: x, self.UsedTypes(self.FullyQualifiedName()))
-        return sorted(list(set([".".join (map(self.ConvertName, p)) for p in packages])))
+        packages = self.UsedTypes(self.FullyQualifiedName())
+        return sorted(list(set([".".join(map(self.ConvertName, p)) for p in packages])))
