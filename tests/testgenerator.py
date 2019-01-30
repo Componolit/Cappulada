@@ -302,9 +302,11 @@ class GenerateConstant(Capdpa_Test):
         result = Namespace(name = "Capdpa", children = [
             Class(name = "Child1"),
             Namespace(name = "Child2", children = [
-                Class(name = "Grandchild")])]).AdaSpecification()
+                Namespace(name = "Child3", children = [
+                    Class(name = "Grandchild")])])]).AdaSpecification()
         self.check(result[0].FileName(), "capdpa.ads")
         self.check(result[1].FileName(), "capdpa-child2.ads")
+        self.check(result[2].FileName(), "capdpa-child2-child3.ads")
 
     def test_enum_member(self):
         result = Namespace(name = "Capdpa", children = [
