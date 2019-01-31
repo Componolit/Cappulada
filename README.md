@@ -126,37 +126,41 @@ $ cappulada -P Example number.h
 This creates a file called `example.ads`. It contains type definitions for standard C types and contains the two classes. The interesting part is the instantiated `Number` class that looks as follows in Ada:
 
 ```Ada
-package Number_T_Int
-   with SPARK_Mode => On
-is
-   type Private_Int is limited private;
-   type Private_Int_Address is limited private;
+package Example is
+   ...
+   package Number_T_Int
+      with SPARK_Mode => On
+   is
+      type Private_Int is limited private;
+      type Private_Int_Address is limited private;
 
-   type Class is
-   limited record
-      Private_X_Value : Private_Int;
-   end record
-   with Import, Convention => CPP;
+      type Class is
+      limited record
+         Private_X_Value : Private_Int;
+      end record
+      with Import, Convention => CPP;
 
-   type Class_Address is private;
+      type Class_Address is private;
 
-   function Constructor (V : Example.Int) return Class
-   with Global => null;
-   pragma Cpp_Constructor (Constructor, "_ZN6NumberIiEC1Ei");
+      function Constructor (V : Example.Int) return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN6NumberIiEC1Ei");
 
-   procedure Add (This : Class; N : Example.Int)
-   with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE3addEi";
+      procedure Add (This : Class; N : Example.Int)
+      with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE3addEi";
 
-   function Value (This : Class) return Example.Int
-   with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE5valueEv";
+      function Value (This : Class) return Example.Int
+      with Global => null, Import, Convention => CPP, External_Name => "_ZN6NumberIiE5valueEv";
 
-private
-   pragma SPARK_Mode (Off);
+   private
+      pragma SPARK_Mode (Off);
 
-   type Class_Address is access Class;
-   type Private_Int is new Example.Int;
-   type Private_Int_Address is access Private_Int;
-end Number_T_Int;
+      type Class_Address is access Class;
+      type Private_Int is new Example.Int;
+      type Private_Int_Address is access Private_Int;
+   end Number_T_Int;
+   ...
+end Example;
 ```
 
 Since Ada does not support compile time templates the class name is mangled. I contains a `_T` to show that it is a template instance and a `_Int` to show its instantiation type. To keep the memory layout all class members, public, protected and private are included in the class record. Yet only public members are given their original type. All others get a private type which cannot be assigned directly.
