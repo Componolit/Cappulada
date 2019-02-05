@@ -371,8 +371,9 @@ class CXX:
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.CXX_METHOD,
-                        # Just ignore private constructors
+                        # Just ignore private constructors and destructors
                         clang.cindex.CursorKind.CONSTRUCTOR,
+                        clang.cindex.CursorKind.DESTRUCTOR,
                         # Just ignore private enumerations
                         clang.cindex.CursorKind.ENUM_DECL
                     ]:
