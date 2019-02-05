@@ -9,3 +9,4 @@ from .ir_enum import Enum
 from .ir_identifier import Identifier
 from .ir_template import Template, Template_Argument, Template_Reference
 from .ir_unit import Unit, Class_Reference
+from .ir_array import Array
