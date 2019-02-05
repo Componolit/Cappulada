@@ -361,7 +361,7 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_enum_member.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def EXCLUDE_test_class_with_array(self):
+    def test_class_with_array(self):
         CXX("tests/data/convert/test_class_with_array.h").ToIR(project="Capdpa")
 
     def test_array_template(self):
