@@ -364,7 +364,7 @@ class Parser(Capdpa_Test):
     def EXCLUDE_test_class_with_array(self):
         CXX("tests/data/convert/test_class_with_array.h").ToIR(project="Capdpa")
 
-    def EXCLUDE_test_array_template(self):
+    def test_array_template(self):
         CXX("tests/data/convert/test_array_template.h").ToIR(project="Capdpa")
 
     def EXCLUDE_test_template_typedef(self):
