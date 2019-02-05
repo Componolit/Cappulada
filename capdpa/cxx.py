@@ -360,7 +360,7 @@ class CXX:
                         clang.cindex.CursorKind.NAMESPACE_REF]:
                     pass
                 else:
-                    raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))
+                    raise NotImplementedError("Unsupported public cursor kind: {} at {}".format(cursor.kind, cursor.location))
             else:
                 if cursor.kind == clang.cindex.CursorKind.FIELD_DECL:
                     children.append(self.__convert_member(cursor))
@@ -378,7 +378,7 @@ class CXX:
                     ]:
                     pass
                 else:
-                    raise NotImplementedError("Unsupported cursor kind: {} at {}".format(cursor.kind, cursor.location))
+                    raise NotImplementedError("Unsupported private cursor kind: {} at {}".format(cursor.kind, cursor.location))
         return children
 
     def ToIR(self, project, with_include="", spec_include="", spec_private=""):
