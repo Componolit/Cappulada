@@ -146,7 +146,7 @@ class Base(object):
 
         return tmp
 
-    def AdaSpecification(self, indentation=0):
+    def AdaSpecification(self, indentation=0, **kwargs):
 	raise NotImplemented("No specification defined for " + type(self).__name__)
 
     def Mangle(self):
