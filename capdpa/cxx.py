@@ -224,6 +224,10 @@ class CXX:
             return IR.Array(
                     ctype = self.__convert_type(children, type_cursor.element_type),
                     size = type_cursor.element_count)
+        elif type_cursor.kind == clang.cindex.TypeKind.DEPENDENTSIZEDARRAY:
+            return IR.Array(
+                    ctype = self.__convert_type(children, type_cursor.element_type),
+                    size = IR.Template_Argument(name = children[0].spelling))
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(
                 name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),
