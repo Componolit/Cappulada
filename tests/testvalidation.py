@@ -171,5 +171,8 @@ class check_validation(Capdpa_Test):
     def test_namespace_with_typedefs(self):
         self.check_validation("test_namespace_with_typedefs")
 
+    def test_constant_arrays(self):
+        self.check_validation("test_constant_arrays")
+
 if __name__ == '__main__':
     unittest.main()
