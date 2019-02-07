@@ -1,0 +1,51 @@
+package Capdpa
+   with SPARK_Mode => On
+is
+   package Template_With_Array_T_X5
+      with SPARK_Mode => On
+   is
+
+      type Class is
+      limited record
+         Var : Capdpa.Int_Array (1 .. 5);
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN19Template_With_ArrayILi5EEC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+      type Class_Address is access Class;
+   end Template_With_Array_T_X5;
+
+   package With_Array_5
+      with SPARK_Mode => On
+   is
+
+      type Class is
+      limited record
+         Twa : Template_With_Array_T_X5;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Constructor (Constructor, "_ZN12With_Array_5C1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+   end With_Array_5;
+
+end Capdpa;

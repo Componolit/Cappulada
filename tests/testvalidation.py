@@ -174,5 +174,8 @@ class check_validation(Capdpa_Test):
     def test_constant_arrays(self):
         self.check_validation("test_constant_arrays")
 
+    def test_dependent_arrays(self):
+        self.check_validation("test_dependent_arrays")
+
 if __name__ == '__main__':
     unittest.main()
