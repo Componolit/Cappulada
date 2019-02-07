@@ -352,8 +352,11 @@ class GenerateConstant(Capdpa_Test):
                 ])]).AdaSpecification()
         self.check(result[0].Text(), self.load("generator/test_function_pointer.txt"))
 
-    def EXCLUDE_test_class_with_array(self):
-        self.fail("Handle array types (TypeKind.CONSTANTARRAY)")
+    def test_class_with_array(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "With_Array", children = [
+                Member(name = "ar", ctype = Array(ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])), size=5))])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("generator/test_class_with_array.txt"))
 
     def test_private_reference_member(self):
         result = Class(name = "Class_Priv_Ref", children = [

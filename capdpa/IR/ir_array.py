@@ -13,6 +13,9 @@ class Array(ir.Base):
     def UsedTypes(self, parent):
         return self.ctype.UsedTypes(parent)
 
+    def AdaSpecification(self, indentation=0, private=False):
+        return self.ctype.AdaSpecification(indentation, private) + "_Array (1 .. {})".format(self.size)
+
 class Array_Template(Array, ir_template.Template_Reference):
 
     def __init__(self, ctype, argument):
