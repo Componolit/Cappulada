@@ -570,5 +570,8 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_constants_are_const.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_partial_template_specialization(self):
+        result = CXX("tests/data/convert/test_partial_template_specialization.h").ToIR(project="Capdpa")
+
 if __name__ == '__main__':
     unittest.main()
