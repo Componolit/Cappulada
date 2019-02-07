@@ -14,6 +14,8 @@ is
       with Import, Convention => CPP;
 
       type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
 
       function Constructor return Class
       with Global => null;
