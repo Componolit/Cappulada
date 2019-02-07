@@ -11,6 +11,8 @@ is
       for Negative use (Minus_Two => -2, Minus_One => -1);
       type Private_Int is limited private;
       type Private_Int_Address is limited private;
+      type Private_Int_Array is array (Natural range <>) of Private_Int;
+      type Private_Int_Address_Array is array (Natural range <>) of Private_Int_Address;
 
       type Class is
       limited record
@@ -20,6 +22,8 @@ is
       with Import, Convention => CPP;
 
       type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
 
       procedure Public_Function (This : Class)
       with Global => null, Import, Convention => CPP, External_Name => "_ZN10With_class15With_everything15public_functionEv";

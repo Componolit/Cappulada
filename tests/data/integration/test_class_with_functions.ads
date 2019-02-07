@@ -11,6 +11,8 @@ is
       with Import, Convention => CPP;
 
       type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
 
       procedure Public_Function (This : Class; Arg1 : Test_Class_With_Functions.Int)
       with Global => null, Import, Convention => CPP, External_Name => "_ZN14With_functions15public_functionEi";
