@@ -134,7 +134,9 @@ class Class(ir_unit.Unit):
                 "{constants}"
                 "{classrecord}"
                 "{static_members}"
-                "{indent}   type Class_Address is private;\n\n"
+                "{indent}   type Class_Address is private;\n"
+                "{indent}   type Class_Array is array (Natural range <>) of Class;\n"
+                "{indent}   type Class_Address_Array is array (Natural range <>) of Class_Address;\n\n"
                 "{operations}\n"
                 "{private}"
                 "{indent}end {package};\n").format(
