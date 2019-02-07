@@ -4,6 +4,7 @@ import ir_enum
 import ir_function
 import ir_identifier
 import ir_type
+import ir_array
 import ir_variable
 import ir_unit
 from copy import copy
@@ -62,7 +63,7 @@ class Class(ir_unit.Unit):
 
     def PublicTypesSpecification(self, indentation):
 
-        types = self.TypeList()
+        types = [t.ctype if ir_array.Array.isInst(t) else t for t in self.TypeList()]
         if not types:
             return ""
 
@@ -85,7 +86,7 @@ class Class(ir_unit.Unit):
         result += "\n".join([('{indent}type {private} is new {basetype};\n{indent}type {private}_Address is access {private};').format(
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True),
-                            basetype = t.AdaSpecification()) for t in self.TypeList()])
+                            basetype = t.AdaSpecification()) for t in [t.ctype if ir_array.Array.isInst(t) else t for t in self.TypeList()]])
 
         return result + "\n";
 
