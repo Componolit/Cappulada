@@ -573,5 +573,8 @@ class Parser(Capdpa_Test):
     def test_partial_template_specialization(self):
         result = CXX("tests/data/convert/test_partial_template_specialization.h").ToIR(project="Capdpa")
 
+    def test_private_nested_class(self):
+        result = CXX("tests/data/convert/test_private_nested_class.h").ToIR(project="Capdpa")
+
 if __name__ == '__main__':
     unittest.main()
