@@ -358,6 +358,25 @@ class GenerateConstant(Capdpa_Test):
                 Member(name = "ar", ctype = Array(ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])), size=5))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("generator/test_class_with_array.txt"))
 
+    def test_template_with_array(self):
+        result = Namespace(name = "Capdpa", children = [
+            Template(entity=
+                Class(name = "Template_With_Array", children = [
+                    Member(name = "var", ctype = Array(
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                        size = Template_Argument(name = "Size")))]),
+                    typenames = [Template_Argument(name = "Size")]
+                    ),
+            Class(name = "Template_With_Array_T_X5", children = [
+                Member(name = "var", ctype = Array(
+                    ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                    size = 5))],
+                instanceof = (["Capdpa", "Template_With_Array"], [Type_Literal(value=5)])),
+            Class(name = "With_Array_5", children = [
+                Member(name = "twa", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Template_With_Array"]), arguments = [
+                    Type_Literal(value = 5)]))])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("generator/test_template_with_array.txt"))
+
     def test_private_reference_member(self):
         result = Class(name = "Class_Priv_Ref", children = [
                 Member(name = "ref_member",
