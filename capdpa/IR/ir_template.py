@@ -38,12 +38,15 @@ class Template(ir.Base):
                         entity.parameters.extend(resolves[c.name])
                 self.__replace(c, resolves)
         if hasattr(entity, "ctype"):
-            if entity.ctype.name in resolves.keys():
+            if hasattr(entity.ctype, "name") and entity.ctype.name in resolves.keys():
                 ct = resolves[entity.ctype.name]
                 ct.reference = entity.ctype.reference
                 ct.pointer   = entity.ctype.pointer
                 entity.ctype = copy(ct)
             self.__replace(entity.ctype, resolves)
+        if hasattr(entity, "size"):
+            if hasattr(entity.size, "name") and entity.size.name in resolves.keys():
+                entity.size = resolves[entity.size.name].value
         if hasattr(entity, "return_type"):
             if entity.return_type and entity.return_type.name in resolves.keys():
                 entity.return_type = resolves[entity.return_type.name]
