@@ -66,7 +66,10 @@ class Class(ir_unit.Unit):
         if not types:
             return ""
 
-        return "\n".join([('{indent}type {private} is limited private;\n{indent}type {private}_Address is limited private;').format(
+        return "\n".join([("{indent}type {private} is limited private;\n"
+                           "{indent}type {private}_Address is limited private;\n"
+                           "{indent}type {private}_Array is array (Natural range <>) of {private};\n"
+                           "{indent}type {private}_Address_Array is array (Natural range <>) of {private}_Address;").format(
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True)) for t in types] + ['', ''])
 

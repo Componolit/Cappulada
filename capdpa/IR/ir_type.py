@@ -104,7 +104,7 @@ class Type_Definition(ir.Base):
 
     def AdaSpecification(self, indentation=0):
         if self.reference:
-            return "{0}subtype {1} is {2};".format(
+            return "{0}subtype {1} is {2};\n{0}subtype {1}_Array is {2}_Array;".format(
                     " " * indentation,
                     self.ConvertName(self.name),
                     self.reference.AdaSpecification())
