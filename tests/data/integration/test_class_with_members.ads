@@ -6,10 +6,16 @@ is
    is
       type Private_Int is limited private;
       type Private_Int_Address is limited private;
+      type Private_Int_Array is array (Natural range <>) of Private_Int;
+      type Private_Int_Address_Array is array (Natural range <>) of Private_Int_Address;
       type Private_Void is limited private;
       type Private_Void_Address is limited private;
+      type Private_Void_Array is array (Natural range <>) of Private_Void;
+      type Private_Void_Address_Array is array (Natural range <>) of Private_Void_Address;
       type Private_C_Float is limited private;
       type Private_C_Float_Address is limited private;
+      type Private_C_Float_Array is array (Natural range <>) of Private_C_Float;
+      type Private_C_Float_Address_Array is array (Natural range <>) of Private_C_Float_Address;
 
       type Class is
       limited record
@@ -23,6 +29,8 @@ is
       with Import, Convention => CPP;
 
       type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
 
       function Constructor return Class
       with Global => null;
