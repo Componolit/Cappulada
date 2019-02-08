@@ -7,6 +7,7 @@ class Outer
             public:
                 int i;
         };
+        Inner inner;
     public:
         int o;
 };
