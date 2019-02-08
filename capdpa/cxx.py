@@ -145,7 +145,8 @@ class CXX:
             reference = True
             type_cursor = type_cursor.get_pointee()
         const = type_cursor.is_const_qualified()
-        if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD]:
+        if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD] \
+                or (type_cursor.kind == clang.cindex.TypeKind.TYPEDEF and len(children) > 0 and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF):
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
@@ -163,8 +164,12 @@ class CXX:
                             #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
                             pass
                         literals = literals[1:]
+                if type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
+                    trt_name = self.__resolve_name(list(decl.get_children())[0])
+                else:
+                    trt_name = self.__resolve_name(decl)
                 return IR.Type_Reference_Template(
-                        name = IR.Identifier(self.__resolve_name(decl)),
+                        name = IR.Identifier(trt_name),
                         constant = const,
                         arguments = args,
                         pointer = ptr, reference=reference)
@@ -199,13 +204,13 @@ class CXX:
                     raise NotImplementedError("Unknown undeclared canonical type: {}".format(canon))
             else:
                 raise NotImplementedError("Unsupported declaration kind {} at {}".format(decl.kind, decl.location))
-        elif type_cursor.kind ==  clang.cindex.TypeKind.VOID:
+        elif type_cursor.kind == clang.cindex.TypeKind.VOID:
             return IR.Type_Reference(
                 name = IR.Identifier([self.project, "void"]),
                 constant = const,
                 pointer = 1,
                 reference = reference) if ptr else None
-        elif type_cursor.kind ==  clang.cindex.TypeKind.TYPEDEF:
+        elif type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier(
                 [type_cursor.spelling]),
                 constant = const,
@@ -309,7 +314,10 @@ class CXX:
     def __convert_typedef(self, cursor):
         children = list(cursor.get_children())
         if children:
-            resolved = self.__convert_type([], children[0].type)
+            if children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
+                resolved = self.__convert_type(children, cursor.type)
+            elif children[0].kind == clang.cindex.CursorKind.TYPE_REF:
+                resolved = self.__convert_type([], children[0].type)
         else:
             resolved = self.__convert_type([], cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
