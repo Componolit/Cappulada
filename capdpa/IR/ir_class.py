@@ -86,7 +86,9 @@ class Class(ir_unit.Unit):
             except:
                 private_class = None
             if private_class and Class.isInst(private_class) and not private_class.isPublic():
-                types.append("{cls}\n{indentation}type {private} is new {classname}.Class;\n".format(
+                types.append(("{cls}\n"
+                              "{indentation}type {private} is new {classname}.Class;\n"
+                              "{indentation}type {private}_Address is access {classname}.Class;\n").format(
                     cls = private_class.AdaSpecification(indentation),
                     indentation = indentation * " ",
                     private = t.AdaSpecification(private=True),
