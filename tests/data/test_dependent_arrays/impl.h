@@ -15,5 +15,5 @@ class Cls
 };
 
 namespace Hidden {
-    Cls<3> Cls_3();
+    Cls<3> Cls_3;
 }
