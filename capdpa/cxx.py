@@ -84,10 +84,14 @@ class CXX:
             raise InvalidNodeError
         return IR.Class(
                 name = cursor.displayname,
-                children = self.__convert_children(cursor.get_children()),
-                public = cursor.access_specifier in [
-                    clang.cindex.AccessSpecifier.PUBLIC,
-                    clang.cindex.AccessSpecifier.INVALID])
+                children = self.__convert_children(cursor.get_children()))
+
+    def __convert_private_record(self, cursor):
+        if cursor.kind not in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
+            raise InvalidNodeError
+        return IR.Private_Record(
+                name = cursor.displayname,
+                children = self.__convert_children(cursor.get_children()))
 
     def __convert_base(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
@@ -162,8 +166,11 @@ class CXX:
                         arguments = args,
                         pointer = ptr, reference=reference)
             elif decl.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
+                name = self.__resolve_name(decl)
+                if decl.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
+                    name += ["Class"]
                 return IR.Type_Reference(
-                        name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
+                        name = IR.Identifier(name),
                         constant = const,
                         pointer = ptr,
                         reference = reference)
@@ -388,7 +395,7 @@ class CXX:
                     children.append(self.__convert_base(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
                     # We assume no forward declarations of private classes
-                    children.append(self.__convert_class(cursor))
+                    children.append(self.__convert_private_record(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.CXX_METHOD,

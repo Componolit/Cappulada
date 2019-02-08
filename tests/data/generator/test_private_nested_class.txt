@@ -1,0 +1,41 @@
+package Capdpa
+   with SPARK_Mode => On
+is
+   package Outer
+      with SPARK_Mode => On
+   is
+      type Private_Inner is limited private;
+      type Private_Inner_Address is limited private;
+      type Private_Inner_Array is array (Natural range <>) of Private_Inner;
+      type Private_Inner_Address_Array is array (Natural range <>) of Private_Inner_Address;
+
+      type Class is
+      limited record
+         Private_In : Private_Inner;
+         O : Capdpa.Int;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
+
+      function Constructor return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN5OuterC1Ev");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+      type Private_Inner is
+      limited record
+         I : Capdpa.Int;
+      end record
+      with Import, Convention => CPP;
+
+   end Outer;
+
+end Capdpa;
+

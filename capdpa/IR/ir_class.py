@@ -11,12 +11,11 @@ from copy import copy
 
 class Class(ir_unit.Unit):
 
-    def __init__(self, name, children=None, instanceof=None, public=True):
+    def __init__(self, name, children=None, instanceof=None):
 
         super(Class, self).__init__()
         self.name       = name
         self.children   = children or []
-        self.public     = public
         if not filter(ir_function.Constructor.isInst, self.children):
             flist = [ir_function.Function.isInst(c) for c in self.children]
             if True in flist:
@@ -148,10 +147,45 @@ class Class(ir_unit.Unit):
                         indent = indentation * " ",
                         package = self.ConvertName(self.name),
                         spark_mode = "On" if self.SparkFeatureSet() else "Off",
-                        subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
+                        subpackages = "\n".join(map(
+                            lambda c: c.AdaSpecification(indentation + 3),
+                            filter(lambda c: Class.isInst(c) and not Private_Record.isInst(c), self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
                         private = self.PrivatePart(indentation) or "",
                         constants = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), constants) + ['']),
                         classrecord = class_record,
                         static_members = "\n".join([m.AdaSpecification(indentation + 3) for m in self.StaticMembers()]),
                         operations = "\n".join(map(lambda o: o.AdaSpecification(indentation + 3), ops)))
+
+
+class Private_Record(Class):
+
+    def __init__(self, name, children=None):
+        super(Private_Record, self).__init__(name, children)
+
+    def AdaSpecification(self, indentation=0):
+
+        # Generate record members
+        null = type("", (), dict(AdaSpecification=lambda self, indentation, private_name: " " * indentation + "null"))()
+        base = [ir_unit.Class_Reference.isInst(c) for c in self.children]
+        base = self.children[base.index(True)] if True in base else None
+        hasvirtualbase = base.isVirtual() if base else False
+
+        class_record = (
+                "{private_types}"
+                "{indent}type Private_{name} is{classdef}\n"
+                "{indent}{tagged}{limited}record\n"
+                "{classmembers}"
+                "{indent}end record\n"
+                "{indent}with Import, Convention => CPP;\n\n"
+                ).format(
+                        indent = (indentation + 3) * " ",
+                        name = self.FullyQualifiedName(),
+                        private_types = self.PublicTypesSpecification(indentation),
+                        classdef = (" new " + base.PackageName() + ".Class with") if hasvirtualbase and self.isVirtual() else "",
+                        tagged = "tagged " if self.isVirtual() and not hasvirtualbase else "",
+                        limited = "limited " if not hasvirtualbase else "",
+                        classmembers = "\n".join([m.AdaSpecification(indentation + 6, True) + ";" for m in self.Members() or [null]] + ['']))
+        return class_record
+
+
