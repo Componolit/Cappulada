@@ -84,7 +84,10 @@ class CXX:
             raise InvalidNodeError
         return IR.Class(
                 name = cursor.displayname,
-                children = self.__convert_children(cursor.get_children()))
+                children = self.__convert_children(cursor.get_children()),
+                public = cursor.access_specifier in [
+                    clang.cindex.AccessSpecifier.PUBLIC,
+                    clang.cindex.AccessSpecifier.INVALID])
 
     def __convert_base(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
@@ -383,6 +386,9 @@ class CXX:
                     children.append(self.__convert_variable(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
                     children.append(self.__convert_base(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
+                    # We assume no forward declarations of private classes
+                    children.append(self.__convert_class(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.CXX_METHOD,

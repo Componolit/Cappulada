@@ -393,5 +393,15 @@ class GenerateConstant(Capdpa_Test):
                                                                             reference = False))])]).AdaSpecification()
         self.check(result[1].Text(), self.load("test_constants_are_const.ads"))
 
+    def test_private_nested_class(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "Outer", children = [
+                Class(name = "Inner", children = [
+                    Member(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                    public = False),
+                Member(access="private",constant=False,ctype=Type_Reference(constant=False,name=Identifier(name=["Capdpa", "Outer", "Inner", "Class"]),pointer=0,reference=False),name="inner"),
+                Member(name = "o", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("generator/test_private_nested_class.txt"))
+
 if __name__ == '__main__':
     unittest.main()
