@@ -409,8 +409,16 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_array_template_2.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
-    def EXCLUDE_test_template_typedef(self):
-        CXX("tests/data/convert/test_template_typedef.h").ToIR(project="Capdpa")
+    def test_template_typedef(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=
+                Class(name = "Container", children = [
+                    Member(name = "value", ctype = Template_Argument(name = "T"))]),
+                typenames = [Template_Argument(name = "T")]),
+            Type_Definition(name = "Int_Container", reference = Type_Reference_Template(name = Identifier(["Capdpa", "Container"]),arguments=[
+                Type_Reference(name = Identifier(["Capdpa", "int"]))]))])
+        result = CXX("tests/data/convert/test_template_typedef.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
     def test_class_with_struct_type(self):
         expected = Namespace("Capdpa", children = [
