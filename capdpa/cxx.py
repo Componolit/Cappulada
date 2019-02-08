@@ -368,8 +368,10 @@ class CXX:
                         clang.cindex.CursorKind.NAMESPACE_REF,
                         clang.cindex.CursorKind.FUNCTION_TEMPLATE,
                         # TODO: properly support function templates
-                        clang.cindex.CursorKind.CONVERSION_FUNCTION
+                        clang.cindex.CursorKind.CONVERSION_FUNCTION,
                         # Just ignore c++ conversion operators
+                        clang.cindex.CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION
+                        # Works unless different specializations have different APIs
                         ]:
                     pass
                 else:
