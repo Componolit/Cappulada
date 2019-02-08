@@ -99,7 +99,7 @@ class CXX:
         return IR.Function(
                 name = cursor.spelling,
                 parameters = self.__convert_arguments(cursor.get_children()),
-                return_type = self.__convert_type([], cursor.result_type))
+                return_type = self.__convert_type(list(cursor.get_children()), cursor.result_type))
 
     def __convert_method(self, cursor):
 

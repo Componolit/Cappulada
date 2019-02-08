@@ -390,6 +390,25 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_array_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_array_template_2(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity=
+                Class(name = "Cls", children = [
+                    Member(name = "ar", ctype = Array(
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                        size = Template_Argument(name = "S")))]),
+                    typenames = [Template_Argument(name = "S")]),
+            Class(name = "Cls_T_X3", children = [
+                Member(name = "ar", ctype = Array(
+                    ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                    size = 3))],
+                instanceof = (["Capdpa", "Cls"], [Type_Literal(value=3)])),
+            Namespace(name = "Dummy", children = [
+                Variable(name = "c3", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Cls"]), arguments=[
+                    Type_Literal(value=3)]))])])
+        result = CXX("tests/data/convert/test_array_template_2.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
     def EXCLUDE_test_template_typedef(self):
         CXX("tests/data/convert/test_template_typedef.h").ToIR(project="Capdpa")
 
