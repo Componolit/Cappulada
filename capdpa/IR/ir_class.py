@@ -11,11 +11,12 @@ from copy import copy
 
 class Class(ir_unit.Unit):
 
-    def __init__(self, name, children=None, instanceof=None):
+    def __init__(self, name, children=None, instanceof=None, public=True):
 
         super(Class, self).__init__()
         self.name       = name
         self.children   = children or []
+        self.public     = public
         if not filter(ir_function.Constructor.isInst, self.children):
             flist = [ir_function.Function.isInst(c) for c in self.children]
             if True in flist:

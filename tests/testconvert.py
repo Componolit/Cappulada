@@ -574,7 +574,15 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_partial_template_specialization.h").ToIR(project="Capdpa")
 
     def test_private_nested_class(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "Outer", children = [
+                Class(name = "Inner", children = [
+                    Member(name = "i", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
+                    public = False),
+                Member(access="private",constant=False,ctype=Type_Reference(constant=False,name=Identifier(name=["Capdpa", "Outer", "Inner", "Class"]),pointer=0,reference=False),name="inner"),
+                Member(name = "o", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))])])
         result = CXX("tests/data/convert/test_private_nested_class.h").ToIR(project="Capdpa")
+        self.check(result, expected)
 
 if __name__ == '__main__':
     unittest.main()
