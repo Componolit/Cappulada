@@ -53,6 +53,7 @@ is
       end Inner;
 
       type Private_Inner is new Inner.Class;
+      type Private_Inner_Address is access Inner.Class;
 
    end Outer;
 
