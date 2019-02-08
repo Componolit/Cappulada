@@ -28,6 +28,9 @@ class Class(ir_unit.Unit):
         self._parentize_list(self.children)
         self.instanceof = instanceof
 
+    def isPublic(self):
+        return self.public
+
     def isVirtual(self):
         return True in [c.isVirtual() for c in self.children]
 
@@ -75,6 +78,29 @@ class Class(ir_unit.Unit):
                             indent = (indentation + 3) * " ",
                             private = t.AdaSpecification(private=True)) for t in types] + ['', ''])
 
+    def PrivateTypes(self, indentation):
+        types = []
+        for t in self.TypeList():
+            try:
+                private_class = self.GetRoot()[t.FullyQualifiedName()[1:]]
+            except:
+                private_class = None
+            if private_class and Class.isInst(private_class) and not private_class.isPublic():
+                types.append("{cls}\n{indentation}type {private} is new {classname}.Class;\n".format(
+                    cls = private_class.AdaSpecification(indentation),
+                    indentation = indentation * " ",
+                    private = t.AdaSpecification(private=True),
+                    classname = t.name.PackageBaseNameRaw()))
+            else:
+                if ir_array.Array.isInst(t):
+                    t = t.ctype
+                types.append(('{indent}type {private} is new {basetype};\n{indent}type {private}_Address is access {private};').format(
+                    indent = indentation * " ",
+                    private = t.AdaSpecification(private=True),
+                    basetype = t.AdaSpecification()))
+        return types
+
+
     def PrivatePart(self, indentation):
 
         result = ("{indent}private\n"
@@ -84,10 +110,7 @@ class Class(ir_unit.Unit):
                             indent = (indentation) * " ",
                             private_static_members = "\n".join([m.AdaSpecification(indentation + 3) for m in self.StaticMembers(private=True)]))
 
-        result += "\n".join([('{indent}type {private} is new {basetype};\n{indent}type {private}_Address is access {private};').format(
-                            indent = (indentation + 3) * " ",
-                            private = t.AdaSpecification(private=True),
-                            basetype = t.AdaSpecification()) for t in [t.ctype if ir_array.Array.isInst(t) else t for t in self.TypeList()]])
+        result += "\n".join(self.PrivateTypes(indentation + 3))
 
         return result + "\n";
 
@@ -147,8 +170,9 @@ class Class(ir_unit.Unit):
                 "{indent}end {package};\n").format(
                         indent = indentation * " ",
                         package = self.ConvertName(self.name),
-                        spark_mode = "On" if self.SparkFeatureSet() else "Off",
-                        subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), filter(Class.isInst, self.children))),
+                        spark_mode = "On" if self.SparkFeatureSet() and self.public else "Off",
+                        subpackages = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3),
+                            filter(lambda c: Class.isInst(c) and c.isPublic(), self.children))),
                         types = "\n".join(map(lambda t: t.AdaSpecification(indentation + 3), types) + ['']),
                         private = self.PrivatePart(indentation) or "",
                         constants = "\n".join(map(lambda c: c.AdaSpecification(indentation + 3), constants) + ['']),

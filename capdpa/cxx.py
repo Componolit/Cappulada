@@ -162,8 +162,11 @@ class CXX:
                         arguments = args,
                         pointer = ptr, reference=reference)
             elif decl.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
+                name = self.__resolve_name(decl)
+                if decl.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
+                    name += ["Class"]
                 return IR.Type_Reference(
-                        name = IR.Identifier(self.__resolve_name(decl) + ["Class"]),
+                        name = IR.Identifier(name),
                         constant = const,
                         pointer = ptr,
                         reference = reference)

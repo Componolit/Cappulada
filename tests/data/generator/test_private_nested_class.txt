@@ -11,7 +11,7 @@ is
 
       type Class is
       limited record
-         Private_In : Private_Inner;
+         Private_Local : Private_Inner;
          O : Capdpa.Int;
       end record
       with Import, Convention => CPP;
@@ -28,11 +28,9 @@ is
       pragma SPARK_Mode (Off);
 
       type Class_Address is access Class;
-
       package Inner
          with SPARK_Mode => Off
       is
-
          type Class is
          limited record
             I : Capdpa.Int;
@@ -45,12 +43,17 @@ is
 
          function Constructor return Class
          with Global => null;
-         pragma Cpp_Constructor (Constructor, "");
+         pragma Cpp_Constructor (Constructor, "_ZN5Outer5InnerC1Ev");
 
       private
          pragma SPARK_Mode (Off);
 
+         type Class_Address is access Class;
+
+      end Inner;
+
+      type Private_Inner is new Inner.Class;
+
    end Outer;
 
 end Capdpa;
-
