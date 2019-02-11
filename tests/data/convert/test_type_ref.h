@@ -16,4 +16,3 @@ class T
         Tt<Tr, int, Tr, 4, Tr, 't', true> t;
 };
 
-//void func(Tt<Tr, int, Tr, 4, Tr, 't', true>);
