@@ -82,12 +82,17 @@ class CXX:
     def __convert_class(self, cursor):
         if cursor.kind not in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
             raise InvalidNodeError
-        return IR.Class(
-                name = cursor.displayname,
-                children = self.__convert_children(cursor.get_children()),
-                public = cursor.access_specifier in [
-                    clang.cindex.AccessSpecifier.PUBLIC,
-                    clang.cindex.AccessSpecifier.INVALID])
+        children = cursor.get_children()
+        if clang.cindex.CursorKind.TYPE_REF in [c.kind for c in children]:
+            #fully specialized template instance, should be generated if used automatically by us
+            return None
+        else:
+            return IR.Class(
+                    name = cursor.displayname,
+                    children = self.__convert_children(cursor.get_children()),
+                    public = cursor.access_specifier in [
+                        clang.cindex.AccessSpecifier.PUBLIC,
+                        clang.cindex.AccessSpecifier.INVALID])
 
     def __convert_base(self, cursor):
         if cursor.kind != clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
@@ -364,10 +369,12 @@ class CXX:
                     children.append(self.__convert_namespace(cursor))
                 elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                     decl = self.__convert_class(cursor)
-                    if True not in [c.name == decl.name for c in children]:
+                    if decl and True not in [c.name == decl.name for c in children]:
                         if not cursor.is_definition():
                             if cursor.get_definition() and cursor.get_definition() in clist:
-                                children.append(self.__convert_class(cursor.get_definition()))
+                                definition = cursor.get_definition()
+                                if definition:
+                                    children.append(self.__convert_class(definition))
                             else:
                                 children.append(IR.Type_Definition(decl.name, None))
                         else:

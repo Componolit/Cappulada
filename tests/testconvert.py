@@ -613,5 +613,38 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_private_nested_class.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_type_ref(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "Tr"),
+            Template(entity = Class(name = "Tt"),
+                typenames = [
+                    Template_Argument(name = "T1"),
+                    Template_Argument(name = "T2"),
+                    Template_Argument(name = "T3"),
+                    Template_Argument(name = "T4"),
+                    Template_Argument(name = "T5"),
+                    Template_Argument(name = "T6"),
+                    Template_Argument(name = "T7")]),
+            Class(name = "Tt_T_Tr_Int_Tr_X4_Tr_T_True", instanceof=(
+                ["Capdpa", "Tt"], [
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Literal(value=4),
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Literal(value='t'),
+                    Type_Literal(value="true")])),
+            Class(name = "T", children = [
+                Member(name = "t", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tt"]), arguments = [
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Literal(value=4),
+                    Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
+                    Type_Literal(value='t'),
+                    Type_Literal(value="true")]))])])
+        result = CXX("tests/data/convert/test_type_ref.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
 if __name__ == '__main__':
     unittest.main()
