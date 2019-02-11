@@ -150,20 +150,30 @@ class CXX:
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
-                if children and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
-                    literals = children[1:]
                 args = []
+                ccursor = 1
                 for i in range(targs):
-                    if type_cursor.get_template_argument_type(i).kind != clang.cindex.TypeKind.INVALID:
-                        args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
+                    cymbal_arg = type_cursor.get_template_argument_type(i)
+                    if cymbal_arg.kind in TypeMap.keys():
+                        args.append(self.__convert_type(children, cymbal_arg))
+                        # only use builtin types from cymbal
                     else:
                         try:
-                            args.append(IR.Type_Literal(name  = self.__convert_literal_type(literals[0].kind),
-                                                        value = eval(list(literals[0].get_tokens())[0].spelling)))
-                        except IndexError as e:
+                            child_arg = children[ccursor]
+                            ccursor += 1
+                            if child_arg.kind in [
+                                    clang.cindex.CursorKind.INTEGER_LITERAL,
+                                    clang.cindex.CursorKind.FLOATING_LITERAL,
+                                    clang.cindex.CursorKind.IMAGINARY_LITERAL,
+                                    clang.cindex.CursorKind.STRING_LITERAL,
+                                    clang.cindex.CursorKind.CHARACTER_LITERAL,
+                                    clang.cindex.CursorKind.CXX_BOOL_LITERAL_EXPR]:
+                                args.append(IR.Type_Literal(value=list(child_arg.get_tokens())[0].spelling.strip("'")))
+                            else:
+                                args.append(self.__convert_type(children, child_arg.type.get_declaration().type))
+                        except IndexError:
                             #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
                             pass
-                        literals = literals[1:]
                 if type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
                     trt_name = self.__resolve_name(list(decl.get_children())[0])
                 else:
