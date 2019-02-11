@@ -132,12 +132,6 @@ class CXX:
             cursor = cursor.semantic_parent
         return [self.project] + list(reversed(identifier))
 
-    def __convert_literal_type(self, kind):
-        if kind == clang.cindex.CursorKind.INTEGER_LITERAL:
-            return IR.Identifier([self.project, 'int'])
-        else:
-            raise NotImplementedError("Literal type conversion not implemented: " + str(self.kind))
-
     def __convert_type(self, children, type_cursor):
         ptr = 0;
         reference = False;
@@ -173,7 +167,12 @@ class CXX:
                                     clang.cindex.CursorKind.STRING_LITERAL,
                                     clang.cindex.CursorKind.CHARACTER_LITERAL,
                                     clang.cindex.CursorKind.CXX_BOOL_LITERAL_EXPR]:
-                                args.append(IR.Type_Literal(value=list(child_arg.get_tokens())[0].spelling.strip("'")))
+                                if child_arg.type.kind in TypeMap.keys():
+                                    args.append(IR.Type_Literal(
+                                        name = IR.Identifier([self.project, TypeMap[child_arg.type.kind]]),
+                                        value=list(child_arg.get_tokens())[0].spelling.strip("'")))
+                                else:
+                                    raise NotImplementedError("Literal type conversion not implemented: " + str(child_arg.type.kind))
                             else:
                                 args.append(self.__convert_type(children, child_arg.type.get_declaration().type))
                         except IndexError:
