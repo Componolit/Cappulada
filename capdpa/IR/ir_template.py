@@ -97,6 +97,8 @@ class Template_Reference(ir.Base):
         idlist = []
         for arg in self.arguments:
             name = arg.name.PackageBaseNameRaw()
+            if name == "Class":
+                name = arg.name.PackagePath()[-1]
             if Template_Reference.isInst(arg):
                 name += arg.postfix()
             if ir_type.Type_Literal.isInst(arg):
