@@ -372,8 +372,9 @@ class CXX:
                         if not cursor.is_definition():
                             if cursor.get_definition() and cursor.get_definition() in clist:
                                 definition = cursor.get_definition()
-                                if definition:
-                                    children.append(self.__convert_class(definition))
+                                decl = self.__convert_class(definition)
+                                if decl:
+                                    children.append(decl)
                             else:
                                 children.append(IR.Type_Definition(decl.name, None))
                         else:
