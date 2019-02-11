@@ -625,24 +625,24 @@ class Parser(Capdpa_Test):
                     Template_Argument(name = "T5"),
                     Template_Argument(name = "T6"),
                     Template_Argument(name = "T7")]),
-            Class(name = "Tt_T_Tr_Int_Tr_X4_Tr_T_True", instanceof=(
+            Class(name = "Tt_T_Tr_Int_Tr_Int_4_Tr_Char_T_Bool_True", instanceof=(
                 ["Capdpa", "Tt"], [
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
-                    Type_Literal(value=4),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=4),
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
-                    Type_Literal(value='t'),
-                    Type_Literal(value="true")])),
+                    Type_Literal(name=Identifier(["Capdpa", "char"]), value='t'),
+                    Type_Literal(name=Identifier(["Capdpa", "bool"]), value="true")])),
             Class(name = "T", children = [
                 Member(name = "t", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tt"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
-                    Type_Literal(value=4),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=4),
                     Type_Reference(name=Identifier(["Capdpa", "Tr", "Class"])),
-                    Type_Literal(value='t'),
-                    Type_Literal(value="true")]))])])
+                    Type_Literal(name=Identifier(["Capdpa", "char"]), value='t'),
+                    Type_Literal(name=Identifier(["Capdpa", "bool"]), value="true")]))])])
         result = CXX("tests/data/convert/test_type_ref.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
