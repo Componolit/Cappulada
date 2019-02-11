@@ -53,6 +53,23 @@ class Base(object):
                 else:
                     raise KeyError(arg)
 
+    def __contains__(self, arg):
+        if hasattr(self, "children"):
+            if isinstance(arg, list):
+                return self.__contains__(tuple(arg))
+            elif isinstance(arg, tuple):
+                if len(arg) > 1:
+                    if arg[0] in self:
+                        return arg[1:] in self[arg[0]]
+                else:
+                    return arg[0] in self
+            else:
+                for c in self.children:
+                    if c.name == arg:
+                        return True
+                else:
+                    return False
+
     def _parentize_list(self, children):
         map(lambda c: c.SetParent(self), children)
 

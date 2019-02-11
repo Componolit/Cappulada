@@ -81,10 +81,10 @@ class Class(ir_unit.Unit):
     def PrivateTypes(self, indentation):
         types = []
         for t in self.TypeList():
-            try:
-                private_class = self.GetRoot()[t.FullyQualifiedName()[1:]]
-            except:
-                private_class = None
+            root = self.GetRoot()
+            t_fqn = t.FullyQualifiedName()[1:]
+            private_class = root[t_fqn] if t_fqn in root else None
+
             if private_class and Class.isInst(private_class) and not private_class.isPublic():
                 types.append(("{cls}\n"
                               "{indentation}type {private} is new {classname}.Class;\n"

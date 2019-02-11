@@ -9,6 +9,7 @@ class Array(ir.Base):
         self.ctype = ctype
         self.size = size
         self.ctype.SetParent(self)
+        self.name = self.ctype.name
 
     def UsedTypes(self, parent):
         return self.ctype.UsedTypes(parent)
