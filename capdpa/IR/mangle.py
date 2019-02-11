@@ -56,11 +56,12 @@ class String(Base):
 
 class Literal(Base):
 
-    def __len__ (self):
-        return 1
+    def __init__ (self, type, value):
+        self.type  = type
+        self.value = value
 
     def serialize (self, namedb, subst):
-        return self.obj
+        return "L" + self.type.serialize(namedb, subst) + str(self.value) + "E"
 
 class Type (Base):
 
@@ -120,8 +121,23 @@ class Constant (Base):
 
 class Constructor (Base):
 
+    def __init__ (self): pass
+
+    def __len__ (self):
+        return 2
+
     def serialize (self, namedb, subst):
-        return self.obj.serialize(namedb, subst) + "C1"
+        return "C1"
+
+class Destuctor (Base):
+
+    def __init__ (self): pass
+
+    def __len__ (self):
+        return 2
+
+    def serialize (self, namedb, subst):
+        return "D1"
 
 class Sequence (Base):
 

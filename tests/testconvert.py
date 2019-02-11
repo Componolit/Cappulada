@@ -379,14 +379,14 @@ class Parser(Capdpa_Test):
                         size = Template_Argument(name = "Size")))]),
                     typenames = [Template_Argument(name = "Size")]
                     ),
-            Class(name = "Template_With_Array_T_X5", children = [
+            Class(name = "Template_With_Array_T_Int_5", children = [
                 Member(name = "var", ctype = Array(
                     ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
                     size = 5))],
-                instanceof = (["Capdpa", "Template_With_Array"], [Type_Literal(value=5)])),
+                instanceof = (["Capdpa", "Template_With_Array"], [Type_Literal(name=Identifier(["Capdpa", "int"]), value=5)])),
             Class(name = "With_Array_5", children = [
                 Member(name = "twa", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Template_With_Array"]), arguments = [
-                    Type_Literal(value = 5)]))])])
+                    Type_Literal(name = Identifier(["Capdpa", "int"]), value = 5)]))])])
         result = CXX("tests/data/convert/test_array_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -398,14 +398,14 @@ class Parser(Capdpa_Test):
                         ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
                         size = Template_Argument(name = "S")))]),
                     typenames = [Template_Argument(name = "S")]),
-            Class(name = "Cls_T_X3", children = [
+            Class(name = "Cls_T_Int_3", children = [
                 Member(name = "ar", ctype = Array(
                     ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
                     size = 3))],
-                instanceof = (["Capdpa", "Cls"], [Type_Literal(value=3)])),
+                instanceof = (["Capdpa", "Cls"], [Type_Literal(name=Identifier(["Capdpa", "int"]),value=3)])),
             Namespace(name = "Dummy", children = [
                 Variable(name = "c3", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Cls"]), arguments=[
-                    Type_Literal(value=3)]))])])
+                    Type_Literal(name=Identifier(["Capdpa", "int"]),value=3)]))])])
         result = CXX("tests/data/convert/test_array_template_2.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
@@ -494,12 +494,12 @@ class Parser(Capdpa_Test):
             Template(entity=Class(name = "Tnt", children = [
                 Member(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))]),
                 typenames = [Template_Argument(name = "Size")]),
-            Class(name = "Tnt_T_X5", children = [
+            Class(name = "Tnt_T_Int_5", children = [
                 Member(name = "S", ctype = Type_Reference(name = Identifier(["Capdpa", "int"])))],
-                instanceof = (['Capdpa', 'Tnt'], [Type_Literal(constant=False,name=Identifier(name=['5']),pointer=0,reference=False,value=5)])),
+                instanceof = (['Capdpa', 'Tnt'], [Type_Literal(constant=False,name=Identifier(name=['Capdpa', 'int']),pointer=0,reference=False,value=5)])),
             Class(name = "Tnt5", children = [
                 Member(name = "t5", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Tnt"]), arguments = [
-                    Type_Literal(name = Identifier(["5"]), value = 5)]))],
+                    Type_Literal(name = Identifier(["Capdpa", "int"]), value = 5)]))],
                     instanceof = None)
             ])
         result = CXX("tests/data/convert/test_template_non_type.h").ToIR(project="Capdpa")

@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+if __name__ == '__main__':
+    sys.path.append (".")
+
 import unittest
 from capdpa import *
 
@@ -344,6 +348,14 @@ class Mangling(unittest.TestCase):
     def test_template_instance_multi (self):
         symbol = str(self.tests['Templ1', 'B_T_Char_Int', 'foo'].Mangle())
         self.assertTrue (symbol == "_ZN6Templ11BIciE3fooEcS1_i", "Invalid symbol: " + symbol)
+
+    def test_template_literal_argument (self):
+        symbol = str(self.tests['with_int_literal'].Mangle())
+        self.assertTrue (symbol == "_Z16with_int_literal16Literal_TemplateILi17EE", "Invalid symbol: " + symbol)
+
+    def test_template_literal_ctor (self):
+        symbol = str(self.tests['Literal_Template_T_Int_17'].children[1].Mangle())
+        self.assertTrue (symbol == "_ZN16Literal_TemplateILi17EEC1Ev", "Invalid symbol: " + symbol)
 
     def EXCLUDE_test_template_instance_complex (self):
         symbol = str(self.tests['Templ2', ['Cde_T_Char_Int', 'foo']].Mangle())

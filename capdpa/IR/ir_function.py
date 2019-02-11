@@ -86,9 +86,9 @@ class Method(Function):
             raise Exception ("Parent not set")
 
         if constructor:
-            entity = mangle.Literal("C1")
+            entity = mangle.Constructor()
         elif destructor:
-            entity = mangle.Literal("D1")
+            entity = mangle.Destructor()
         else:
             entity = mangle.String(self.name)
 
@@ -99,7 +99,7 @@ class Method(Function):
             # Template
             (template_name, template_args) = self.parent.instanceof
             basename = [mangle.String(n) for n in template_name[1:]]
-            args = mangle.Template ([mangle.Type ([mangle.String(x) for x in t.name.name[1:]]) for t in template_args])
+            args = mangle.Template ([t.Mangle() for t in template_args])
             name = mangle.Name (basename + [args], entity)
 
         parameters = [p.Mangle() for p in self.parameters] if self.parameters else [mangle.Type ([mangle.String("void")])]
