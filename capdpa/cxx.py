@@ -182,7 +182,9 @@ class CXX:
                         constant = const,
                         pointer = ptr,
                         reference = reference)
-            elif decl.kind in [clang.cindex.CursorKind.ENUM_DECL, clang.cindex.CursorKind.TYPEDEF_DECL]:
+            elif decl.kind in [clang.cindex.CursorKind.ENUM_DECL,
+                    clang.cindex.CursorKind.TYPEDEF_DECL,
+                    clang.cindex.CursorKind.TYPE_ALIAS_DECL]:
                 return IR.Type_Reference(
                         name = IR.Identifier(self.__resolve_name(decl)),
                         pointer = ptr,
@@ -367,7 +369,9 @@ class CXX:
                         [children.append(self.__convert_constant(constant)) for constant in cursor.get_children()]
                 elif cursor.kind == clang.cindex.CursorKind.CXX_METHOD:
                     children.append(self.__convert_method(cursor))
-                elif cursor.kind == clang.cindex.CursorKind.TYPEDEF_DECL:
+                elif cursor.kind in [
+                        clang.cindex.CursorKind.TYPEDEF_DECL,
+                        clang.cindex.CursorKind.TYPE_ALIAS_DECL]:
                     children.append(self.__convert_typedef(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CONSTRUCTOR:
                     children.append(self.__convert_constructor(cursor))

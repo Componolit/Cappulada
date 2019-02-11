@@ -9,4 +9,8 @@ is
    subtype U8_Array is Uint8_T_Array;
    subtype Ull is Test_Types.Unsigned_Long_Long;
    subtype Ull_Array is Test_Types.Unsigned_Long_Long_Array;
+   subtype Int8_T is Test_Types.Char;
+   subtype Int8_T_Array is Test_Types.Char_Array;
+   subtype Int16_T is Test_Types.Short;
+   subtype Int16_T_Array is Test_Types.Short_Array;
 end Test_Types;
