@@ -435,7 +435,9 @@ class CXX:
                         clang.cindex.CursorKind.CONSTRUCTOR,
                         clang.cindex.CursorKind.DESTRUCTOR,
                         # Just ignore private enumerations
-                        clang.cindex.CursorKind.ENUM_DECL
+                        clang.cindex.CursorKind.ENUM_DECL,
+                        # Just ignore private typedefs
+                        clang.cindex.CursorKind.TYPEDEF_DECL
                     ]:
                     pass
                 else:
