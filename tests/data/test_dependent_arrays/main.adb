@@ -5,7 +5,7 @@ with Interfaces.C;
 procedure Main
    with SPARK_Mode => Off
 is
-   use Test_Dependent_Arrays.Cls_X3;
+   use Test_Dependent_Arrays.Cls_T_Int_3;
    use all type Interfaces.C.Int;
    use all type Interfaces.C.Long;
    Inst : Class := Constructor;

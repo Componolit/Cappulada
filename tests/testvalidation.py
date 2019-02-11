@@ -25,7 +25,7 @@ class check_validation(Capdpa_Test):
         result = call(["gprbuild", "-q", "-P", "tests/data/testcase.gpr", "-XName=" + name])
         self.assertEqual(result, 0, "Build failed")
 
-        result = call(["gnatprove", "-q", "-P", "tests/data/testcase.gpr", "-XName=" + name])
+        result = call(["gnatprove", "--mode", "check_all", "-q", "-P", "tests/data/testcase.gpr", "-XName=" + name])
         self.assertEqual(result, 0, "Gnatprove failed")
 
         result = call(["tests/compile/" + name + "/main"])

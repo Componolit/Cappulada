@@ -1,5 +1,6 @@
 import ir
 import ir_function
+import ir_type
 from copy import deepcopy, copy
 
 class UnspecifiedTemplate: pass
@@ -20,12 +21,18 @@ class Template(ir.Base):
         self.parent = parent
         self.entity.parent = parent
 
+    def __resolve_type(self, ctype, resolves):
+        rt = copy(resolves[ctype.name])
+        rt.reference = ctype.reference
+        rt.pointer   = ctype.pointer
+        return rt
+
     def __replace(self, entity, resolves):
         if hasattr(entity, "children"):
             for c in entity.children:
                 if c.name in resolves.keys():
                     if not c.variadic:
-                        c = resolves[c.name]
+                        c = self.__resolve_type(c, resolves)
                     else:
                         entity.children.extend(c)
                 self.__replace(c, resolves)
@@ -33,23 +40,20 @@ class Template(ir.Base):
             for c in entity.parameters:
                 if c.name in resolves.keys():
                     if not c.variadic:
-                        c = resolves[c.name]
+                        c = self._resolve_type(c, resolves)
                     else:
-                        entity.parameters.extend(resolves[c.name])
+                        entity.parameters.extend(self.__resolve_type(c, resolves))
                 self.__replace(c, resolves)
         if hasattr(entity, "ctype"):
             if hasattr(entity.ctype, "name") and entity.ctype.name in resolves.keys():
-                ct = resolves[entity.ctype.name]
-                ct.reference = entity.ctype.reference
-                ct.pointer   = entity.ctype.pointer
-                entity.ctype = copy(ct)
+                entity.ctype = self.__resolve_type(entity.ctype, resolves)
             self.__replace(entity.ctype, resolves)
         if hasattr(entity, "size"):
             if hasattr(entity.size, "name") and entity.size.name in resolves.keys():
                 entity.size = resolves[entity.size.name].value
         if hasattr(entity, "return_type"):
             if entity.return_type and entity.return_type.name in resolves.keys():
-                entity.return_type = resolves[entity.return_type.name]
+                entity.return_type = self.__resolve_type(entity.return_type, resolves)
             self.__replace(entity.return_type, resolves)
 
     def InstantiateTemplates(self):
@@ -58,7 +62,7 @@ class Template(ir.Base):
     def UsedTypes(self, parent):
         types = []
         for t in self.entity.UsedTypes(parent) or []:
-            types.extend (t)
+            types.append(t)
         return types
 
     def instantiate(self, ref):
@@ -95,6 +99,8 @@ class Template_Reference(ir.Base):
             name = arg.name.PackageBaseNameRaw()
             if Template_Reference.isInst(arg):
                 name += arg.postfix()
+            if ir_type.Type_Literal.isInst(arg):
+                name += "_" + str(arg.value)
             idlist.append(name)
         return "_T_{}".format(
                 "_".join(map(self.ConvertName, idlist)))

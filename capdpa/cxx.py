@@ -127,6 +127,12 @@ class CXX:
             cursor = cursor.semantic_parent
         return [self.project] + list(reversed(identifier))
 
+    def __convert_literal_type(self, kind):
+        if kind == clang.cindex.CursorKind.INTEGER_LITERAL:
+            return IR.Identifier([self.project, 'int'])
+        else:
+            raise NotImplementedError("Literal type conversion not implemented: " + str(self.kind))
+
     def __convert_type(self, children, type_cursor):
         ptr = 0;
         reference = False;
@@ -151,7 +157,8 @@ class CXX:
                         args.append(self.__convert_type(children, type_cursor.get_template_argument_type(i)))
                     else:
                         try:
-                            args.append(IR.Type_Literal(value = eval(list(literals[0].get_tokens())[0].spelling)))
+                            args.append(IR.Type_Literal(name  = self.__convert_literal_type(literals[0].kind),
+                                                        value = eval(list(literals[0].get_tokens())[0].spelling)))
                         except IndexError as e:
                             #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
                             pass

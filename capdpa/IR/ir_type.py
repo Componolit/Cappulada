@@ -62,9 +62,12 @@ class Type_Literal(Type_Reference):
     Not really a type but a literal value that is used to instantiate a template
     """
 
-    def __init__(self, value, **kwargs):
-        super(Type_Literal, self).__init__(name=ir_identifier.Identifier([str(value)]))
+    def __init__(self, name, value, **kwargs):
+        super(Type_Literal, self).__init__(name)
         self.value = value
+
+    def Mangle(self):
+        return mangle.Literal (super(Type_Literal, self).Mangle(), self.value)
 
 class Type_Reference_Template(Type_Reference, ir_template.Template_Reference):
 

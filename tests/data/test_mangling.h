@@ -169,3 +169,13 @@ namespace Root2
          int compression2 (Data p1, int p2, Data p3) { return 0; };
    };
 }
+
+template <int Val>
+class Literal_Template
+{
+    public:
+        int var[Val];
+        Literal_Template();
+};
+
+void with_int_literal(Literal_Template<17> arg);
