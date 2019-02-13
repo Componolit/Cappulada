@@ -153,7 +153,7 @@ class Parser(Capdpa_Test):
                 Template_Argument(name="B")])
 
     def test_template_engine(self):
-        types = Type_Reference_Template(name="Container", arguments=[
+        types = Type_Reference_Template(name=Identifier(["Container"]), arguments=[
             Type_Reference(name=Identifier(["typeA"])),
             Type_Reference(name=Identifier(["typeB"]))])
         expected = Class(name="Container_T_Typea_Typeb", children=[
@@ -173,7 +173,7 @@ class Parser(Capdpa_Test):
             Member(name="b", ctype=Template_Argument(name="B"))]), typenames=[
                 Template_Argument(name="A"),
                 Template_Argument(name="B")]))
-        ftypes = Type_Reference_Template(name = "Base", arguments = [
+        ftypes = Type_Reference_Template(name = Identifier(["Base"]), arguments = [
             Type_Reference(name = Identifier(["Capdpa", "ClassA"]))])
         ftemplate = Template(entity=Class(name = "F", children=[
             Method(name = "Foo", parameters = [
@@ -195,6 +195,24 @@ class Parser(Capdpa_Test):
             ],
             instanceof = (['F'], [Type_Reference(constant=False,name=Identifier(name=['Capdpa', 'ClassA']),pointer=0,reference=False)]))
         self.check(ftemplate.instantiate(ftypes), fexpected)
+
+    def test_nested_template_engine(self):
+        types = Type_Reference_Template(name=Identifier(["Container"]), arguments=[
+            Type_Reference(name=Identifier(["TypeA"]))])
+        inner = Template(entity=Class(name="Inner"), typenames=[Template_Argument(name="I")])
+        outer = Template(entity=Class(name="Outer", children=[
+            Member(name="i", ctype=Type_Reference_Template(name=Identifier(["Inner"]), arguments=[
+                Template_Argument(name="O")]))]), typenames=[
+                    Template_Argument(name="O")])
+        inner_expected = Class(name = "Inner_T_Typea", instanceof=(["Inner"], [Type_Reference(name=Identifier(["TypeA"]))]))
+        inner_result = inner.instantiate(types)
+        outer_expected = Class(name = "Outer_T_Typea", children=[
+            Member(name="i", ctype=Type_Reference_Template(name=Identifier(["Inner"]), arguments=[
+                Type_Reference(name=Identifier(["TypeA"]))]))], instanceof=(
+                    ["Outer"], [Type_Reference(name=Identifier(["TypeA"]))]))
+        outer_result = outer.instantiate(types)
+        self.check(inner_expected, inner_result)
+        self.check(outer_expected, outer_result)
 
     def test_template(self):
         expected = Namespace(name = "Capdpa", children = [
