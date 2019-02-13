@@ -28,33 +28,23 @@ class Template(ir.Base):
         return rt
 
     def __replace(self, entity, resolves):
-        if hasattr(entity, "children"):
-            for c in entity.children:
-                if c.name in resolves.keys():
-                    if not c.variadic:
-                        c = self.__resolve_type(c, resolves)
-                    else:
-                        entity.children.extend(c)
-                self.__replace(c, resolves)
-        if hasattr(entity, "parameters"):
-            for c in entity.parameters:
-                if c.name in resolves.keys():
-                    if not c.variadic:
-                        c = self._resolve_type(c, resolves)
-                    else:
-                        entity.parameters.extend(self.__resolve_type(c, resolves))
-                self.__replace(c, resolves)
-        if hasattr(entity, "ctype"):
-            if hasattr(entity.ctype, "name") and entity.ctype.name in resolves.keys():
-                entity.ctype = self.__resolve_type(entity.ctype, resolves)
-            self.__replace(entity.ctype, resolves)
+        for attr in ["children", "parameters", "arguments"]:
+            if hasattr(entity, attr):
+                for c in getattr(entity, attr):
+                    if c.name in resolves.keys():
+                        if not c.variadic:
+                            getattr(entity, attr)[getattr(entity, attr).index(c)] = self.__resolve_type(c, resolves)
+                        else:
+                            getattr(entity, attr).extend(c)
+                    self.__replace(c, resolves)
+        for attr in ["ctype", "return_type"]:
+            if hasattr(entity, attr):
+                if hasattr(getattr(entity, attr), "name") and getattr(entity, attr).name in resolves.keys():
+                    setattr(entity, attr, self.__resolve_type(getattr(entity, attr), resolves))
+                self.__replace(getattr(entity, attr), resolves)
         if hasattr(entity, "size"):
             if hasattr(entity.size, "name") and entity.size.name in resolves.keys():
                 entity.size = resolves[entity.size.name].value
-        if hasattr(entity, "return_type"):
-            if entity.return_type and entity.return_type.name in resolves.keys():
-                entity.return_type = self.__resolve_type(entity.return_type, resolves)
-            self.__replace(entity.return_type, resolves)
 
     def InstantiateTemplates(self):
         pass
