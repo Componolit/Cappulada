@@ -660,14 +660,21 @@ class Parser(Capdpa_Test):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity = Class(name = "T1"), typenames = [
                 Template_Argument(name = "T")]),
+            Class(name = "T1_T_Int", instanceof=(
+                ["Capdpa", "T1"], [Type_Reference(name=Identifier(["Capdpa", "int"]))])),
             Template(entity = Class(name = "T2", children = [
                 Member(name = "t1", ctype = Type_Reference_Template(name = "T1", arguments = [
                     Template_Argument(name = "T")]))]),
                 typenames = [
                     Template_Argument(name = "T")]),
+            Class(name = "T2_T_Int", children = [
+                Member(name = "t1", ctype = Type_Reference_Template(name = "T2", arguments = [
+                    Type_Reference(name=Identifier(["Capdpa", "int"]))]))],
+                instanceof=(
+                    ["Capdpa", "T2"], [Type_Reference(name=Identifier(["Capdpa", "int"]))])),
             Class(name = "T_int", children = [
                 Member(name = "t2", ctype = Type_Reference_Template(name = "T2", arguments = [
-                    Type_Reference(name = Identifier(["Capdpa", "int"]))], reference=True))])])
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))])])
         result = CXX("tests/data/convert/test_class_template_decl.h").ToIR(project="Capdpa")
         self.check(result, example)
 

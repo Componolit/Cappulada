@@ -4,7 +4,7 @@ template <typename T> class T1 { };
 template <typename T> class T2
 {
     public:
-        T2<T> t1;
+        T1<T> t1;
 };
 
 class T_int
