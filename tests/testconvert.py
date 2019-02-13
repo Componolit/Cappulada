@@ -662,7 +662,7 @@ class Parser(Capdpa_Test):
                 Template_Argument(name = "T"),
                 Template_Argument(name = "I")]),
             Template(entity = Class(name = "T2", children = [
-                Member(name = "t1", ctype = Type_Reference_Template(name = "T1", arguments = [
+                Member(name = "t1", ctype = Type_Reference_Template(name=Identifier(["Capdpa", "T1"]), arguments = [
                     Template_Argument(name = "U"),
                     Template_Argument(name = "H")]))]),
                 typenames = [
