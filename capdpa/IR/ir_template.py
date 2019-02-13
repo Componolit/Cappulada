@@ -27,6 +27,19 @@ class Template(ir.Base):
         rt.pointer   = ctype.pointer
         return rt
 
+    def __recursive_instantiation(self, entity):
+        if isinstance(entity, ir_type.Type_Reference_Template):
+            template = self.GetRoot()[entity.FullyQualifiedName()[1:]]
+            if template:
+                instance = template.instantiate(entity)
+                if instance not in template.parent.children:
+                    index = template.parent.children.index(template) + template.parent_index
+                    template.parent.children.insert(index, instance)
+                    template.parent_index += 1
+            else:
+                # Template not in tree, cannot instantiate
+                pass
+
     def __replace(self, entity, resolves):
         for attr in ["children", "parameters", "arguments"]:
             if hasattr(entity, attr):
@@ -45,6 +58,7 @@ class Template(ir.Base):
         if hasattr(entity, "size"):
             if hasattr(entity.size, "name") and entity.size.name in resolves.keys():
                 entity.size = resolves[entity.size.name].value
+        self.__recursive_instantiation(entity)
 
     def InstantiateTemplates(self):
         pass
