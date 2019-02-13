@@ -669,6 +669,10 @@ class Parser(Capdpa_Test):
             Template(entity = Class(name = "T1"), typenames = [
                 Template_Argument(name = "T"),
                 Template_Argument(name = "I")]),
+            Class(name = "T1_T_Int_Int_0", instanceof=(
+                ["Capdpa", "T1"], [
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)])),
             Template(entity = Class(name = "T2", children = [
                 Member(name = "t1", ctype = Type_Reference_Template(name=Identifier(["Capdpa", "T1"]), arguments = [
                     Template_Argument(name = "U"),
@@ -676,10 +680,6 @@ class Parser(Capdpa_Test):
                 typenames = [
                     Template_Argument(name = "U"),
                     Template_Argument(name = "H")]),
-            Class(name = "T1_T_Int_Int_0", instanceof=(
-                ["Capdpa", "T1"], [
-                    Type_Reference(name=Identifier(["Capdpa", "int"])),
-                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)])),
             Class(name = "T2_T_Int_Int_0", children = [
                 Member(name = "t1", ctype = Type_Reference_Template(name=Identifier(["Capdpa", "T1"]), arguments = [
                     Type_Reference(name=Identifier(["Capdpa", "int"])),
