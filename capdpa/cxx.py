@@ -219,7 +219,7 @@ class CXX:
                 else:
                     raise NotImplementedError("Unknown undeclared canonical type: {}".format(canon))
             elif decl.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
-                return IR.Type_Reference_Template(name = children[0].spelling, arguments=[
+                return IR.Type_Reference_Template(name = IR.Identifier(self.__resolve_name(children[0])), arguments=[
                     IR.Template_Argument(name=c.spelling) for c in children[1:]])
             else:
                 raise NotImplementedError("Unsupported declaration kind {} at {}".format(decl.kind, decl.location))
