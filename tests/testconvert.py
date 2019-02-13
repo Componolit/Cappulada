@@ -659,24 +659,33 @@ class Parser(Capdpa_Test):
     def test_class_template_decl(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity = Class(name = "T1"), typenames = [
-                Template_Argument(name = "T")]),
-            Class(name = "T1_T_Int", instanceof=(
-                ["Capdpa", "T1"], [Type_Reference(name=Identifier(["Capdpa", "int"]))])),
+                Template_Argument(name = "T"),
+                Template_Argument(name = "I")]),
             Template(entity = Class(name = "T2", children = [
                 Member(name = "t1", ctype = Type_Reference_Template(name = "T1", arguments = [
-                    Template_Argument(name = "T")]))]),
+                    Template_Argument(name = "U"),
+                    Template_Argument(name = "H")]))]),
                 typenames = [
-                    Template_Argument(name = "T")]),
-            Class(name = "T2_T_Int", children = [
-                Member(name = "t1", ctype = Type_Reference_Template(name = "T2", arguments = [
-                    Type_Reference(name=Identifier(["Capdpa", "int"]))]))],
+                    Template_Argument(name = "U"),
+                    Template_Argument(name = "H")]),
+            Class(name = "T1_T_Int_Int_0", instanceof=(
+                ["Capdpa", "T1"], [
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)])),
+            Class(name = "T2_T_Int_Int_0", children = [
+                Member(name = "t1", ctype = Type_Reference_Template(name=Identifier(["Capdpa", "T1"]), arguments = [
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)]))],
                 instanceof=(
-                    ["Capdpa", "T2"], [Type_Reference(name=Identifier(["Capdpa", "int"]))])),
+                    ["Capdpa", "T2"], [
+                        Type_Reference(name=Identifier(["Capdpa", "int"])),
+                        Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)])),
             Class(name = "T_int", children = [
-                Member(name = "t2", ctype = Type_Reference_Template(name = "T2", arguments = [
-                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))])])
+                Member(name = "t2", ctype = Type_Reference_Template(name=Identifier(["Capdpa", "T2"]), arguments = [
+                    Type_Reference(name=Identifier(["Capdpa", "int"])),
+                    Type_Literal(name=Identifier(["Capdpa", "int"]), value=0)]))])])
         result = CXX("tests/data/convert/test_class_template_decl.h").ToIR(project="Capdpa")
-        self.check(result, example)
+        self.check(result, expected)
 
 if __name__ == '__main__':
     unittest.main()
