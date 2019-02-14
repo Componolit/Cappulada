@@ -333,10 +333,17 @@ class CXX:
     def __convert_typedef(self, cursor):
         children = list(cursor.get_children())
         if children:
-            if children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
+            if children[0].kind in [
+                    clang.cindex.CursorKind.TEMPLATE_REF,
+                    clang.cindex.CursorKind.NAMESPACE_REF]:
                 resolved = self.__convert_type(children, cursor.type)
             elif children[0].kind == clang.cindex.CursorKind.TYPE_REF:
                 resolved = self.__convert_type([], children[0].type)
+            else:
+                raise NotImplementedError("Unknown typedef ref: {} ({}) at {}".format(
+                    children[0].spelling,
+                    children[0].kind,
+                    children[0].location))
         else:
             resolved = self.__convert_type([], cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)
