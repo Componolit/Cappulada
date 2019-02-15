@@ -705,5 +705,59 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_class_template_decl.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_nested_template(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Template(entity = Class(name = "T1"), typenames = [
+                Template_Argument(name = "T")]),
+            Class(name = "T1_T_Int", instanceof=(
+                ["Capdpa", "T1"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+            Class(name = "T1_T_Char", instanceof=(
+                ["Capdpa", "T1"], [Type_Reference(name = Identifier(["Capdpa", "char"]))])),
+            Template(entity = Class(name = "T2", children = [
+                Member(name = "t1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T1"]), arguments = [
+                    Template_Argument(name = "U")]))]), typenames = [
+                        Template_Argument(name = "U")]),
+            Class(name = "T2_T_Int", children = [
+                Member(name = "t1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T1"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))], instanceof=(
+                        ["Capdpa", "T2"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+            Class(name = "T2_T_Char", children = [
+                Member(name = "t1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T1"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "char"]))]))], instanceof=(
+                        ["Capdpa", "T2"], [Type_Reference(name = Identifier(["Capdpa", "char"]))])),
+            Template(entity = Class(name = "T3", children = [
+                Member(name = "t2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T2"]), arguments = [
+                    Template_Argument(name = "V")]))]), typenames = [
+                        Template_Argument(name = "V")]),
+            Class(name = "T3_T_Int", children = [
+                Member(name = "t2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T2"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))], instanceof=(
+                        ["Capdpa", "T3"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+            Class(name = "T3_T_Char", children = [
+                Member(name = "t2", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T2"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "char"]))]))], instanceof=(
+                        ["Capdpa", "T3"], [Type_Reference(name = Identifier(["Capdpa", "char"]))])),
+            Template(entity = Class(name = "T4", children = [
+                Member(name = "t3", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T3"]), arguments = [
+                    Template_Argument(name = "W")]))]), typenames = [
+                        Template_Argument(name = "W")]),
+            Class(name = "T4_T_Int", children = [
+                Member(name = "t3", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T3"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]))], instanceof=(
+                        ["Capdpa", "T4"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+            Class(name = "T4_T_Char", children = [
+                Member(name = "t3", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T3"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "char"]))]))], instanceof=(
+                        ["Capdpa", "T4"], [Type_Reference(name = Identifier(["Capdpa", "char"]))])),
+            Class(name = "Inst", children = [
+                Member(name = "t4_int", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T4"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+                Member(name = "t4_char", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T4"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "char"]))])),
+                ])
+            ])
+        result = CXX("tests/data/convert/test_nested_template.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
 if __name__ == '__main__':
     unittest.main()
