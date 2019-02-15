@@ -418,6 +418,7 @@ class CXX:
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.UNEXPOSED_DECL,
                         clang.cindex.CursorKind.NAMESPACE_REF,
+                        clang.cindex.CursorKind.TEMPLATE_REF,
                         clang.cindex.CursorKind.FUNCTION_TEMPLATE,
                         # TODO: properly support function templates
                         clang.cindex.CursorKind.CONVERSION_FUNCTION,
