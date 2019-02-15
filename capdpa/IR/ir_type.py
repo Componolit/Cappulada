@@ -1,4 +1,5 @@
 import ir
+import ir_array
 import ir_identifier
 import ir_template
 import mangle
@@ -107,10 +108,16 @@ class Type_Definition(ir.Base):
 
     def AdaSpecification(self, indentation=0):
         if self.reference:
-            return "{0}subtype {1} is {2};\n{0}subtype {1}_Array is {2}_Array;".format(
-                    " " * indentation,
-                    self.ConvertName(self.name),
-                    self.reference.AdaSpecification())
+            if ir_array.Array.isInst(self.reference):
+                return "{0}subtype {1} is {2};".format(
+                        " " * indentation,
+                        self.ConvertName(self.name),
+                        self.reference.AdaSpecification())
+            else:
+                return "{0}subtype {1} is {2};\n{0}subtype {1}_Array is {2}_Array;".format(
+                        " " * indentation,
+                        self.ConvertName(self.name),
+                        self.reference.AdaSpecification())
         else:
             return ("{0}package {1} is\n"
                     "{0}   type Class is null record;\n"

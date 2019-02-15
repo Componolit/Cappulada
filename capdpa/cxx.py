@@ -265,6 +265,11 @@ class CXX:
             return IR.Array(
                     ctype = self.__convert_type(children, type_cursor.element_type),
                     size = IR.Template_Argument(name = children[0].spelling))
+        elif type_cursor.kind == clang.cindex.TypeKind.INCOMPLETEARRAY:
+            return IR.Array(
+                    ctype = self.__convert_type(children, type_cursor.element_type),
+                    size = 0,
+                    constrained = False)
         elif type_cursor.kind in TypeMap.keys():
             return IR.Type_Reference(
                 name = IR.Identifier([self.project, TypeMap[type_cursor.kind]]),
@@ -337,13 +342,11 @@ class CXX:
                     clang.cindex.CursorKind.TEMPLATE_REF,
                     clang.cindex.CursorKind.NAMESPACE_REF]:
                 resolved = self.__convert_type(children, cursor.type)
-            elif children[0].kind == clang.cindex.CursorKind.TYPE_REF:
+            elif children[0].kind in [
+                    clang.cindex.CursorKind.TYPE_REF]:
                 resolved = self.__convert_type([], children[0].type)
             else:
-                raise NotImplementedError("Unknown typedef ref: {} ({}) at {}".format(
-                    children[0].spelling,
-                    children[0].kind,
-                    children[0].location))
+                resolved = self.__convert_type(children, cursor.type.get_canonical())
         else:
             resolved = self.__convert_type([], cursor.type.get_canonical())
         return IR.Type_Definition(cursor.type.spelling, resolved)

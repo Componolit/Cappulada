@@ -16,5 +16,7 @@ class Array(ir.Base):
         return self.ctype.UsedTypes(parent)
 
     def AdaSpecification(self, indentation=0, private=False):
-        return self.ctype.AdaSpecification(indentation, private) + "_Array (1 .. {})".format(self.size)
+        return self.ctype.AdaSpecification(indentation, private)\
+                + "_Array"\
+                + (" (1 .. {})".format(self.size) if self.constrained else "")
 
