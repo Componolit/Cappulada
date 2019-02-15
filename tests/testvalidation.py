@@ -183,5 +183,8 @@ class check_validation(Capdpa_Test):
     def test_nested_private_class(self):
         self.check_validation("test_nested_private_class")
 
+    def test_nested_templates(self):
+        self.check_validation("test_nested_templates")
+
 if __name__ == '__main__':
     unittest.main()
