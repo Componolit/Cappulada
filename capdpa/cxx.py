@@ -442,7 +442,7 @@ class CXX:
                     children.append(self.__convert_variable(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CXX_BASE_SPECIFIER:
                     children.append(self.__convert_base(cursor))
-                elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
+                elif cursor.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                     # We assume no forward declarations of private classes
                     children.append(self.__convert_class(cursor))
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
