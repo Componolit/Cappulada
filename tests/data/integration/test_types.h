@@ -5,3 +5,5 @@ typedef uint8_t u8;
 typedef unsigned long long ull;
 using int8_t = char;
 using int16_t = short;
+typedef int iuarray[];
+typedef int icarray[10];

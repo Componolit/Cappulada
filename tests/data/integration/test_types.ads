@@ -13,4 +13,6 @@ is
    subtype Int8_T_Array is Test_Types.Char_Array;
    subtype Int16_T is Test_Types.Short;
    subtype Int16_T_Array is Test_Types.Short_Array;
+   subtype Iuarray is Test_Types.Int_Array;
+   subtype Icarray is Test_Types.Int_Array (1 .. 10);
 end Test_Types;

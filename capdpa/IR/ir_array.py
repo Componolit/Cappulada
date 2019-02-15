@@ -4,12 +4,13 @@ import ir_template
 
 class Array(ir.Base):
 
-    def __init__(self, ctype, size):
+    def __init__(self, ctype, size, constrained=True):
         super(Array, self).__init__()
         self.ctype = ctype
         self.size = size
         self.ctype.SetParent(self)
         self.name = self.ctype.name
+        self.constrained = constrained
 
     def UsedTypes(self, parent):
         return self.ctype.UsedTypes(parent)
