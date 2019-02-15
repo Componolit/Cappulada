@@ -361,7 +361,10 @@ class CXX:
         return IR.Template(
                 entity = IR.Class(
                     name = cursor.spelling,
-                    children = self.__convert_children(list(cursor.get_children())[len(targs):])),
+                    children = self.__convert_children(list(cursor.get_children())[len(targs):]),
+                    public = cursor.access_specifier in [
+                        clang.cindex.AccessSpecifier.INVALID,
+                        clang.cindex.AccessSpecifier.PUBLIC]),
                 typenames = [IR.Template_Argument(name = c.spelling,
                                                   variadic = list(c.get_tokens())[1].spelling == "...") for c in targs])
 
@@ -442,6 +445,8 @@ class CXX:
                 elif cursor.kind == clang.cindex.CursorKind.CLASS_DECL:
                     # We assume no forward declarations of private classes
                     children.append(self.__convert_class(cursor))
+                elif cursor.kind == clang.cindex.CursorKind.CLASS_TEMPLATE:
+                    children.append(self.__convert_template(cursor))
                 elif cursor.kind in [
                         clang.cindex.CursorKind.CXX_ACCESS_SPEC_DECL,
                         clang.cindex.CursorKind.CXX_METHOD,

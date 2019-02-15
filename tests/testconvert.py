@@ -753,5 +753,18 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_nested_template.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_private_template(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "Pt", children = [
+                Template(entity=Class(name = "Temp", public=False), typenames=[
+                    Template_Argument(name = "T")]),
+                Class(name = "Temp_T_Int", public=False, instanceof=(
+                    ["Capdpa", "Pt", "Temp"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
+                Member(name = "t", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "Pt", "Temp"]), arguments = [
+                    Type_Reference(name = Identifier(["Capdpa", "int"]))]),
+                    access = "private")])])
+        result = CXX("tests/data/convert/test_private_template.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
 if __name__ == '__main__':
     unittest.main()
