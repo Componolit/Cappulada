@@ -768,15 +768,19 @@ class Parser(Capdpa_Test):
 
     def test_function_template_argument(self):
         expected = Namespace(name = "Capdpa", children = [
-            Template(entity=Class(name = "Tp"), typenames=[
-                Template_Argument(name = "T")]),
-            Class(name = "T_T_Int", instanceof = (
-                ["Capdpa", "T"], [Type_Reference(name = Identifier(["Capdpa", "int"]))])),
-            Class(name = "F", children = [
-                Method(name = "f", parameters = [
-                    Argument(name = "Arg1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "T"]), arguments = [
-                        Type_Reference(name=Identifier(["Capdpa", "int"]))]))],
-                    return_type = None)])])
+            Namespace(name = "A", children = [
+                Template(entity=Class(name = "Tp"), typenames = [
+                    Template_Argument(name = "T")]),
+                Class(name = "Tp_T_G", instanceof = (
+                    ["Capdpa", "A", "Tp"], [Type_Reference(name=Identifier(["Capdpa", "int"]))]))
+                ]),
+            Namespace(name = "B", children = [
+                Class(name = "G"),
+                Class(name = "F", children = [
+                    Method(name = "f", parameters = [
+                        Argument(name = "arg1", ctype = Type_Reference_Template(name = Identifier(["Capdpa", "A", "G"]), arguments = [
+                            Type_Reference(name=Identifier(["Capdpa", "B", "G"]))]))],
+                        return_type = None)])])])
         result = CXX("tests/data/convert/test_function_template_argument.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
