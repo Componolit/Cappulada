@@ -379,7 +379,7 @@ class CXX:
                 resolved = self.__convert_type(children, cursor.type.get_canonical())
         else:
             resolved = self.__convert_type([], cursor.type.get_canonical())
-        return IR.Type_Definition(cursor.type.spelling, resolved)
+        return IR.Type_Definition(cursor.type.spelling.split("::")[-1], resolved)
 
     def __convert_template(self, cursor):
         targs = []
