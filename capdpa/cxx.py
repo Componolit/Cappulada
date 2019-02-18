@@ -132,61 +132,91 @@ class CXX:
             cursor = cursor.semantic_parent
         return [self.project] + list(reversed(identifier))
 
-    def __convert_type(self, children, type_cursor):
+    def __resolve_template_arguments(self, type_cursor, children, arg_count, context=None):
+        type_cursor, ptr, reference, const = self.__get_type_attributes(type_cursor)
+        if not context:
+            context = (x for x in self.__ltstrip(children) if x.kind != clang.cindex.CursorKind.NAMESPACE_REF)
+        first = lambda cl: cl[sum([t[1] for r in cl])]
+        args = []
+        for i in xrange(type_cursor.get_num_template_arguments()):
+            argtype = type_cursor.get_template_argument_type(i)
+            if argtype.kind in TypeMap.keys():
+                args.append(self.__convert_type(children, argtype))
+            else:
+                c = type("", (), dict(kind = clang.cindex.CursorKind.NAMESPACE_REF))
+                while c.kind == clang.cindex.CursorKind.NAMESPACE_REF:
+                    try:
+                        c = context.next()
+                    except StopIteration:
+                        c = None
+                        break
+                if not c:
+                    continue
+                if c.kind in [
+                        clang.cindex.CursorKind.INTEGER_LITERAL,
+                        clang.cindex.CursorKind.FLOATING_LITERAL,
+                        clang.cindex.CursorKind.IMAGINARY_LITERAL,
+                        clang.cindex.CursorKind.STRING_LITERAL,
+                        clang.cindex.CursorKind.CHARACTER_LITERAL,
+                        clang.cindex.CursorKind.CXX_BOOL_LITERAL_EXPR]:
+                    args.append(IR.Type_Literal(
+                        name = IR.Identifier([self.project, TypeMap[c.type.kind]]),
+                        value = list(c.get_tokens())[0].spelling.strip("'")))
+                elif c.kind == clang.cindex.CursorKind.TEMPLATE_REF:
+                    args.append(self.__resolve_template_arguments(argtype, children,
+                        argtype.get_num_template_arguments(), context))
+                elif c.kind == clang.cindex.CursorKind.TYPE_REF:
+                    args.append(self.__convert_type(children, c.type))
+                else:
+                    raise NotImplementedError("Unknown context kind: {}".format(c.kind))
+        if type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
+            trt_name = self.__resolve_name(list(type_cursor.get_declaration().get_children())[0])
+        else:
+            trt_name = self.__resolve_name(type_cursor.get_declaration())
+        return IR.Type_Reference_Template(
+                name = IR.Identifier(trt_name),
+                constant = const,
+                arguments = args,
+                pointer = ptr,
+                reference = reference)
+
+    def __ltstrip(self, children):
+        """
+        Strip namespace and first template ref from children list
+
+        The expression `N1::N2::Template<N3::T1<...>>` yields:
+        [NAMESPACE_REF (N1), NAMESPACE_REF(N2), TEMPLATE_REF(Template), NAMESPACE_REF(N3), TEMPLATE_REF(T1), ...]
+        This function removes anything before the first `<`, in this example N1, N2 and Template
+        """
+        while children[0].kind == clang.cindex.CursorKind.NAMESPACE_REF:
+            children = children[1:]
+        if children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF:
+            return children[1:]
+        else:
+            return children
+
+    def __get_type_attributes(self, type_cursor):
         ptr = 0;
         reference = False;
-
         while type_cursor.kind == clang.cindex.TypeKind.POINTER:
             ptr += 1
             type_cursor = type_cursor.get_pointee()
-
         if type_cursor.kind == clang.cindex.TypeKind.LVALUEREFERENCE:
             reference = True
             type_cursor = type_cursor.get_pointee()
         const = type_cursor.is_const_qualified()
+        return (type_cursor, ptr, reference, const)
+
+
+    def __convert_type(self, children, type_cursor):
+        original_type = type_cursor
+        type_cursor, ptr, reference, const = self.__get_type_attributes(type_cursor)
         if type_cursor.kind in [clang.cindex.TypeKind.UNEXPOSED, clang.cindex.TypeKind.RECORD] \
                 or (type_cursor.kind == clang.cindex.TypeKind.TYPEDEF and len(children) > 0 and children[0].kind == clang.cindex.CursorKind.TEMPLATE_REF):
             targs = type_cursor.get_num_template_arguments()
             decl = type_cursor.get_declaration()
             if targs > 0:
-                args = []
-                ccursor = 1
-                for i in range(targs):
-                    cymbal_arg = type_cursor.get_template_argument_type(i)
-                    if cymbal_arg.kind in TypeMap.keys():
-                        args.append(self.__convert_type(children, cymbal_arg))
-                        # only use builtin types from cymbal
-                    else:
-                        try:
-                            child_arg = children[ccursor]
-                            ccursor += 1
-                            if child_arg.kind in [
-                                    clang.cindex.CursorKind.INTEGER_LITERAL,
-                                    clang.cindex.CursorKind.FLOATING_LITERAL,
-                                    clang.cindex.CursorKind.IMAGINARY_LITERAL,
-                                    clang.cindex.CursorKind.STRING_LITERAL,
-                                    clang.cindex.CursorKind.CHARACTER_LITERAL,
-                                    clang.cindex.CursorKind.CXX_BOOL_LITERAL_EXPR]:
-                                if child_arg.type.kind in TypeMap.keys():
-                                    args.append(IR.Type_Literal(
-                                        name = IR.Identifier([self.project, TypeMap[child_arg.type.kind]]),
-                                        value=list(child_arg.get_tokens())[0].spelling.strip("'")))
-                                else:
-                                    raise NotImplementedError("Literal type conversion not implemented: " + str(child_arg.type.kind))
-                            else:
-                                args.append(self.__convert_type(children, child_arg.type.get_declaration().type))
-                        except IndexError:
-                            #FIXME: here we should add an argument to a variadic template but clang doesn't give type information on those args so we can't
-                            pass
-                if type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
-                    trt_name = self.__resolve_name(list(decl.get_children())[0])
-                else:
-                    trt_name = self.__resolve_name(decl)
-                return IR.Type_Reference_Template(
-                        name = IR.Identifier(trt_name),
-                        constant = const,
-                        arguments = args,
-                        pointer = ptr, reference=reference)
+                return self.__resolve_template_arguments(original_type, children, targs)
             elif decl.kind in [clang.cindex.CursorKind.CLASS_DECL, clang.cindex.CursorKind.STRUCT_DECL]:
                 name = self.__resolve_name(decl)
                 if decl.access_specifier in [clang.cindex.AccessSpecifier.PUBLIC, clang.cindex.AccessSpecifier.INVALID]:
