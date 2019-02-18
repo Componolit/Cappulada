@@ -205,6 +205,8 @@ class CXX:
             reference = True
             type_cursor = type_cursor.get_pointee()
         const = type_cursor.is_const_qualified()
+        if type_cursor.kind == clang.cindex.TypeKind.ELABORATED:
+            type_cursor = type_cursor.get_named_type()
         return (type_cursor, ptr, reference, const)
 
 
