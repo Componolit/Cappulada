@@ -263,7 +263,7 @@ class CXX:
                 reference = reference) if ptr else None
         elif type_cursor.kind == clang.cindex.TypeKind.TYPEDEF:
             return IR.Type_Reference(name = IR.Identifier(
-                [type_cursor.spelling]),
+                self.__resolve_name(type_cursor.get_declaration())),
                 constant = const,
                 pointer = ptr,
                 reference = reference)
