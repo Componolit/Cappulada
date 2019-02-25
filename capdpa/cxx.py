@@ -4,6 +4,8 @@ import IR
 import cymbal
 import ctypes
 
+clang.cindex.Config.set_library_path("/usr/lib/llvm-3.8/lib/")
+
 cymbal.monkeypatch_type(
         'get_template_argument_type',
         'clang_Type_getTemplateArgumentAsType',
