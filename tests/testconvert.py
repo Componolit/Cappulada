@@ -372,6 +372,16 @@ class Parser(Capdpa_Test):
         result = CXX("tests/data/convert/test_class_with_array.h").ToIR(project="Capdpa")
         self.check(result, expected)
 
+    def test_array_parameter(self):
+        expected = Namespace(name = "Capdpa", children = [
+            Class(name = "A", children = [
+                Constructor (parameters = [
+                    Argument(name = "x", ctype = Array(
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                        size = None))])])])
+        result = CXX("tests/data/convert/test_array_parameter.h").ToIR(project="Capdpa")
+        self.check(result, expected)
+
     def test_array_template(self):
         expected = Namespace(name = "Capdpa", children = [
             Template(entity=

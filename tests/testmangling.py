@@ -357,6 +357,14 @@ class Mangling(unittest.TestCase):
         symbol = str(self.tests['Literal_Template_T_Int_17'].children[1].Mangle())
         self.assertTrue (symbol == "_ZN16Literal_TemplateILi17EEC1Ev", "Invalid symbol: " + symbol)
 
+    def test_array(self):
+        symbol = str(self.tests['Main', 'method_with_constrained_array'].Mangle())
+        self.assertTrue (symbol == "_ZN4Main29method_with_constrained_arrayEPi", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Main', 'method_with_unconstrained_array'].Mangle())
+        self.assertTrue (symbol == "_ZN4Main31method_with_unconstrained_arrayEPi", "Invalid symbol: " + symbol)
+        symbol = str(self.tests['Main', 'method_with_null_array'].Mangle())
+        self.assertTrue (symbol == "_ZN4Main22method_with_null_arrayEPi", "Invalid symbol: " + symbol)
+
     def EXCLUDE_test_template_instance_complex (self):
         symbol = str(self.tests['Templ2', ['Cde_T_Char_Int', 'foo']].Mangle())
         self.assertTrue (symbol == "_ZN6Templ23CdeIcN3Bar3FooEE3fooEcS3_i", "Invalid symbol: " + symbol)
