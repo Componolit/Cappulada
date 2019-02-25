@@ -358,6 +358,15 @@ class GenerateConstant(Capdpa_Test):
                 Member(name = "ar", ctype = Array(ctype = Type_Reference(name = Identifier(["Capdpa", "Int"])), size=5))])]).AdaSpecification()
         self.check(result[0].Text(), self.load("generator/test_class_with_array.txt"))
 
+    def test_array_parameter(self):
+        result = Namespace(name = "Capdpa", children = [
+            Class(name = "A", children = [
+                Constructor(parameters = [
+                    Argument(name = "x", ctype = Array(
+                        ctype = Type_Reference(name = Identifier(["Capdpa", "int"])),
+                        size = None))])])]).AdaSpecification()
+        self.check(result[0].Text(), self.load("generator/test_array_parameter.txt"))
+
     def test_template_with_array(self):
         result = Namespace(name = "Capdpa", children = [
             Template(entity=

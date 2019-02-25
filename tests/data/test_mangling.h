@@ -81,6 +81,10 @@ class Main
       void method_builtin_float (float) { };
       void method_builtin_double (double) { };
       void method_builtin_long_double (long double) { };
+
+      void method_with_constrained_array(int [42]);
+      void method_with_unconstrained_array(int []);
+      void method_with_null_array(int [0]);
 };
 
 namespace std {

@@ -1,0 +1,28 @@
+package Capdpa
+   with SPARK_Mode => On
+is
+   package A
+      with SPARK_Mode => On
+   is
+      type Class is
+      limited record
+         null;
+      end record
+      with Import, Convention => CPP;
+
+      type Class_Address is private;
+      type Class_Array is array (Natural range <>) of Class;
+      type Class_Address_Array is array (Natural range <>) of Class_Address;
+
+      function Constructor (X : Capdpa.Int_Array) return Class
+      with Global => null;
+      pragma Cpp_Constructor (Constructor, "_ZN1AC1EPi");
+
+   private
+      pragma SPARK_Mode (Off);
+
+      type Class_Address is access Class;
+
+   end A;
+
+end Capdpa;
