@@ -177,6 +177,9 @@ class check_validation(Capdpa_Test):
     def test_dependent_arrays(self):
         self.check_validation("test_dependent_arrays")
 
+    def test_array_parameter(self):
+        self.check_validation("test_array_parameter")
+
     def test_nested_private_class(self):
         self.check_validation("test_nested_private_class")
 

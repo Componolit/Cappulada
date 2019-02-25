@@ -1,6 +1,7 @@
 
 import ir
 import ir_template
+import mangle
 
 class Array(ir.Base):
 
@@ -14,6 +15,10 @@ class Array(ir.Base):
     def UsedTypes(self, parent):
         return self.ctype.UsedTypes(parent)
 
+    def Mangle(self):
+        return mangle.Pointer(self.ctype.Mangle())
+
     def AdaSpecification(self, indentation=0, private=False):
-        return self.ctype.AdaSpecification(indentation, private) + "_Array (1 .. {})".format(self.size)
+        return self.ctype.AdaSpecification(indentation, private) + "_Array" + (
+                " (1 .. {})".format(self.size) if self.size != None else "")
 
