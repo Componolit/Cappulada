@@ -1,4 +1,4 @@
 sudo: required
 
 script:
-   - docker run -v $PWD:/app -w /app jklmnn/gnat:gpl.2018.spark /bin/sh -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates python-clang-3.8 libclang-3.8-dev python-pip && pip install -r requirements.txt && python -m unittest discover tests"
+   - docker run -v $PWD:/app -w /app jklmnn/gnat:gpl.2018.spark /bin/sh -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates python-clang-3.8 libclang-3.8-dev python-pip python-setuptools && pip install -r requirements.txt && python -m unittest discover tests"
