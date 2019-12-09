@@ -7,11 +7,13 @@ from capdpa import Generator
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(epilog="After headers `--` can be passed. "
+                                            "Any argument after this token will be passed directly to clang. "
+                                            "Example: `cappulada header1.h header2.h -- -I include_dir`")
     parser.add_argument('-o', '--outdir', help="target directory", default=os.path.abspath(os.curdir))
     parser.add_argument('-p', '--project', help="project name", default="Capdpa")
-    parser.add_argument('-s', '--spec_include', help="specification include")
-    parser.add_argument('-w', '--with_include', help="with include")
+    #parser.add_argument('-s', '--spec_include', help="specification include")
+    #parser.add_argument('-w', '--with_include', help="with include")
     parser.add_argument('headers', help="header files", nargs='+')
 
     args = parser.parse_args(sys.argv[1:sys.argv.index('--')] if '--' in sys.argv else sys.argv[1:])
